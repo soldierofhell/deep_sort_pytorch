@@ -5,7 +5,9 @@ import argparse
 import numpy as np
 from distutils.util import strtobool
 
+from detectron2.config import get_cfg
 from detectron2.engine.defaults import DefaultPredictor
+
 from deep_sort import DeepSort
 from util import COLORS_10, draw_bboxes
 
@@ -19,6 +21,10 @@ class Detector(object):
             cv2.resizeWindow("test", args.display_width, args.display_height)
 
         self.vdo = cv2.VideoCapture()
+		cfg = get_cfg()
+		cfg.merge_from_file("detectron2_repo/configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
+		cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+		cfg.MODEL.WEIGHTS = "detectron2://COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl"
         self.predictor = DefaultPredictor(cfg)
         self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda)
         self.class_names = self.yolo3.class_names
