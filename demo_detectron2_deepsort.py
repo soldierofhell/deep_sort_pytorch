@@ -42,13 +42,11 @@ class Detector(object):
             self.output = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width, self.im_height))
             
         if self.args.save_frames:
-            if os.path.exists('frames'):
-                #delete
-                pass
+            if not os.path.exists('frames'):
+                os.makedirs('frames')
         
         if self.args.save_txt:
-            of = open('gt.txt', "w")
-            writer = csv.writer(of, delimiter=',')
+            txt = open('gt.txt', "w")
 
         assert self.vdo.isOpened()
         return self
@@ -58,9 +56,9 @@ class Detector(object):
             print(exc_type, exc_value, exc_traceback)
 
     def detect(self):
-        i = 0
+        frame_id = 0
         while self.vdo.grab():
-            i+=1
+            frame_id+=1
             #if i>50:
             #    break
             start = time.time()
@@ -99,8 +97,12 @@ class Detector(object):
                     ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
                     
                     if self.args.save_txt:
-                        for
-                            writer.writerow([frame+1, i+1, x1+1, y1+1, x2-x1+1, y2-y1+1, -1, -1, -1, -1])
+                        for j in range(bbox_xyxy.shape[0]):
+                            x1 = bbox_xyxy[j,0]
+                            y1 = bbox_xyxy[j,1]
+                            x2 = bbox_xyxy[j,2]
+                            y2 = bbox_xyxy[j,3]
+                            txt.write(f'{frame_id}, {identities[j]}, {x1}, {y1}, {x2-x1}, {y2-y1}, -1, -1, -1, -1\n')
 
             end = time.time()
             print("time: {}s, fps: {}".format(end - start, 1 / (end - start)))
@@ -113,8 +115,7 @@ class Detector(object):
                 self.output.write(ori_im)
                 
             if self.args.save_frames:
-                cv2.imwrite(f'./frames/img_{i}.jpg')
-                
+                cv2.imwrite(f'./frames/img_{frame_id:05}.jpg')        
 
 
 
