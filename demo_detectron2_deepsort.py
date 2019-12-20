@@ -49,7 +49,11 @@ class Detector(object):
             print(exc_type, exc_value, exc_traceback)
 
     def detect(self):
+        i = 0
         while self.vdo.grab():
+            i+=1
+            if i>20:
+                break
             start = time.time()
             _, ori_im = self.vdo.retrieve()
             im = ori_im
