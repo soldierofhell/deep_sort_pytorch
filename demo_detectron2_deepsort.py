@@ -69,7 +69,7 @@ class Detector(object):
                 # if "pred_masks" in instances.keys():
                 #	pred_masks = instances["pred_masks"][mask]
 
-                bbox_xcycwh = torch.stack(xcyc, wh).detach().cpu().numpy()
+                bbox_xcycwh = torch.cat((xcyc, wh), 1).detach().cpu().numpy()
                 cls_conf = scores.detach().cpu().numpy()
 
                 bbox_xcycwh[:, 3:] *= 1.2
