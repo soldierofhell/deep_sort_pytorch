@@ -27,7 +27,7 @@ class Detector(object):
         cfg.MODEL.WEIGHTS = "detectron2://COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl"
         self.predictor = DefaultPredictor(cfg)
         self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda)
-        self.class_names = self.yolo3.class_names
+        #self.class_names = self.yolo3.class_names
 
     def __enter__(self):
         assert os.path.isfile(self.args.VIDEO_PATH), "Error: path error"
