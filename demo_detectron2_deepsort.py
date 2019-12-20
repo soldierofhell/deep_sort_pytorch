@@ -59,6 +59,8 @@ class Detector(object):
 
             if instances.pred_classes.numel() > 0:                
 
+                print(instances.pred_classes)
+                
                 mask = instances.pred_classes == 1
 
                 scores = instances.scores[mask]
