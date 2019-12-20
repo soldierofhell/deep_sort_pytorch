@@ -51,7 +51,7 @@ class Detector(object):
             start = time.time()
             _, ori_im = self.vdo.retrieve()
             im = ori_im
-            predictions = self.predictor(image)
+            predictions = self.predictor(im)
 
             if len(predictions) > 0:
                 instances = predictions["instances"]
