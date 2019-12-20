@@ -59,7 +59,7 @@ class Detector(object):
 				pred_boxes = instances["pred_boxes"][mask]
 				if "pred_masks" in instances.keys():
 					pred_masks = instances["pred_masks"][mask]
-					
+
 				bbox_xcycwh[:,3:] *= 1.2
 
 				outputs = self.deepsort.update(bbox_xcycwh, cls_conf, im)
