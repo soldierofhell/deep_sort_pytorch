@@ -57,8 +57,15 @@ class Detector(object):
 
 				scores = instances["scores"][mask]
 				pred_boxes = instances["pred_boxes"][mask]
-				if "pred_masks" in instances.keys():
-					pred_masks = instances["pred_masks"][mask]
+				
+				xcyc = pred_boxes.get_centers()
+				wh = pred_boxes.tensor[:, :2] - pred_boxes.tensor[:, 2:]				
+				
+				#if "pred_masks" in instances.keys():
+				#	pred_masks = instances["pred_masks"][mask]
+					
+				bbox_xcycwh = torch.stack(xcyc, wh).detach().cpu().numpy()
+				cls_conf = scores.detach().cpu().numpy()
 
 				bbox_xcycwh[:,3:] *= 1.2
 
