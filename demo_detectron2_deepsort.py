@@ -8,6 +8,8 @@ from distutils.util import strtobool
 from detectron2.config import get_cfg
 from detectron2.engine.defaults import DefaultPredictor
 
+import torch
+
 from deep_sort import DeepSort
 from util import COLORS_10, draw_bboxes
 
