@@ -52,8 +52,8 @@ class Detector(object):
         i = 0
         while self.vdo.grab():
             i+=1
-            if i>50:
-                break
+            #if i>50:
+            #    break
             start = time.time()
             _, ori_im = self.vdo.retrieve()
             im = ori_im
