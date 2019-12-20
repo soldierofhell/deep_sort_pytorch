@@ -103,7 +103,7 @@ class Detector(object):
                             y1 = bbox_xyxy[j,1]
                             x2 = bbox_xyxy[j,2]
                             y2 = bbox_xyxy[j,3]
-                            self.txt.write(f'{frame_id}, {identities[j]}, {x1}, {y1}, {x2-x1}, {y2-y1}, -1, -1, -1, -1\n')
+                            self.txt.write(f'{frame_id},{identities[j]},{x1},{y1},{x2-x1},{y2-y1},-1,-1,-1,-1\n')
 
             end = time.time()
             print("time: {}s, fps: {}".format(end - start, 1 / (end - start)))
