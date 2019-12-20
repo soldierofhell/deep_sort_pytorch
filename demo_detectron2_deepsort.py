@@ -51,20 +51,22 @@ class Detector(object):
             predictions = self.predictor(image)
 		
             if len(predictions)>0:
+				instances = predictions["instances"]
 
-		instances = predictions["instances"]
+				mask = instances["pred_classes"]==1
 
-		mask = instances["pred_classes"]==1
+				scores = instances["scores"][mask]
+				pred_boxes = instances["pred_boxes"][mask]
+				if "pred_masks" in instances.keys():
+					pred_masks = instances["pred_masks"][mask]
+					
+				bbox_xcycwh[:,3:] *= 1.2
 
-                bbox_xcycwh = bbox_xcycwh[mask]
-                bbox_xcycwh[:,3:] *= 1.2
-
-                cls_conf = cls_conf[mask]
-                outputs = self.deepsort.update(bbox_xcycwh, cls_conf, im)
-                if len(outputs) > 0:
-                    bbox_xyxy = outputs[:,:4]
-                    identities = outputs[:,-1]
-                    ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
+				outputs = self.deepsort.update(bbox_xcycwh, cls_conf, im)
+				if len(outputs) > 0:
+					bbox_xyxy = outputs[:,:4]
+					identities = outputs[:,-1]
+					ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
 
             end = time.time()
             print("time: {}s, fps: {}".format(end-start, 1/(end-start)))
