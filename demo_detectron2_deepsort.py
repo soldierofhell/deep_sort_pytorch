@@ -56,10 +56,10 @@ class Detector(object):
             if len(predictions) > 0:
                 instances = predictions["instances"]
 
-                mask = instances["pred_classes"] == 1
+                mask = instances.pred_classes == 1
 
-                scores = instances["scores"][mask]
-                pred_boxes = instances["pred_boxes"][mask]
+                scores = instances.scores[mask]
+                pred_boxes = instances.pred_boxes[mask]
 
                 xcyc = pred_boxes.get_centers()
                 wh = pred_boxes.tensor[:, :2] - pred_boxes.tensor[:, 2:]
