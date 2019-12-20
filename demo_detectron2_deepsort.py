@@ -40,6 +40,15 @@ class Detector(object):
         if self.args.save_path:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
             self.output = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width, self.im_height))
+            
+        if self.args.save_frames:
+            if os.path.exists('frames'):
+                #delete
+                pass
+        
+        if self.args.save_txt:
+            of = open('gt.txt', "w")
+            writer = csv.writer(of, delimiter=',')
 
         assert self.vdo.isOpened()
         return self
@@ -88,6 +97,10 @@ class Detector(object):
                     bbox_xyxy = outputs[:, :4]
                     identities = outputs[:, -1]
                     ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
+                    
+                    if self.args.save_txt:
+                        for
+                            writer.writerow([frame+1, i+1, x1+1, y1+1, x2-x1+1, y2-y1+1, -1, -1, -1, -1])
 
             end = time.time()
             print("time: {}s, fps: {}".format(end - start, 1 / (end - start)))
@@ -98,6 +111,11 @@ class Detector(object):
 
             if self.args.save_path:
                 self.output.write(ori_im)
+                
+            if self.args.save_frames:
+                cv2.imwrite(f'./frames/img_{i}.jpg')
+                
+
 
 
 def parse_args():
@@ -115,6 +133,8 @@ def parse_args():
     parser.add_argument("--display_height", type=int, default=600)
     parser.add_argument("--save_path", type=str, default="demo.avi")
     parser.add_argument("--use_cuda", type=str, default="True")
+    parser.add_argument("--save_frames", action="store_true")
+    parser.add_argument("--save_txt", action="store_true")
     return parser.parse_args()
 
 
