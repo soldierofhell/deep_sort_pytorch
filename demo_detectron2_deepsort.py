@@ -20,7 +20,7 @@ class Detector(object):
             cv2.namedWindow("test", cv2.WINDOW_NORMAL)
             cv2.resizeWindow("test", args.display_width, args.display_height)
 
-	self.vdo = cv2.VideoCapture()
+        self.vdo = cv2.VideoCapture()
         cfg = get_cfg()
         cfg.merge_from_file("detectron2_repo/configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
@@ -29,7 +29,6 @@ class Detector(object):
         self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda)
         self.class_names = self.yolo3.class_names
 
-
     def __enter__(self):
         assert os.path.isfile(self.args.VIDEO_PATH), "Error: path error"
         self.vdo.open(self.args.VIDEO_PATH)
@@ -37,52 +36,50 @@ class Detector(object):
         self.im_height = int(self.vdo.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
         if self.args.save_path:
-            fourcc =  cv2.VideoWriter_fourcc(*'MJPG')
-            self.output = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width,self.im_height))
+            fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+            self.output = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width, self.im_height))
 
         assert self.vdo.isOpened()
         return self
 
-    
     def __exit__(self, exc_type, exc_value, exc_traceback):
         if exc_type:
             print(exc_type, exc_value, exc_traceback)
-        
 
     def detect(self):
-        while self.vdo.grab(): 
+        while self.vdo.grab():
             start = time.time()
             _, ori_im = self.vdo.retrieve()
             im = ori_im
             predictions = self.predictor(image)
-		
-            if len(predictions)>0:
+
+            if len(predictions) > 0:
                 instances = predictions["instances"]
 
-                mask = instances["pred_classes"]==1
+                mask = instances["pred_classes"] == 1
 
                 scores = instances["scores"][mask]
                 pred_boxes = instances["pred_boxes"][mask]
 
                 xcyc = pred_boxes.get_centers()
-                wh = pred_boxes.tensor[:, :2] - pred_boxes.tensor[:, 2:]				
+                wh = pred_boxes.tensor[:, :2] - pred_boxes.tensor[:, 2:]
 
-                #if "pred_masks" in instances.keys():
+                # if "pred_masks" in instances.keys():
                 #	pred_masks = instances["pred_masks"][mask]
 
                 bbox_xcycwh = torch.stack(xcyc, wh).detach().cpu().numpy()
                 cls_conf = scores.detach().cpu().numpy()
 
-                bbox_xcycwh[:,3:] *= 1.2
+                bbox_xcycwh[:, 3:] *= 1.2
 
                 outputs = self.deepsort.update(bbox_xcycwh, cls_conf, im)
                 if len(outputs) > 0:
-                        bbox_xyxy = outputs[:,:4]
-                        identities = outputs[:,-1]
-                        ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
+                    bbox_xyxy = outputs[:, :4]
+                    identities = outputs[:, -1]
+                    ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
 
             end = time.time()
-            print("time: {}s, fps: {}".format(end-start, 1/(end-start)))
+            print("time: {}s, fps: {}".format(end - start, 1 / (end - start)))
 
             if self.args.display:
                 cv2.imshow("test", ori_im)
@@ -90,7 +87,7 @@ class Detector(object):
 
             if self.args.save_path:
                 self.output.write(ori_im)
-            
+
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -110,9 +107,8 @@ def parse_args():
     return parser.parse_args()
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     args = parse_args()
     with Detector(args) as det:
         det.detect()
-
 
