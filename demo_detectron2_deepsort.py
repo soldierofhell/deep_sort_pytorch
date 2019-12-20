@@ -116,7 +116,7 @@ class Detector(object):
                 self.output.write(ori_im)
                 
             if self.args.save_frames:
-                cv2.imwrite(f'./frames/img_{frame_id:05}.jpg', ori_im)        
+                cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)        
 
 
 
