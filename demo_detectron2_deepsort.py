@@ -57,29 +57,29 @@ class Detector(object):
             predictions = self.predictor(image)
 		
             if len(predictions)>0:
-				instances = predictions["instances"]
+                instances = predictions["instances"]
 
-				mask = instances["pred_classes"]==1
+                mask = instances["pred_classes"]==1
 
-				scores = instances["scores"][mask]
-				pred_boxes = instances["pred_boxes"][mask]
-				
-				xcyc = pred_boxes.get_centers()
-				wh = pred_boxes.tensor[:, :2] - pred_boxes.tensor[:, 2:]				
-				
-				#if "pred_masks" in instances.keys():
-				#	pred_masks = instances["pred_masks"][mask]
-					
-				bbox_xcycwh = torch.stack(xcyc, wh).detach().cpu().numpy()
-				cls_conf = scores.detach().cpu().numpy()
+                scores = instances["scores"][mask]
+                pred_boxes = instances["pred_boxes"][mask]
 
-				bbox_xcycwh[:,3:] *= 1.2
+                xcyc = pred_boxes.get_centers()
+                wh = pred_boxes.tensor[:, :2] - pred_boxes.tensor[:, 2:]				
 
-				outputs = self.deepsort.update(bbox_xcycwh, cls_conf, im)
-				if len(outputs) > 0:
-					bbox_xyxy = outputs[:,:4]
-					identities = outputs[:,-1]
-					ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
+                #if "pred_masks" in instances.keys():
+                #	pred_masks = instances["pred_masks"][mask]
+
+                bbox_xcycwh = torch.stack(xcyc, wh).detach().cpu().numpy()
+                cls_conf = scores.detach().cpu().numpy()
+
+                bbox_xcycwh[:,3:] *= 1.2
+
+                outputs = self.deepsort.update(bbox_xcycwh, cls_conf, im)
+                if len(outputs) > 0:
+                        bbox_xyxy = outputs[:,:4]
+                        identities = outputs[:,-1]
+                        ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
 
             end = time.time()
             print("time: {}s, fps: {}".format(end-start, 1/(end-start)))
