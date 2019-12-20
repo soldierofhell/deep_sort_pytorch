@@ -75,7 +75,7 @@ class Detector(object):
                 bbox_xcycwh = torch.cat((xcyc, wh), 1).detach().cpu().numpy()
                 cls_conf = scores.detach().cpu().numpy()
                 
-                print(bbox_xcycwh, cls_conf)
+                #print(bbox_xcycwh, cls_conf)
 
                 bbox_xcycwh[:, 3:] *= 1.2
 
