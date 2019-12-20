@@ -24,9 +24,9 @@ class Detector(object):
 
         self.vdo = cv2.VideoCapture()
         cfg = get_cfg()
-        cfg.merge_from_file("detectron2_repo/configs/COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml")
+        cfg.merge_from_file("detectron2_repo/configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml")
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
-        cfg.MODEL.WEIGHTS = "detectron2://COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x/137849600/model_final_f10217.pkl"
+        cfg.MODEL.WEIGHTS = "detectron2://COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x/139686956/model_final_5ad38f.pkl"        # 
         self.predictor = DefaultPredictor(cfg)
         self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda)
         #self.class_names = self.yolo3.class_names
