@@ -62,7 +62,7 @@ class Detector(object):
     def detect(self):
         
         start_second = 0
-        end_second = 10
+        end_second = 8
         
         fps = self.vdo.get(cv2.CAP_PROP_FPS)
         
