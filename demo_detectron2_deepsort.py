@@ -63,12 +63,16 @@ class Detector(object):
         
         fps = self.vdo.get(cv2.CAP_PROP_FPS)
         
+        print('fps: ', fps)
+        
         start_frameid = start_second * fps
         end_frameid = end_second * fps
         
         while self.vdo.grab():
            
             frame_id = int(round(self.vdo.get(1)))
+            
+            print('frame id: ', self.vdo.get(1))
             
             if frame_id < start_frameid:
                 continue
