@@ -61,7 +61,7 @@ class Detector(object):
         start_second = 0
         end_second = 10
         
-        fps = vdo.get(cv2.CAP_PROP_FPS)
+        fps = self.vdo.get(cv2.CAP_PROP_FPS)
         
         start_frameid = start_second * fps
         end_frameid = end_second * fps
