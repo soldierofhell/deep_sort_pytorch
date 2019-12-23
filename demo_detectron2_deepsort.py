@@ -57,11 +57,24 @@ class Detector(object):
             print(exc_type, exc_value, exc_traceback)
 
     def detect(self):
-        frame_id = 0
+        
+        start_second = 0
+        end_second = 10
+        
+        fps = vdo.get(cv2.CAP_PROP_FPS)
+        
+        start_frameid = start_second * fps
+        end_frameid = end_second * fps
+        
         while self.vdo.grab():
-            frame_id+=1
-            #if i>50:
-            #    break
+           
+            frame_id = int(round(vdo.get(1)))
+            
+            if frame_id < start_frameid:
+                continue
+            elif frame_id > end_frameid:
+                break            
+            
             start = time.time()
             _, ori_im = self.vdo.retrieve()
             im = ori_im
