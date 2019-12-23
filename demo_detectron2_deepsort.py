@@ -42,12 +42,11 @@ class Detector(object):
             self.output = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width, self.im_height))
             
         if self.args.save_frames:
-            if not os.path.exists('supervisely'):
-                os.makedirs('supervisely')
-                os.makedirs('supervisely/img')
-            else:
+            if os.path.exists('supervisely'):
                 import shutil
                 shutil.rmtree('supervisely')
+            os.makedirs('supervisely')
+            os.makedirs('supervisely/img')
         
         if self.args.save_txt:
             self.txt = open('gt.txt', "w")
