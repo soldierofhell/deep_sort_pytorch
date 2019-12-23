@@ -68,7 +68,7 @@ class Detector(object):
         
         while self.vdo.grab():
            
-            frame_id = int(round(vdo.get(1)))
+            frame_id = int(round(self.vdo.get(1)))
             
             if frame_id < start_frameid:
                 continue
