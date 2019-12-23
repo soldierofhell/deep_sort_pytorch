@@ -45,6 +45,9 @@ class Detector(object):
             if not os.path.exists('supervisely'):
                 os.makedirs('supervisely')
                 os.makedirs('supervisely/img')
+            else:
+                import shutil
+                shutil.rmtree('supervisely')
         
         if self.args.save_txt:
             self.txt = open('gt.txt', "w")
@@ -81,6 +84,10 @@ class Detector(object):
             
             start = time.time()
             _, ori_im = self.vdo.retrieve()
+            
+            if self.args.save_frames:
+                cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)
+            
             im = ori_im
             predictions = self.predictor(im)
             
@@ -131,9 +138,6 @@ class Detector(object):
 
             if self.args.save_path:
                 self.output.write(ori_im)
-                
-            if self.args.save_frames:
-                cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)        
 
 
 
