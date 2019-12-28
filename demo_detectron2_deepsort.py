@@ -104,7 +104,7 @@ class Detector(object):
                 if not args.image_input:
                     cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)
                 else:
-                    cv2.imwrite(f'./supervisely/img/' + self.img_list[frame_id][-13:], ori_im)
+                    cv2.imwrite(f'./supervisely/img/' + self.img_list[frame_id-1][-13:], ori_im)
             
             im = ori_im
             predictions = self.predictor(im)
