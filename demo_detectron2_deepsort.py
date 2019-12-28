@@ -95,6 +95,8 @@ class Detector(object):
                     break           
                 _, ori_im = self.vdo.read() # retrieve()
             else:
+                if frame_id>=len(self.img_list):
+                    break
                 ori_im = cv2.imread(self.img_list[frame_id])
                 frame_id+=1                
             
