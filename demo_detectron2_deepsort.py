@@ -46,6 +46,8 @@ class Detector(object):
             self.im_height = int(self.vdo.get(cv2.CAP_PROP_FRAME_HEIGHT))
         else:
             self.img_list = glob.glob(self.args.VIDEO_PATH)
+            img_test = cv2.imread(self.img_list[0])
+            self.im_height, self.im_width = img_test.shape[:2]
 
         if self.args.save_path:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
