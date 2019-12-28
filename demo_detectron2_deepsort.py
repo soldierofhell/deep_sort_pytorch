@@ -45,7 +45,7 @@ class Detector(object):
             self.im_width = int(self.vdo.get(cv2.CAP_PROP_FRAME_WIDTH))
             self.im_height = int(self.vdo.get(cv2.CAP_PROP_FRAME_HEIGHT))
         else:
-            glob.glob(self.args.VIDEO_PATH)
+            self.img_list = glob.glob(self.args.VIDEO_PATH)
 
         if self.args.save_path:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
@@ -82,20 +82,19 @@ class Detector(object):
             start_frameid = start_second * fps
             end_frameid = end_second * fps
         else:
-            glob.glob(
+            frame_id = 0
         
         while True: #self.vdo.grab():
-            if not args.input_image:
-                
-                frame_id = int(round(self.vdo.get(1)))
-            
-            if frame_id < start_frameid:
-                continue
-            elif frame_id > end_frameid:
-                break            
-            
-            
-            _, ori_im = self.vdo.read() # retrieve()
+            if not args.input_image:                
+                frame_id = int(round(self.vdo.get(1)))            
+                if frame_id < start_frameid:
+                    continue
+                elif frame_id > end_frameid:
+                    break           
+                _, ori_im = self.vdo.read() # retrieve()
+            else:
+                ori_im = cv2.imread(self.img_list[frame_id])
+                frame_id+=1                
             
             if self.args.save_frames:
                 cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)
