@@ -87,7 +87,7 @@ class Detector(object):
             frame_id = 0
         
         while True: #self.vdo.grab():
-            if not args.input_image:                
+            if not args.image_input:                
                 frame_id = int(round(self.vdo.get(1)))            
                 if frame_id < start_frameid:
                     continue
