@@ -71,8 +71,8 @@ class Detector(object):
 
     def detect(self):
         
-        if not args.image_input:
-            start = time.time()
+        start = time.time()
+        if not args.image_input:            
 
             start_second = 0
             end_second = 8
