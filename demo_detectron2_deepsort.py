@@ -24,7 +24,7 @@ class Detector(object):
             cv2.namedWindow("test", cv2.WINDOW_NORMAL)
             cv2.resizeWindow("test", args.display_width, args.display_height)
 
-        if not args.input_image:
+        if not args.image_input:
             self.vdo = cv2.VideoCapture()
         cfg = get_cfg()
         #cfg.merge_from_file("detectron2_repo/configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml")
@@ -38,7 +38,7 @@ class Detector(object):
         #self.class_names = self.yolo3.class_names
 
     def __enter__(self):
-        if not args.input_image:
+        if not args.image_input:
             assert os.path.isfile(self.args.VIDEO_PATH), "Error: path error"
             self.vdo.open(self.args.VIDEO_PATH)
             assert self.vdo.isOpened()
@@ -69,7 +69,7 @@ class Detector(object):
 
     def detect(self):
         
-        if not args.input_image:
+        if not args.image_input:
             start = time.time()
 
             start_second = 0
