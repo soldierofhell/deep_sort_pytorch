@@ -101,7 +101,10 @@ class Detector(object):
                 frame_id+=1                
             
             if self.args.save_frames:
-                cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)
+                if not args.image_input:
+                    cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)
+                else:
+                    cv2.imwrite(f'./supervisely/img/' + self.img_list[frame_id][-13:], ori_im)
             
             im = ori_im
             predictions = self.predictor(im)
