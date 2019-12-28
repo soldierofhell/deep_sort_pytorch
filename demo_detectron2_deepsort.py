@@ -51,7 +51,7 @@ class Detector(object):
 
         if self.args.save_path:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-            self.output = cv2.VideoWriter(self.args.save_path, fourcc, 20, (self.im_width, self.im_height))
+            self.output = cv2.VideoWriter(self.args.save_path, fourcc, args.save_fps, (self.im_width, self.im_height))
             
         if self.args.save_frames:
             if os.path.exists('supervisely'):
@@ -174,6 +174,7 @@ def parse_args():
     parser.add_argument("--save_frames", action="store_true")
     parser.add_argument("--save_txt", action="store_true")
     parser.add_argument("--image_input", action="store_true")
+    parser.add_argument("--save_fps", type=int, default=20)
     return parser.parse_args()
 
 
