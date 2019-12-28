@@ -13,6 +13,8 @@ import torch
 from deep_sort import DeepSort
 from util import COLORS_10, draw_bboxes
 
+import glob
+
 
 class Detector(object):
     def __init__(self, args):
@@ -22,20 +24,28 @@ class Detector(object):
             cv2.namedWindow("test", cv2.WINDOW_NORMAL)
             cv2.resizeWindow("test", args.display_width, args.display_height)
 
-        self.vdo = cv2.VideoCapture()
+        if not args.input_image:
+            self.vdo = cv2.VideoCapture()
         cfg = get_cfg()
-        cfg.merge_from_file("detectron2_repo/configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml")
+        #cfg.merge_from_file("detectron2_repo/configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml")
+        #cfg.MODEL.WEIGHTS = "detectron2://COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x/139686956/model_final_5ad38f.pkl"
+        cfg.merge_from_file("detectron2_repo/configs/Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml")
+        cfg.MODEL.WEIGHTS = "detectron2://Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv/18131413/model_0039999_e76410.pkl"
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
-        cfg.MODEL.WEIGHTS = "detectron2://COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x/139686956/model_final_5ad38f.pkl"        # 
+
         self.predictor = DefaultPredictor(cfg)
         self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda)
         #self.class_names = self.yolo3.class_names
 
     def __enter__(self):
-        assert os.path.isfile(self.args.VIDEO_PATH), "Error: path error"
-        self.vdo.open(self.args.VIDEO_PATH)
-        self.im_width = int(self.vdo.get(cv2.CAP_PROP_FRAME_WIDTH))
-        self.im_height = int(self.vdo.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        if not args.input_image:
+            assert os.path.isfile(self.args.VIDEO_PATH), "Error: path error"
+            self.vdo.open(self.args.VIDEO_PATH)
+            assert self.vdo.isOpened()
+            self.im_width = int(self.vdo.get(cv2.CAP_PROP_FRAME_WIDTH))
+            self.im_height = int(self.vdo.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        else:
+            glob.glob(self.args.VIDEO_PATH)
 
         if self.args.save_path:
             fourcc = cv2.VideoWriter_fourcc(*'MJPG')
@@ -50,8 +60,7 @@ class Detector(object):
         
         if self.args.save_txt:
             self.txt = open('gt.txt', "w")
-
-        assert self.vdo.isOpened()
+        
         return self
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
@@ -60,29 +69,33 @@ class Detector(object):
 
     def detect(self):
         
-        start_second = 0
-        end_second = 8
+        if not args.input_image:
+            start = time.time()
+
+            start_second = 0
+            end_second = 8
+
+            fps = self.vdo.get(cv2.CAP_PROP_FPS)
+
+            print('fps: ', fps)
+
+            start_frameid = start_second * fps
+            end_frameid = end_second * fps
+        else:
+            glob.glob(
         
-        fps = self.vdo.get(cv2.CAP_PROP_FPS)
-        
-        print('fps: ', fps)
-        
-        start_frameid = start_second * fps
-        end_frameid = end_second * fps
-        
-        while self.vdo.grab():
-           
-            frame_id = int(round(self.vdo.get(1)))
-            
-            print('frame id: ', self.vdo.get(1))
+        while True: #self.vdo.grab():
+            if not args.input_image:
+                
+                frame_id = int(round(self.vdo.get(1)))
             
             if frame_id < start_frameid:
                 continue
             elif frame_id > end_frameid:
                 break            
             
-            start = time.time()
-            _, ori_im = self.vdo.retrieve()
+            
+            _, ori_im = self.vdo.read() # retrieve()
             
             if self.args.save_frames:
                 cv2.imwrite(f'./supervisely/img/img_{frame_id:05}.jpg', ori_im)
@@ -157,6 +170,7 @@ def parse_args():
     parser.add_argument("--use_cuda", type=str, default="True")
     parser.add_argument("--save_frames", action="store_true")
     parser.add_argument("--save_txt", action="store_true")
+    parser.add_argument("--image_input", action="store_true")
     return parser.parse_args()
 
 
