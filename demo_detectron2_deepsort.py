@@ -134,8 +134,11 @@ class Detector(object):
                 bbox_xcycwh[:, 3:] *= 1.2
 
                 outputs = self.deepsort.update(bbox_xcycwh, cls_conf, im)
-                if len(outputs) > 0:
+                if len(outputs) > 0:                    
                     bbox_xyxy = outputs[:, :4]
+                    dh = ((0.1/1.2)*(bbox_xyxy[:,3]-bbox_xyxy[:,1])).astype(int)
+                    bbox_xyxy[:,1] += dh
+                    bbox_xyxy[:,3] -= dh
                     identities = outputs[:, -1]
                     ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
                     
