@@ -30,7 +30,8 @@ class Detector(object):
         #cfg.merge_from_file("detectron2_repo/configs/COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x.yaml")
         #cfg.MODEL.WEIGHTS = "detectron2://COCO-Keypoints/keypoint_rcnn_X_101_32x8d_FPN_3x/139686956/model_final_5ad38f.pkl"
         cfg.merge_from_file("detectron2_repo/configs/Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml")
-        cfg.MODEL.WEIGHTS = "detectron2://Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv/18131413/model_0039999_e76410.pkl"
+        cfg.MODEL.WEIGHTS = args.detectron2_weights
+        #"detectron2://Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv/18131413/model_0039999_e76410.pkl"
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
 
         self.predictor = DefaultPredictor(cfg)
@@ -166,7 +167,7 @@ def parse_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("VIDEO_PATH", type=str)
     parser.add_argument("--detectron2_cfg", type=str, default="YOLOv3/cfg/yolo_v3.cfg")
-    parser.add_argument("--detectron2_weights", type=str, default="YOLOv3/yolov3.weights")
+    parser.add_argument("--detectron2_weights", type=str, default="detectron2://Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv/18131413/model_0039999_e76410.pkl")
     parser.add_argument("--yolo_names", type=str, default="YOLOv3/cfg/coco.names")
     parser.add_argument("--conf_thresh", type=float, default=0.5)
     parser.add_argument("--nms_thresh", type=float, default=0.4)
@@ -180,7 +181,7 @@ def parse_args():
     parser.add_argument("--save_frames", action="store_true")
     parser.add_argument("--save_txt", action="store_true")
     parser.add_argument("--image_input", action="store_true")
-    parser.add_argument("--save_fps", type=int, default=20)
+    parser.add_argument("--save_fps", type=int, default=20)   
     return parser.parse_args()
 
 
