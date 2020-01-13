@@ -21,7 +21,7 @@ def draw_bbox(img, box, cls_name, identity=None, offset=(0,0)):
     x1,y1,x2,y2 = [int(i+0.0) for idx,i in enumerate(box)] # offset[idx%2]
     # set color and label text
     color = COLORS_10[identity%len(COLORS_10)] if identity is not None else COLORS_10[0]
-    label = '{} {} {}'.format(cls_name, identity, match_method)
+    label = '{} {}'.format(cls_name, identity, match_method)
     # box text and bar
     t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
     cv2.rectangle(img,(x1, y1),(x2,y2),color,2)
@@ -30,7 +30,7 @@ def draw_bbox(img, box, cls_name, identity=None, offset=(0,0)):
     return img
 
 
-def draw_bboxes(img, bbox, identities=None, offset=(0,0)):
+def draw_bboxes(img, bbox, identities=None, match_method=-1, offset=(0,0)):
     for i,box in enumerate(bbox):
         x1,y1,x2,y2 = [int(i) for i in box]
         x1 += offset[0]
@@ -40,7 +40,7 @@ def draw_bboxes(img, bbox, identities=None, offset=(0,0)):
         # box text and bar
         id = int(identities[i]) if identities is not None else 0    
         color = COLORS_10[id%len(COLORS_10)]
-        label = '{}{:d}'.format("", id)
+        label = '{}{:d}{}'.format("", id, match_method)
         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
         cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
         cv2.rectangle(img,(x1, y1),(x1+t_size[0]+3,y1+t_size[1]+4), color,-1)
