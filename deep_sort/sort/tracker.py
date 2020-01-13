@@ -69,7 +69,8 @@ class Tracker:
             self._match(detections)
 
         # Update track set.
-        for idx, track_idx, detection_idx in enumerate(matches):
+        for idx, match in enumerate(matches):
+            track_idx, detection_idx = match
             match_method = 1 if idx<len_a else 2
             self.tracks[track_idx].update(
                 self.kf, detections[detection_idx], match_method)
