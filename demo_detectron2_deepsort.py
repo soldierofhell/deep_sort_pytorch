@@ -13,7 +13,7 @@ import torch
 from deep_sort import DeepSort
 from util import COLORS_10, draw_bboxes
 
-import glob
+import glob, json
 
 
 class Detector(object):
