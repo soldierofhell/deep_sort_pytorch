@@ -30,10 +30,10 @@ class DeepSort(object):
         detections = [Detection(bbox_tlwh[i], conf, features[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]
 
         # run on non-maximum supression
-        boxes = np.array([d.tlwh for d in detections])
-        scores = np.array([d.confidence for d in detections])
-        indices = non_max_suppression( boxes, self.nms_max_overlap, scores)
-        detections = [detections[i] for i in indices]
+        #boxes = np.array([d.tlwh for d in detections])
+        #scores = np.array([d.confidence for d in detections])
+        #indices = non_max_suppression( boxes, self.nms_max_overlap, scores)
+        #detections = [detections[i] for i in indices]
 
         # update tracker
         self.tracker.predict()
@@ -51,7 +51,7 @@ class DeepSort(object):
             outputs.append(np.array([x1,y1,x2,y2,track_id, match_method], dtype=np.int))
         if len(outputs) > 0:
             outputs = np.stack(outputs,axis=0)
-        return outputs
+        return outputs, detections
 
 
     """
