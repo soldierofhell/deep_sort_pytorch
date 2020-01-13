@@ -18,7 +18,7 @@ def draw_bbox(img, box, cls_name, identity=None, offset=(0,0)):
     '''
         draw box of an id
     '''
-    x1,y1,x2,y2 = [int(i+offset[idx%2]) for idx,i in enumerate(box)]
+    x1,y1,x2,y2 = [int(i+0.0) for idx,i in enumerate(box)] # offset[idx%2]
     # set color and label text
     color = COLORS_10[identity%len(COLORS_10)] if identity is not None else COLORS_10[0]
     label = '{} {}'.format(cls_name, identity)
