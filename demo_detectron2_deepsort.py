@@ -136,7 +136,7 @@ class Detector(object):
                     ann_dir = os.path.join(self.args.detections_dir, 'MOT', 'ann')
                     
                     ann = self.img_list[frame_id] + ".json"
-                    ann_path = os.path.join(ann_dir, ann)
+                    ann_path = os.path.join(self.args.detections_dir, 'MOT', 'ann', ann)
                     print('ann_path: ', ann_path)
                     with open(ann_path) as f:
                         ann_dict = json.load(f)
