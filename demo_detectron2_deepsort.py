@@ -132,7 +132,7 @@ class Detector(object):
                 bbox_xcycwh = torch.cat((xcyc, wh), 1).detach().cpu().numpy()
                 cls_conf = scores.detach().cpu().numpy()
                 
-                if detections_dir!="":
+                if self.args.detections_dir!="":
                     annd_dir = os.path.join(detections_dir, 'MOT', 'ann')
                     ann = self.img_list[frame_id] + ".json"
                     with open(os.path.join(ann_dir, ann)) as f:
