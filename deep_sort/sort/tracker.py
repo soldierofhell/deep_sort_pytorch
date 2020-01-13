@@ -65,13 +65,14 @@ class Tracker:
 
         """
         # Run matching cascade.
-        matches, unmatched_tracks, unmatched_detections = \
+        matches, unmatched_tracks, unmatched_detections, len_a = \
             self._match(detections)
 
         # Update track set.
-        for track_idx, detection_idx in matches:
+        for idx, track_idx, detection_idx in enumerate(matches):
+            match_method = 'features' if idx<len_a else 'iou'
             self.tracks[track_idx].update(
-                self.kf, detections[detection_idx])
+                self.kf, detections[detection_idx], match_method)
         for track_idx in unmatched_tracks:
             self.tracks[track_idx].mark_missed()
         for detection_idx in unmatched_detections:
@@ -128,7 +129,7 @@ class Tracker:
 
         matches = matches_a + matches_b
         unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
-        return matches, unmatched_tracks, unmatched_detections
+        return matches, unmatched_tracks, unmatched_detections, len(matches_a)
 
     def _initiate_track(self, detection):
         mean, covariance = self.kf.initiate(detection.to_xyah())
