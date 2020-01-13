@@ -133,7 +133,7 @@ class Detector(object):
                 cls_conf = scores.detach().cpu().numpy()
                 
                 if self.args.detections_dir!="":
-                    annd_dir = os.path.join(self.args.detections_dir, 'MOT', 'ann')
+                    ann_dir = os.path.join(self.args.detections_dir, 'MOT', 'ann')
                     ann = self.img_list[frame_id] + ".json"
                     with open(os.path.join(ann_dir, ann)) as f:
                         ann_dict = json.load(f)
