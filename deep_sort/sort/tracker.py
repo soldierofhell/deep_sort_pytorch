@@ -74,10 +74,12 @@ class Tracker:
             match_method = 1 if idx<len_a else 2
             self.tracks[track_idx].update(
                 self.kf, detections[detection_idx], match_method)
+            detections[detection_idx].track_id = track_idx # for supervisely export
         for track_idx in unmatched_tracks:
             self.tracks[track_idx].mark_missed()
         for detection_idx in unmatched_detections:
             self._initiate_track(detections[detection_idx])
+            detections[detection_idx].track_id = track_idx # for supervisely export
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
 
         # Update distance metric.
@@ -134,7 +136,9 @@ class Tracker:
 
     def _initiate_track(self, detection):
         mean, covariance = self.kf.initiate(detection.to_xyah())
-        self.tracks.append(Track(
+        new_track = Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
-            detection.feature))
+            detection.feature)
+        self.tracks.append(new_track)
         self._next_id += 1
+        return new_track.track_id
