@@ -160,8 +160,9 @@ class Detector(object):
                     dh = ((0.1/1.2)*(bbox_xyxy[:,3]-bbox_xyxy[:,1])).astype(int)
                     bbox_xyxy[:,1] += dh
                     bbox_xyxy[:,3] -= dh
-                    identities = outputs[:, -1]
-                    ori_im = draw_bboxes(ori_im, bbox_xyxy, identities)
+                    identities = outputs[:, 4]
+                    match_method = outputs[:, 5]
+                    ori_im = draw_bboxes(ori_im, bbox_xyxy, identities, match_method)
                     
                     if self.args.save_txt:
                         for j in range(bbox_xyxy.shape[0]):
