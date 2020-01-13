@@ -21,7 +21,7 @@ def draw_bbox(img, box, cls_name, identity=None, offset=(0,0)):
     x1,y1,x2,y2 = [int(i+0.0) for idx,i in enumerate(box)] # offset[idx%2]
     # set color and label text
     color = COLORS_10[identity%len(COLORS_10)] if identity is not None else COLORS_10[0]
-    label = '{} {}'.format(cls_name, identity)
+    label = '{} {} {}'.format(cls_name, identity, match_method)
     # box text and bar
     t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1 , 1)[0]
     cv2.rectangle(img,(x1, y1),(x2,y2),color,2)
