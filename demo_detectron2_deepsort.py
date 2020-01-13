@@ -132,6 +132,21 @@ class Detector(object):
                 bbox_xcycwh = torch.cat((xcyc, wh), 1).detach().cpu().numpy()
                 cls_conf = scores.detach().cpu().numpy()
                 
+                if detections_dir!="":
+                    annd_dir = os.path.join(detections_dir, 'MOT', 'ann')
+                    ann = self.img_list[frame_id] + ".json"
+                    with open(os.path.join(ann_dir, ann)) as f:
+                        ann_dict = json.load(f)
+                    bboxes = []
+                    for obj in ann_dict['objects']:
+                        bbox = obj["points"]["exterior"]
+                        bbox = bbox[0]+bbox[1]
+                        bbox = [min(bbox[0], bbox[2]), min(bbox[1], bbox[3]), max(bbox[0], bbox[2]), max(bbox[1], bbox[3])]
+                        bboxes.append([(bbox[2]+bbox[0])/2, (bbox[3]+bbox[1])/2, bbox[2]-bbox[0], bbox[3]-bbox[1]])
+                        
+                    bbox_xcycwh = np.array(bboxes)
+                    cls_conf = np.ones(bbox_xcycwh.shape[0])
+                
                 #print(bbox_xcycwh, cls_conf)
 
                 bbox_xcycwh[:, 3:] *= 1.2
@@ -183,7 +198,9 @@ def parse_args():
     parser.add_argument("--save_frames", action="store_true")
     parser.add_argument("--save_txt", action="store_true")
     parser.add_argument("--image_input", action="store_true")
-    parser.add_argument("--save_fps", type=int, default=20)   
+    parser.add_argument("--save_fps", type=int, default=20)
+    parser.add_argument("--detections_dir", type=str, default="")
+    
     return parser.parse_args()
 
 
