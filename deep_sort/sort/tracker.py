@@ -70,7 +70,7 @@ class Tracker:
 
         # Update track set.
         for idx, track_idx, detection_idx in enumerate(matches):
-            match_method = 'features' if idx<len_a else 'iou'
+            match_method = 1 if idx<len_a else 2
             self.tracks[track_idx].update(
                 self.kf, detections[detection_idx], match_method)
         for track_idx in unmatched_tracks:
