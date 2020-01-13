@@ -135,7 +135,7 @@ class Detector(object):
                 if self.args.detections_dir!="":
                     ann_dir = os.path.join(self.args.detections_dir)
                     
-                    ann = self.img_list[frame_id] + ".json"
+                    ann = os.path.basename(self.img_list[frame_id]) + ".json"
                     ann_path = os.path.join(ann_dir, ann)
                     print('ann_path: ', ann_path)
                     with open(ann_path) as f:
