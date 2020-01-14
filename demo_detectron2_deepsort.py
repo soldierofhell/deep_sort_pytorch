@@ -13,7 +13,7 @@ import torch
 from deep_sort import DeepSort
 from util import COLORS_10, draw_bboxes
 
-import glob, json
+import glob, json. shutil
 
 
 class Detector(object):
@@ -88,6 +88,9 @@ class Detector(object):
             end_frameid = end_second * fps
         else:
             frame_id = 0
+            
+        if self.args.update_tracks:
+            shutil.copytree(self.args.detections_dir, self.args.detections_dir + '_tracked')
         
         while True: #self.vdo.grab():
             if not args.image_input:                
@@ -136,8 +139,7 @@ class Detector(object):
                     ann_dir = os.path.join(self.args.detections_dir)
                     
                     ann = os.path.basename(self.img_list[frame_id-1]) + ".json"
-                    ann_path = os.path.join(ann_dir, ann)
-                    print('ann_path: ', ann_path)
+                    ann_path = os.path.join(ann_dir, 'MOT', 'ann', ann)
                     with open(ann_path) as f:
                         ann_dict = json.load(f)
                     bboxes = []
@@ -171,13 +173,8 @@ class Detector(object):
                             x2 = bbox_xyxy[j,2]
                             y2 = bbox_xyxy[j,3]
                             self.txt.write(f'{frame_id},{identities[j]},{x1},{y1},{x2-x1},{y2-y1},1,0,-1,-1\n')
-                if self.args.update_tracks:
-                    
-                    ann_dir = os.path.join(os.path.split(ann_dir)[0], 'update')
-                    
-                    ann_path = os.path.join(ann_dir, ann)
-                    
-                    os.makedirs(ann_dir, exist_ok=True)
+                if self.args.update_tracks:                    
+                    ann_path = os.path.join(self.args.detections_dir + '_tracked', 'MOT', 'ann', ann)
                     
                     for idx, obj in enumerate(ann_dict['objects']):
                         obj["tags"] = [{"name": "track_id", "value": detections[idx].track_id}]
