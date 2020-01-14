@@ -180,8 +180,8 @@ class Detector(object):
                     os.makedirs(ann_dir, exist_ok=True)
                     
                     for idx, obj in enumerate(ann_dict['objects']):
-                        obj["tags"].append({"name": "track_id", "value": detections[idx].track_id})                    
-                    
+                        obj["tags"] = [{"name": "track_id", "value": detections[idx].track_id})]
+                        
                     with open(ann_path, 'w') as f:
                         json.dump(ann_dict, f)
 
