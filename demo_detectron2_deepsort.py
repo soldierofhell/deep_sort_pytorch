@@ -171,6 +171,15 @@ class Detector(object):
                             x2 = bbox_xyxy[j,2]
                             y2 = bbox_xyxy[j,3]
                             self.txt.write(f'{frame_id},{identities[j]},{x1},{y1},{x2-x1},{y2-y1},1,0,-1,-1\n')
+                if self.args.update_tracks:                   
+                    
+                    ann_path = os.path.join(ann_dir, 'update', ann)
+                    
+                    for idx, obj in enumerate(ann_dict['objects']):
+                        obj["tags"].append({"name": "track_id", "value": detections[idx].track_id})                    
+                    
+                    with open(ann_path, 'w') as f:
+                        json.dump(f)
 
             end = time.time()
             print("time: {}s, fps: {}".format(end - start, 1 / (end - start)))
@@ -204,6 +213,8 @@ def parse_args():
     parser.add_argument("--image_input", action="store_true")
     parser.add_argument("--save_fps", type=int, default=20)
     parser.add_argument("--detections_dir", type=str, default="")
+    parser.add_argument("--update_tracks", action="store_true")
+    
     
     return parser.parse_args()
 
