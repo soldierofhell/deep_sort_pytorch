@@ -183,7 +183,7 @@ class Detector(object):
                         obj["tags"].append({"name": "track_id", "value": detections[idx].track_id})                    
                     
                     with open(ann_path, 'w') as f:
-                        json.dump(f)
+                        json.dump(ann_dict, f)
 
             end = time.time()
             print("time: {}s, fps: {}".format(end - start, 1 / (end - start)))
