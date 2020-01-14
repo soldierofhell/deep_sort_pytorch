@@ -173,7 +173,9 @@ class Detector(object):
                             self.txt.write(f'{frame_id},{identities[j]},{x1},{y1},{x2-x1},{y2-y1},1,0,-1,-1\n')
                 if self.args.update_tracks:                   
                     
-                    ann_path = os.path.join(ann_dir, 'update', ann)
+                    ann_path = os.path.join(os.path.split(ann_dir)[0], 'update', ann)
+                    
+                    os.makedirs(ann_path, exist_ok=True)
                     
                     for idx, obj in enumerate(ann_dict['objects']):
                         obj["tags"].append({"name": "track_id", "value": detections[idx].track_id})                    
