@@ -171,11 +171,13 @@ class Detector(object):
                             x2 = bbox_xyxy[j,2]
                             y2 = bbox_xyxy[j,3]
                             self.txt.write(f'{frame_id},{identities[j]},{x1},{y1},{x2-x1},{y2-y1},1,0,-1,-1\n')
-                if self.args.update_tracks:                   
+                if self.args.update_tracks:
                     
-                    ann_path = os.path.join(os.path.split(ann_dir)[0], 'update', ann)
+                    ann_dir = os.path.join(os.path.split(ann_dir)[0], 'update')
                     
-                    os.makedirs(ann_path, exist_ok=True)
+                    ann_path = os.path.join(ann_dir, ann)
+                    
+                    os.makedirs(ann_dir, exist_ok=True)
                     
                     for idx, obj in enumerate(ann_dict['objects']):
                         obj["tags"].append({"name": "track_id", "value": detections[idx].track_id})                    
