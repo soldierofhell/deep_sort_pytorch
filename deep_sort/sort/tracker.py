@@ -74,7 +74,7 @@ class Tracker:
             match_method = 1 if idx<len_a else 2
             self.tracks[track_idx].update(
                 self.kf, detections[detection_idx], match_method)
-            detections[detection_idx].track_id = track_idx # for supervisely export
+            detections[detection_idx].track_id = self.tracks[track_idx].track_id # for supervisely export
         for track_idx in unmatched_tracks:
             self.tracks[track_idx].mark_missed()
         for detection_idx in unmatched_detections:
