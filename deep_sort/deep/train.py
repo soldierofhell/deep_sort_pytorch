@@ -59,7 +59,7 @@ if args.resume:
     checkpoint = torch.load("./checkpoint/ckpt.t7")
     # import ipdb; ipdb.set_trace()
     net_dict = checkpoint['net_dict']
-    print(net_dict)
+    print(net_dict.keys())
     net.load_state_dict(net_dict)
     #best_acc = checkpoint['acc']
     #start_epoch = checkpoint['epoch']
