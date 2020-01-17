@@ -129,7 +129,7 @@ class Detector(object):
                 xcyc = pred_boxes.get_centers()
                 wh = pred_boxes.tensor[:, 2:] - pred_boxes.tensor[:, :2] + torch.ones(pred_boxes.tensor[:, 2:].size()).cuda()
                 
-                wh_min = torch.min(wh, 1)            
+                wh_min, _ = torch.min(wh, 1)            
                 
                 # if "pred_masks" in instances.keys():
                 #	pred_masks = instances["pred_masks"][mask]
