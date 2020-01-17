@@ -128,6 +128,8 @@ class Detector(object):
 
                 xcyc = pred_boxes.get_centers()
                 wh = pred_boxes.tensor[:, 2:] - pred_boxes.tensor[:, :2]
+                
+                print(wh)
 
                 # if "pred_masks" in instances.keys():
                 #	pred_masks = instances["pred_masks"][mask]
