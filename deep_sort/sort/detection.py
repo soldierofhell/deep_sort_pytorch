@@ -31,6 +31,9 @@ class Detection(object):
         self.confidence = float(confidence)
         self.feature = np.asarray(feature, dtype=np.float32)
         self.track_id = 0
+        
+        self.number = -1
+        self.number_confidence = -1
 
     def to_tlbr(self):
         """Convert bounding box to format `(min x, min y, max x, max y)`, i.e.,
