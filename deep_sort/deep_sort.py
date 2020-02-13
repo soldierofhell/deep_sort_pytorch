@@ -6,6 +6,8 @@ from .sort.preprocessing import non_max_suppression
 from .sort.detection import Detection
 from .sort.tracker import Tracker
 
+from detectron2.config import get_cfg
+from detectron2.engine import DefaultPredictor
 
 __all__ = ['DeepSort']
 
@@ -21,6 +23,14 @@ class DeepSort(object):
         nn_budget = 100
         metric = NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
         self.tracker = Tracker(metric)
+        
+        number_cfg = get_cfg()
+        number_cfg.merge_from_file("/content/detectron2_repo/configs/Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml")
+        number_cfg.MODEL.WEIGHTS = "/content/drive/My Drive/respo/ocr/cascade_rcnn/model_0010999.pth"
+        number_cfg.MODEL.MASK_ON = False
+        number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
+        number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+        self.number_detector = DefaultPredictor(number_cfg)
 
     def update(self, bbox_xywh, confidences, ori_img):
         self.height, self.width = ori_img.shape[:2]
@@ -29,6 +39,9 @@ class DeepSort(object):
         bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
         detections = [Detection(bbox_tlwh[i], conf, features[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]
 
+        for detection in detections:
+            
+        
         # run on non-maximum supression
         #boxes = np.array([d.tlwh for d in detections])
         #scores = np.array([d.confidence for d in detections])
@@ -98,5 +111,7 @@ class DeepSort(object):
         else:
             features = np.array([])
         return features
+    
+
 
 
