@@ -9,6 +9,8 @@ from .sort.tracker import Tracker
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 
+from ..deep-text-recognition-benchmark.text_predictor import TextPredictor
+
 __all__ = ['DeepSort']
 
 
@@ -30,7 +32,9 @@ class DeepSort(object):
         number_cfg.MODEL.MASK_ON = False
         number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
         number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
-        self.number_detector = DefaultPredictor(number_cfg)
+        self.number_detector = DefaultPredictor(number_cfg)        
+        
+        self.number_decoder = TextPredictor()
 
     def update(self, bbox_xywh, confidences, ori_img):
         self.height, self.width = ori_img.shape[:2]
