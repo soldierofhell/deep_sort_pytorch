@@ -116,6 +116,8 @@ class DeepSort(object):
             features = np.array([])
         return features
     
+    def _predict_number()
+    
 
 
 
