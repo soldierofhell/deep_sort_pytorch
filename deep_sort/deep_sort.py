@@ -40,11 +40,10 @@ class DeepSort(object):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
         features = self._get_features(bbox_xywh, ori_img)
+        numbers = self._predict_numbers(bbox_xywh, ori_img)
+        
         bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
-        detections = [Detection(bbox_tlwh[i], conf, features[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]
-
-        for detection in detections:
-            
+        detections = [Detection(bbox_tlwh[i], conf, features[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
         
         # run on non-maximum supression
         #boxes = np.array([d.tlwh for d in detections])
@@ -116,7 +115,35 @@ class DeepSort(object):
             features = np.array([])
         return features
     
-    def _predict_number()
+    def padded_bbox(bbox, h, w):
+        bw, bh = bbox[2]-bbox[0], bbox[3]-bbox[1]
+
+        bbox[0] = max(bbox[0]-int(0.1*bw), 0)
+        bbox[1] = max(bbox[1]-int(0.1*bh), 0)
+        bbox[2] = min(bbox[2]+int(0.1*bw), w)
+        bbox[3] = min(bbox[3]+int(0.1*bh), h)
+
+        return bbox
+    
+    def _predict_numbers(self, bbox_xywh, ori_img):
+        
+        numbers = []
+        
+        for box in bbox_xywh:
+            x1,y1,x2,y2 = self._xywh_to_xyxy(box)
+            player_crop = ori_img[y1:y2,x1:x2]
+            number_instances = self.number_detector(player_crop)["instances"]
+            if number_instances.pred_classes.size()[0]>0:
+                number_box = number_instances.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
+                number_box = padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
+                number_crop = player_crop[number_box[1]:number_box[3], number_box[0]:number_box[2]]
+                
+                pred, confidence_score = self.number_decoder.predict(image, input_size=(100, 32))
+                numbers.append([(pred, confidence_score)]
+           else:
+                numbers.append([(pred, confidence_score)]
+        
+        return numbers
     
 
 
