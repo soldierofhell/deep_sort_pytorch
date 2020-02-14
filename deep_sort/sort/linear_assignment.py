@@ -191,7 +191,9 @@ def gate_cost_matrix(
         cost_matrix[row, gating_distance > gating_threshold] = gated_cost
     return cost_matrix
 
-def new_matching_cascade(tracks, detections):
+from functools import partial
+
+def new_matching_cascade(distance_metrics, tracks, detections, track_indices=None, detection_indices=None):
     """Run matching cascade.
 
     Parameters
@@ -232,6 +234,19 @@ def new_matching_cascade(tracks, detections):
         track_indices = list(range(len(tracks)))
     if detection_indices is None:
         detection_indices = list(range(len(detections)))
+        
+    def combined_distance_metric(distance_metrics, level, tracks, detections, track_indices=None, detection_indices=None):
+        
+        lambda_F = 1.0 * (0.9) ** level
+        lambda_I = 2.0 * (0.5) ** level
+        lambda_N = 3.0       
+        
+        value =
+        lambda_F * distance_metrics['F'](tracks, detections, track_indices, detection_indices) +
+        lambda_I * distance_metrics['I'](tracks, detections, track_indices, detection_indices) +
+        lambda_N * distance_metrics['N'](tracks, detections, track_indices, detection_indices)
+        
+        return value
 
     unmatched_detections = detection_indices
     matches = []
@@ -245,10 +260,10 @@ def new_matching_cascade(tracks, detections):
         ]
         if len(track_indices_l) == 0:  # Nothing to match at this level
             continue
-
+        
         matches_l, _, unmatched_detections = \
-            min_cost_matching(
-                distance_metric, max_distance, tracks, detections,
+                partial(combined_distance_metric, distance_metrics, level)    
+                (distance_metric, max_distance, tracks, detections,
                 track_indices_l, unmatched_detections)
         matches += matches_l
     unmatched_tracks = list(set(track_indices) - set(k for k, _ in matches))
