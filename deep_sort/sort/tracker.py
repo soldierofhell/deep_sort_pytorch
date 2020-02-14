@@ -6,6 +6,28 @@ from . import linear_assignment
 from . import iou_matching
 from .track import Track
 
+def number_cost(tracks, detections, track_indices=None, detection_indices=None):
+    
+    if track_indices is None:
+        track_indices = np.arange(len(tracks))
+    if detection_indices is None:
+        detection_indices = np.arange(len(detections))
+        
+    cost_matrix = np.zeros((len(track_indices), len(detection_indices)))
+    
+    for row, track_idx in enumerate(track_indices):
+        if racks[track_idx].number is None:
+            continue
+
+        number = tracks[track_idx].number
+        candidates = np.asarray([detections[i].number for i in detection_indices])
+        cost_matrix[row, :] = number == candidates
+        
+        # todo: dodac warunki na ta sama druzyne, czyli min features
+        
+    return cost_matrix  
+    
+
 
 class Tracker:
     """
@@ -115,7 +137,7 @@ class Tracker:
         distance_metrics = {
             'I': gated_metric,
             'F': iou_matching.iou_cost,
-            'N': 
+            'N': number_cost
         }
         
         
