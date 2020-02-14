@@ -112,6 +112,13 @@ class Tracker:
         unconfirmed_tracks = [
             i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
 
+        distance_metrics = {
+            'I': gated_metric,
+            'F': iou_matching.iou_cost,
+            'N': 
+        }
+        
+        
         # Associate confirmed tracks using appearance features.
         matches_a, unmatched_tracks_a, unmatched_detections = \
             linear_assignment.matching_cascade(
