@@ -28,7 +28,7 @@ class DeepSort(object):
         
         number_cfg = get_cfg()
         number_cfg.merge_from_file("/content/detectron2_repo/configs/Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml")
-        number_cfg.MODEL.WEIGHTS = "/content/drive/My Drive/respo/ocr/cascade_rcnn/model_0010999.pth"
+        number_cfg.MODEL.WEIGHTS = "/content/model_0029999.pth"
         number_cfg.MODEL.MASK_ON = False
         number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
         number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
