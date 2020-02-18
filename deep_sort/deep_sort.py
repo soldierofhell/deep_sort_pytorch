@@ -40,10 +40,12 @@ class DeepSort(object):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
         features = self._get_features(bbox_xywh, ori_img)
-        numbers = self._predict_numbers(bbox_xywh, ori_img)
+        #numbers = self._predict_numbers(bbox_xywh, ori_img)
         
         bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
-        detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
+        
+        temp_number = {'number': None, 'confidence': None} # numbers[i]
+        detections = [Detection(bbox_tlwh[i], conf, features[i], temp_number) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
         
         # run on non-maximum supression
         #boxes = np.array([d.tlwh for d in detections])
