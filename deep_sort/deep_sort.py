@@ -115,7 +115,7 @@ class DeepSort(object):
             features = np.array([])
         return features
     
-    def _padded_bbox(bbox, h, w):
+    def _padded_bbox(self, bbox, h, w):
         bw, bh = bbox[2]-bbox[0], bbox[3]-bbox[1]
 
         bbox[0] = max(bbox[0]-int(0.1*bw), 0)
