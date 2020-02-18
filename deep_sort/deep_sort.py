@@ -137,10 +137,10 @@ class DeepSort(object):
                 number_box = number_instances.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
                 number_box = padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
                 number_crop = player_crop[number_box[1]:number_box[3], number_box[0]:number_box[2]]
-                
+
                 pred, confidence_score = self.number_decoder.predict(image, input_size=(100, 32))
                 numbers.append({'number': pred, 'confidence': confidence_score})
-           else:
+            else:
                 numbers.append({'number': None, 'confidence': None})
         
         return numbers
