@@ -9,7 +9,7 @@ from .sort.tracker import Tracker
 from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 
-from ..deep_text_recognition_benchmark.text_predictor import TextPredictor
+from .deep_text_recognition_benchmark.text_predictor import TextPredictor
 
 __all__ = ['DeepSort']
 
