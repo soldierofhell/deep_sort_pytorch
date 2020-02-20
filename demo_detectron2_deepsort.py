@@ -168,7 +168,7 @@ class Detector(object):
                     identities = outputs[:, 4]
                     match_method = outputs[:, 5]
                     number = outputs[:, 6]
-                    number_box = outputs[:, 7]
+                    number_box = outputs[:, 7:]
                     ori_im = draw_bboxes(ori_im, bbox_xyxy, identities, match_method, number, number_box)
                     
                     if self.args.save_txt:
