@@ -138,13 +138,13 @@ class DeepSort(object):
             number_instances = self.number_detector(player_crop)["instances"]
             if number_instances.pred_classes.size()[0]>0:
                 number_box = number_instances.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
-                number_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
-                number_crop = player_crop[number_box[1]:number_box[3], number_box[0]:number_box[2]]
+                padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
+                number_crop = player_crop[padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
                 pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32))
-                numbers.append({'number': pred, 'confidence': confidence_score})
+                numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': nunumber_box})
             else:
-                numbers.append({'number': None, 'confidence': None})
+                numbers.append({'number': None, 'confidence': None, 'bbox': None})
         
         return numbers
     
