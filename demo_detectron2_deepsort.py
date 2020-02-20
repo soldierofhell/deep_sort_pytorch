@@ -157,14 +157,14 @@ class Detector(object):
                 
                 #print(bbox_xcycwh, cls_conf)
 
-                bbox_xcycwh[:, 3:] *= 1.2
+                #bbox_xcycwh[:, 3:] *= 1.2
 
                 outputs, detections = self.deepsort.update(bbox_xcycwh, cls_conf, im)
                 if len(outputs) > 0:                    
                     bbox_xyxy = outputs[:, :4]
-                    dh = ((0.1/1.2)*(bbox_xyxy[:,3]-bbox_xyxy[:,1])).astype(int)
-                    bbox_xyxy[:,1] += dh
-                    bbox_xyxy[:,3] -= dh
+                    #dh = ((0.1/1.2)*(bbox_xyxy[:,3]-bbox_xyxy[:,1])).astype(int)
+                    #bbox_xyxy[:,1] += dh
+                    #bbox_xyxy[:,3] -= dh
                     identities = outputs[:, 4]
                     match_method = outputs[:, 5]
                     number = outputs[:, 6]
