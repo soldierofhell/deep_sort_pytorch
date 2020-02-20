@@ -143,7 +143,7 @@ class DeepSort(object):
                 number_crop = player_crop[padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
                 pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32))
-                numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': nunumber_box})
+                numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': nunumber_box.tolist()})
             else:
                 numbers.append({'number': None, 'confidence': None, 'bbox': None})
         
