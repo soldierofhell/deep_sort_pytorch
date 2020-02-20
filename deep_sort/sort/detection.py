@@ -34,6 +34,7 @@ class Detection(object):
         
         self.number = number['number']
         self.number_confidence = number['confidence']
+        self.number_bbox = number['bbox']
 
     def to_tlbr(self):
         """Convert bounding box to format `(min x, min y, max x, max y)`, i.e.,
