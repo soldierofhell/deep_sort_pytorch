@@ -257,6 +257,8 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
     cascade_depth = 3
         
     for level in range(cascade_depth):
+        
+        print(f'level: {level}')
         if len(unmatched_detections) == 0:  # No detections left
             break
 
