@@ -6,29 +6,6 @@ from . import linear_assignment
 from . import iou_matching
 from .track import Track
 
-def number_cost(tracks, detections, track_indices=None, detection_indices=None):
-    
-    if track_indices is None:
-        track_indices = np.arange(len(tracks))
-    if detection_indices is None:
-        detection_indices = np.arange(len(detections))
-        
-    cost_matrix = np.zeros((len(track_indices), len(detection_indices)))
-    
-    for row, track_idx in enumerate(track_indices):
-        if racks[track_idx].number is None:
-            continue
-
-        number = tracks[track_idx].number
-        candidates = np.asarray([detections[i].number for i in detection_indices])
-        cost_matrix[row, :] = number == candidates
-        
-        # todo: dodac warunki na ta sama druzyne, czyli min features
-        
-    return cost_matrix  
-    
-
-
 class Tracker:
     """
     This is the multi-target tracker.
@@ -127,6 +104,26 @@ class Tracker:
                 detection_indices)
 
             return cost_matrix
+        
+        def number_cost(tracks, detections, track_indices=None, detection_indices=None):    
+            if track_indices is None:
+                track_indices = np.arange(len(tracks))
+            if detection_indices is None:
+                detection_indices = np.arange(len(detections))
+
+            cost_matrix = np.zeros((len(track_indices), len(detection_indices)))
+
+            for row, track_idx in enumerate(track_indices):
+                if racks[track_idx].number is None:
+                    continue
+
+                number = tracks[track_idx].number
+                candidates = np.asarray([detections[i].number for i in detection_indices])
+                cost_matrix[row, :] = number == candidates
+
+                # todo: dodac warunki na ta sama druzyne, czyli min features
+
+            return cost_matrix  
 
         # Split track set into confirmed and unconfirmed tracks.
         confirmed_tracks = [
@@ -140,27 +137,34 @@ class Tracker:
             'N': number_cost
         }
         
-        
-        # Associate confirmed tracks using appearance features.
         matches_a, unmatched_tracks_a, unmatched_detections = \
-            linear_assignment.matching_cascade(
-                gated_metric, self.metric.matching_threshold, self.max_age,
-                self.tracks, detections, confirmed_tracks)
+                linear_assignment.new_matching_cascade(
+                    distance_metrics,
+                    self.tracks, detections, confirmed_tracks)
+        
 
-        # Associate remaining tracks together with unconfirmed tracks using IOU.
-        iou_track_candidates = unconfirmed_tracks + [
-            k for k in unmatched_tracks_a if
-            self.tracks[k].time_since_update == 1]
-        unmatched_tracks_a = [
-            k for k in unmatched_tracks_a if
-            self.tracks[k].time_since_update != 1]
-        matches_b, unmatched_tracks_b, unmatched_detections = \
-            linear_assignment.min_cost_matching(
-                iou_matching.iou_cost, self.max_iou_distance, self.tracks,
-                detections, iou_track_candidates, unmatched_detections)
+        if False:
+            # Associate confirmed tracks using appearance features.
+            matches_a, unmatched_tracks_a, unmatched_detections = \
+                linear_assignment.matching_cascade(
+                    gated_metric, self.metric.matching_threshold, self.max_age,
+                    self.tracks, detections, confirmed_tracks)
 
-        matches = matches_a + matches_b
-        unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
+            # Associate remaining tracks together with unconfirmed tracks using IOU.
+            iou_track_candidates = unconfirmed_tracks + [
+                k for k in unmatched_tracks_a if
+                self.tracks[k].time_since_update == 1]
+            unmatched_tracks_a = [
+                k for k in unmatched_tracks_a if
+                self.tracks[k].time_since_update != 1]
+            matches_b, unmatched_tracks_b, unmatched_detections = \
+                linear_assignment.min_cost_matching(
+                    iou_matching.iou_cost, self.max_iou_distance, self.tracks,
+                    detections, iou_track_candidates, unmatched_detections)
+
+            matches = matches_a + matches_b
+            unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
+            
         return matches, unmatched_tracks, unmatched_detections, len(matches_a)
 
     def _initiate_track(self, detection):
