@@ -238,13 +238,16 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
     def combined_distance_metric(distance_metrics, level, tracks, detections, track_indices=None, detection_indices=None):
         
         lambda_F = 1.0 * (0.9) ** level
-        lambda_I = 2.0 * (0.5) ** level
-        lambda_N = 3.0       
+        lambda_I = 2.0 * (0.25) ** level
+        lambda_N = 3.0
         
-        value = \
-        lambda_F * distance_metrics['F'](tracks, detections, track_indices, detection_indices) + \
-        lambda_I * distance_metrics['I'](tracks, detections, track_indices, detection_indices) + \
-        lambda_N * distance_metrics['N'](tracks, detections, track_indices, detection_indices)
+        distance_F = lambda_F * distance_metrics['F'](tracks, detections, track_indices, detection_indices) + \
+        distance_I = lambda_I * distance_metrics['I'](tracks, detections, track_indices, detection_indices) + \
+        distance_N = lambda_N * distance_metrics['N'](tracks, detections, track_indices, detection_indices)        
+        
+        print(f"{level}: {distance_F}, {distance_I}, {distance_N}")
+        
+        value = distance_F + distance_I + distance_N
         
         return value
 
