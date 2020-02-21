@@ -115,7 +115,7 @@ class Tracker:
             cost_matrix = np.zeros((len(track_indices), len(detection_indices)))
 
             for row, track_idx in enumerate(track_indices):
-                if racks[track_idx].number is None:
+                if tracks[track_idx].number is None:
                     continue
 
                 number = tracks[track_idx].number
