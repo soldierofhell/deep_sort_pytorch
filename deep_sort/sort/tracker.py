@@ -142,6 +142,9 @@ class Tracker:
                     distance_metrics,
                     self.tracks, detections, confirmed_tracks)
         
+        
+        matches = matches_a
+        unmatched_tracks = unmatched_tracks_a
 
         if False:
             # Associate confirmed tracks using appearance features.
