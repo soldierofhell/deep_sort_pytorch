@@ -140,7 +140,7 @@ class Tracker:
         matches_a, unmatched_tracks_a, unmatched_detections = \
                 linear_assignment.new_matching_cascade(
                     distance_metrics,
-                    self.tracks, detections, confirmed_tracks)
+                    self.tracks, detections)
         
         
         matches = matches_a
