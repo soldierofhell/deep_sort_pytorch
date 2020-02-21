@@ -260,6 +260,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         
         print(f'level: {level}')
         if len(unmatched_detections) == 0:  # No detections left
+            print('no unmatched')
             break
 
         track_indices_l = [
@@ -267,6 +268,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
             if tracks[k].time_since_update == 1 + level
         ]
         if len(track_indices_l) == 0:  # Nothing to match at this level
+            print('no tracks since update')                
             continue
         
         metric_fn = partial(combined_distance_metric, distance_metrics, level)
