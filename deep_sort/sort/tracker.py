@@ -82,12 +82,12 @@ class Tracker:
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
 
         # Update distance metric.
-        active_targets = [t.track_id for t in self.tracks if t.is_confirmed()]
+        active_targets = [t.track_id for t in self.tracks] #  if t.is_confirmed()
         print(f'active_targets: {active_targets}')
         features, targets = [], []
         for track in self.tracks:
-            if not track.is_confirmed():
-                continue
+            #if not track.is_confirmed():
+            #    continue
             features += track.features
             targets += [track.track_id for _ in track.features]
             track.features = []
