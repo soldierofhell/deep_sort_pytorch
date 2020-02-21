@@ -263,6 +263,8 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
             print('no unmatched')
             break
 
+        print([tracks[k].time_since_update for k in track_indices]) 
+        
         track_indices_l = [
             k for k in track_indices
             if tracks[k].time_since_update == level # 1 + level
