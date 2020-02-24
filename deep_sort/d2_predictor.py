@@ -1,19 +1,11 @@
-import argparse
 import logging
 import os
-from collections import OrderedDict
 import torch
 
 from detectron2.checkpoint import DetectionCheckpointer
-from detectron2.data import (
-    MetadataCatalog,
-    build_detection_test_loader,
-    build_detection_train_loader,
-)
+from detectron2.data import MetadataCatalog
 
 from detectron2.modeling import build_model
-from detectron2.utils import comm
-from detectron2.utils.collect_env import collect_env_info
 from detectron2.utils.logger import setup_logger
 
 import torch.nn.functional as F
