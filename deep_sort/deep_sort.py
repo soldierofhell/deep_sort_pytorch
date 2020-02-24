@@ -35,6 +35,15 @@ class DeepSort(object):
         self.number_detector = DefaultPredictor(number_cfg)        
         
         self.number_decoder = TextPredictor()
+        
+        self.game_id = 0
+        self.players_list = []
+        import csv
+        with open('/content/datasets.csv') as csvfile:
+          reader = csv.DictReader(csvfile)
+          for row in reader:
+            if row['GAME_ID'] == str(self.game_id):
+              self.players_list.append(row)
 
     def update(self, bbox_xywh, confidences, ori_img):
         self.height, self.width = ori_img.shape[:2]
