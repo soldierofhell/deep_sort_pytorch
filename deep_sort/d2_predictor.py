@@ -16,7 +16,9 @@ from detectron2.utils import comm
 from detectron2.utils.collect_env import collect_env_info
 from detectron2.utils.logger import setup_logger
 
-class DefaultPredictor:
+import torch.nn.functional as F
+
+class TensorPredictor:
     """
     """
 
@@ -35,6 +37,26 @@ class DefaultPredictor:
 
         self.input_format = cfg.INPUT.FORMAT
         assert self.input_format in ["RGB", "BGR"], self.input_format
+        
+        self.short_edge_length = cfg.INPUT.MIN_SIZE_TEST
+        self.max_size = cfg.INPUT.MAX_SIZE_TEST
+        
+    def _resize_shortest_edge(img):
+        
+        h, w = img.size()[1:]
+
+        scale = size * 1.0 / min(h, w)
+        if h < w:
+            newh, neww = size, scale * w
+        else:
+            newh, neww = scale * h, size
+        if max(newh, neww) > self.max_size:
+            scale = self.max_size * 1.0 / max(newh, neww)
+            newh = newh * scale
+            neww = neww * scale
+        neww = int(neww + 0.5)
+        newh = int(newh + 0.5)
+        return F.interpolate(h, w, newh, neww, self.interp)
 
     def __call__(self, original_image):
         """
