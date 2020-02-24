@@ -57,8 +57,8 @@ class TensorPredictor:
                 if self.input_format == "RGB":
                     # whether the model expects BGR inputs or RGB
                     original_image = original_image[:, :, ::-1]
-                height, width = original_image.shape[:2]
-                    image = _resize_shortest_edge(original_image)
+                height, width = image_tensor.size()[1:]
+                    image = _resize_shortest_edge(image_tensor)
             
             
             input_list.append({"image": image, "height": height, "width": width})
