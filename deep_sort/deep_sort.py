@@ -10,6 +10,7 @@ from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 
 from .deep_text_recognition_benchmark.text_predictor import TextPredictor
+from .similarity.predictor import Predictor as SimilarityPredictor
 
 __all__ = ['DeepSort']
 
@@ -44,6 +45,8 @@ class DeepSort(object):
           for row in reader:
             if row['GAME_ID'] == str(self.game_id):
               self.players_list.append(row)
+            
+        self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
 
     def update(self, bbox_xywh, confidences, ori_img):
         self.height, self.width = ori_img.shape[:2]
