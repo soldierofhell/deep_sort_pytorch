@@ -26,14 +26,14 @@ class TensorPredictor:
         self.input_format = cfg.INPUT.FORMAT
         assert self.input_format in ["RGB", "BGR"], self.input_format
         
-        self.short_edge_length = cfg.INPUT.MIN_SIZE_TEST
+        self.min_size = cfg.INPUT.MIN_SIZE_TEST
         self.max_size = cfg.INPUT.MAX_SIZE_TEST
         
     def _resize_shortest_edge(img):
         
         img_size = img.size()[1:]
 
-        scale = self.short_edge_length * 1.0 / torch.min(img_size)
+        scale = self.min_size * 1.0 / torch.min(img_size)
         if img_size[0] < img_size[1]:
             newh, neww = size, scale * img_size[1]
         else:
