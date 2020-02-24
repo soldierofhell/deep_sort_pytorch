@@ -12,6 +12,8 @@ from detectron2.engine import DefaultPredictor
 from .deep_text_recognition_benchmark.text_predictor import TextPredictor
 from .similarity.predictor import Predictor as SimilarityPredictor
 
+from .d2_predictor import TensorPredictor
+
 import cv2
 
 __all__ = ['DeepSort']
