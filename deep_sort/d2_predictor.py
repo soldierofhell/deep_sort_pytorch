@@ -58,16 +58,21 @@ class TensorPredictor:
         newh = int(newh + 0.5)
         return F.interpolate(img, newh, neww)
 
-    def __call__(self, original_image):
+    def __call__(self, image_list):
         """
         """
         with torch.no_grad():
-            # Apply pre-processing to image.
-            if self.input_format == "RGB":
-                # whether the model expects BGR inputs or RGB
-                original_image = original_image[:, :, ::-1]
-            height, width = original_image.shape[:2]
-            image = _resize_shortest_edge(original_image)
-            inputs = {"image": image, "height": height, "width": width}
-            predictions = self.model([inputs])[0]
+            input_list = []
+            
+            for image_tensor in image_list:
+                # Apply pre-processing to image.
+                if self.input_format == "RGB":
+                    # whether the model expects BGR inputs or RGB
+                    original_image = original_image[:, :, ::-1]
+                height, width = original_image.shape[:2]
+                    image = _resize_shortest_edge(original_image)
+            
+            
+            input_list.append({"image": image, "height": height, "width": width})
+            predictions = self.model(input_list)[0]
             return predictions
