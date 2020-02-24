@@ -12,6 +12,8 @@ from detectron2.engine import DefaultPredictor
 from .deep_text_recognition_benchmark.text_predictor import TextPredictor
 from .similarity.predictor import Predictor as SimilarityPredictor
 
+import cv2
+
 __all__ = ['DeepSort']
 
 
@@ -47,6 +49,8 @@ class DeepSort(object):
               self.players_list.append(row)
             
         self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
+        self.team0_ref_img = cv2.imread('/content/team0_ref.jpg')
+        self.team1_ref_img = cv2.imread('/content/team1_ref.jpg')
 
     def update(self, bbox_xywh, confidences, ori_img):
         self.height, self.width = ori_img.shape[:2]
