@@ -149,6 +149,10 @@ class DeepSort(object):
         
         numbers = []
         
+        # todo: 100% CUDA
+        
+        player_crops
+        
         for box in bbox_xywh:
             x1,y1,x2,y2 = self._xywh_to_xyxy(box)
             player_crop = ori_img[y1:y2,x1:x2]
