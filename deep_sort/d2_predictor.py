@@ -62,5 +62,5 @@ class TensorPredictor:
             
             
             input_list.append({"image": image, "height": height, "width": width})
-            predictions = self.model(input_list)[0]
+            predictions = self.model(input_list)
             return predictions
