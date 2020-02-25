@@ -33,13 +33,13 @@ class TensorPredictor:
         
         h, w = img.size()[1], img.size()[2]
 
-        scale = self.min_size * 1.0 / torch.min(h, w)
+        scale = self.min_size * 1.0 / min(h, w)
         if h < w:
             newh, neww = size, scale * w
         else:
             newh, neww = scale * h, size
-        if torch.max(newh, neww) > self.max_size:
-            scale = self.max_size * 1.0 / torch.max(newh, neww)
+        if max(newh, neww) > self.max_size:
+            scale = self.max_size * 1.0 / max(newh, neww)
             newh = newh * scale
             neww = neww * scale
         neww = int(neww + 0.5)
