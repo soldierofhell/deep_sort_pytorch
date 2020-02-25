@@ -12,6 +12,7 @@ from .d2_predictor import TensorPredictor as ObjectDetector
 from .deep_text_recognition_benchmark.text_predictor import TextPredictor
 from .similarity.predictor import TensorPredictor as SimilarityPredictor
 
+import torch
 import torchvision.transforms.functional as TF
 
 import cv2
