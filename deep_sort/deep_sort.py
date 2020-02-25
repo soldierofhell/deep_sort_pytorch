@@ -194,6 +194,7 @@ class DeepSort(object):
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
                 padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
                 print('player crop: ', player_crop.size())
+                print('number_box: ', number_box)
                 print('padded_box: ', padded_box)
                 number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
