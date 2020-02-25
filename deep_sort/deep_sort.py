@@ -21,6 +21,8 @@ __all__ = ['DeepSort']
 # todo:
 # * usunac xywh, zostawić xyxy?
 
+# * parametry: players_list_path, game_id, ref_img_paths (format gameid_team.jpg), checkpoint_paths, 
+
 
 class DeepSort(object):
     def __init__(self, model_path, max_dist=0.2, use_cuda=True):
