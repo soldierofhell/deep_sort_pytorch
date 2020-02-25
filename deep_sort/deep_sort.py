@@ -153,12 +153,12 @@ class DeepSort(object):
     def _padded_bbox(self, bbox, h, w):
         bw, bh = bbox[2]-bbox[0], bbox[3]-bbox[1]
 
-        bbox[0] = max(bbox[0]-int(0.1*bw), 0)
-        bbox[1] = max(bbox[1]-int(0.1*bh), 0)
-        bbox[2] = min(bbox[2]+int(0.1*bw), w)
-        bbox[3] = min(bbox[3]+int(0.1*bh), h)
+        padded_bbox[0] = max(bbox[0]-int(0.1*bw), 0)
+        padded_bbox[1] = max(bbox[1]-int(0.1*bh), 0)
+        padded_bbox[2] = min(bbox[2]+int(0.1*bw), w)
+        padded_bbox[3] = min(bbox[3]+int(0.1*bh), h)
 
-        return bbox
+        return padded_bbox
     
     def _predict_numbers(self, bbox_xywh, ori_img):
         
@@ -192,7 +192,7 @@ class DeepSort(object):
             
             if number_instance.pred_classes.size()[0]>0:
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
-                padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
+                padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
                 print('player crop: ', player_crop.size())
                 print('number_box: ', number_box)
                 print('padded_box: ', padded_box)
