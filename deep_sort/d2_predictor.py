@@ -31,7 +31,7 @@ class TensorPredictor:
         
     def _resize_shortest_edge(self, img):
         
-        h, w = img.size()[1], image_tensor.size()[2]
+        h, w = img.size()[1], img.size()[2]
 
         scale = self.min_size * 1.0 / torch.min(h, w)
         if h < w:
