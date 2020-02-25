@@ -186,7 +186,7 @@ class DeepSort(object):
         print('output length: ', len(number_outputs))
         
         numbers = []
-        for team_id, number_output in zip(team_ids, number_outputs):
+        for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
             number_instance = number_output['instances']
             print('detected boxes: ', number_instance.pred_classes.size()[0])
             
