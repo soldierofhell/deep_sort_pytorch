@@ -170,7 +170,7 @@ class DeepSort(object):
         for box in bbox_xywh:
             x1,y1,x2,y2 = self._xywh_to_xyxy(box)
             player_crop = ori_img[y1:y2,x1:x2]
-            crop_list.append(TF.to_tensor(player_crop).cuda())
+            crop_list.append(TF.to_tensor(player_crop.astype("float32").transpose(2, 0, 1)).cuda())
             
         # split to teams
         embeddings = self.team_embeddings.predict(crop_list)
