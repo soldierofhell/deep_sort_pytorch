@@ -172,7 +172,7 @@ class DeepSort(object):
             crop_list.append(TF.to_tensor(player_crop).cuda())
             
         # split to teams
-        embeddings = self.team_embeddings(crop_list)
+        embeddings = self.team_embeddings.predict(crop_list)
         dists = torch.cdist(embeddings, self.team_ref_embeddings)
         team_ids = torch.argmin(dists, dim=1)
         
