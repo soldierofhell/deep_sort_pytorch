@@ -29,7 +29,7 @@ class TensorPredictor:
         self.min_size = cfg.INPUT.MIN_SIZE_TEST
         self.max_size = cfg.INPUT.MAX_SIZE_TEST
         
-    def _resize_shortest_edge(img):
+    def _resize_shortest_edge(self, img):
         
         img_size = img.size()[1:]
 
@@ -58,7 +58,7 @@ class TensorPredictor:
                     # whether the model expects BGR inputs or RGB
                     image_tensor = image_tensor[:, :, ::-1]
                 height, width = image_tensor.size()[1], image_tensor.size()[2]
-                image = _resize_shortest_edge(image_tensor)           
+                image = self._resize_shortest_edge(image_tensor)           
                 input_list.append({"image": image, "height": height, "width": width})
                 
             predictions = self.model(input_list)
