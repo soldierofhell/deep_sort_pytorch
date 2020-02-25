@@ -180,9 +180,14 @@ class DeepSort(object):
         # number detection
         number_outputs = self.number_detector(crop_list)
         
+        print('input length: ', len(crop_list))
+        print('output length: ', len(number_outputs))
+        
         numbers = []
         for team_id, number_output in zip(team_ids, number_outputs):
             number_instance = number_output['instances']
+            print('detected boxes: ', len(number_instance.pred_classes.size()))
+            
             if number_instance.pred_classes.size()[0]>0:
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
                 padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
