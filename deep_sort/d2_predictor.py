@@ -35,9 +35,9 @@ class TensorPredictor:
 
         scale = self.min_size * 1.0 / min(h, w)
         if h < w:
-            newh, neww = size, scale * w
+            newh, neww = self.min_size, scale * w
         else:
-            newh, neww = scale * h, size
+            newh, neww = scale * h, self.min_size
         if max(newh, neww) > self.max_size:
             scale = self.max_size * 1.0 / max(newh, neww)
             newh = newh * scale
