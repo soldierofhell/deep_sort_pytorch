@@ -63,6 +63,7 @@ class TensorPredictor:
                 image = self._resize_shortest_edge(image_tensor)
                 image = image * 256.0 #.permute(2, 0, 1)
                 print('image size: ', image.size())
+                print('height, width: ', height, width)
                 input_list.append({"image": image, "height": height, "width": width})
                 
             predictions = self.model(input_list)
