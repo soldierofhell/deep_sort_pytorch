@@ -186,7 +186,7 @@ class DeepSort(object):
         numbers = []
         for team_id, number_output in zip(team_ids, number_outputs):
             number_instance = number_output['instances']
-            print('detected boxes: ', len(number_instance.pred_classes.size()))
+            print('detected boxes: ', number_instance.pred_classes.size()[0])
             
             if number_instance.pred_classes.size()[0]>0:
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
