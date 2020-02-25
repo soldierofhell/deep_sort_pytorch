@@ -2,17 +2,15 @@ import numpy as np
 
 from .deep.feature_extractor import Extractor
 from .sort.nn_matching import NearestNeighborDistanceMetric
-from .sort.preprocessing import non_max_suppression
+#from .sort.preprocessing import non_max_suppression
 from .sort.detection import Detection
 from .sort.tracker import Tracker
 
 from detectron2.config import get_cfg
-from detectron2.engine import DefaultPredictor
-
+#from detectron2.engine import DefaultPredictor
+from .d2_predictor import TensorPredictor as ObjectDetector
 from .deep_text_recognition_benchmark.text_predictor import TextPredictor
 from .similarity.predictor import TensorPredictor as SimilarityPredictor
-
-from .d2_predictor import TensorPredictor as ObjectDetector
 
 import torchvision.transforms.functional as TF
 
@@ -53,6 +51,7 @@ class DeepSort(object):
               self.players_list.append(row)
             
         self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
+        self.team_threshold = 0.75
         self.team0_ref_img = cv2.imread('/content/team0_ref.jpg')
         self.team1_ref_img = cv2.imread('/content/team1_ref.jpg')
 
@@ -155,23 +154,25 @@ class DeepSort(object):
         
         # todo: 100% CUDA
         
-        player_crops = []
+        crop_list = []
         
         for box in bbox_xywh:
             x1,y1,x2,y2 = self._xywh_to_xyxy(box)
             player_crop = ori_img[y1:y2,x1:x2]
-            player_crops.append(player_crop)
+            crop_list.append(TF.to_tensor(player_crop).cuda())
             
-            number_instances = self.number_detector(player_crop)["instances"]
-            if number_instances.pred_classes.size()[0]>0:
-                number_box = number_instances.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
-                padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
-                number_crop = player_crop[padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
+        embeddings = self.team_embeddings(crop_list)
+        
+        number_instances = self.number_detector(crop_list)["instances"]
+        if number_instances.pred_classes.size()[0]>0:
+            number_box = number_instances.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
+            padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
+            number_crop = player_crop[padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
-                pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32))
-                numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
-            else:
-                numbers.append({'number': None, 'confidence': None, 'bbox': None})
+            pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32))
+            numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
+        else:
+            numbers.append({'number': None, 'confidence': None, 'bbox': None})
         
         return numbers
     
