@@ -43,12 +43,17 @@ class DeepSort(object):
         
         self.game_id = 0
         self.players_list = []
+        self.team_numbers = [[],[]]
         import csv
         with open('/content/datasets.csv') as csvfile:
           reader = csv.DictReader(csvfile)
           for row in reader:
             if row['GAME_ID'] == str(self.game_id):
-              self.players_list.append(row)
+                self.players_list.append(row)
+                if row['TEAM'] == 'Belgium':
+                    self.team_numbers[0].append(row['NUMBER'])
+                else:
+                    self.team_numbers[1].append(row['NUMBER'])        
             
         self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
         #self.team_threshold = 0.75
