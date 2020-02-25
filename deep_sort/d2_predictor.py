@@ -61,7 +61,7 @@ class TensorPredictor:
                     image_tensor = image_tensor[:, :, ::-1]
                 height, width = image_tensor.size()[1], image_tensor.size()[2]
                 image = self._resize_shortest_edge(image_tensor)
-                image = image.to(torch.float32).permute(2, 0, 1)
+                image = image.to(torch.float32) #.permute(2, 0, 1)
                 print('image size: ', image.size())
                 input_list.append({"image": image, "height": height, "width": width})
                 
