@@ -31,13 +31,13 @@ class TensorPredictor:
         
     def _resize_shortest_edge(self, img):
         
-        img_size = img.size()[1:]
+        h, w = img.size()[1], image_tensor.size()[2]
 
-        scale = self.min_size * 1.0 / torch.min(img_size)
-        if img_size[0] < img_size[1]:
-            newh, neww = size, scale * img_size[1]
+        scale = self.min_size * 1.0 / torch.min(h, w)
+        if h < w:
+            newh, neww = size, scale * w
         else:
-            newh, neww = scale * img_size[0], size
+            newh, neww = scale * h, size
         if torch.max(newh, neww) > self.max_size:
             scale = self.max_size * 1.0 / torch.max(newh, neww)
             newh = newh * scale
