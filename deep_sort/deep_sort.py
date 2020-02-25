@@ -53,8 +53,8 @@ class DeepSort(object):
         self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
         #self.team_threshold = 0.75
         team_ref_paths = ['/content/team0_ref.jpg', '/content/team1_ref.jpg']
-        team_ref_img = torch.stack([TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths])
-        self.team_ref_embeddings = self.team_embeddings(team_ref_img)
+        team_ref_img = [TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths]
+        self.team_ref_embeddings = self.team_embeddings.predict(team_ref_img)
 
     def update(self, bbox_xywh, confidences, ori_img):
         self.height, self.width = ori_img.shape[:2]
