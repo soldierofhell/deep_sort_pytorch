@@ -29,6 +29,8 @@ class TensorPredictor:
         self.min_size = cfg.INPUT.MIN_SIZE_TEST
         self.max_size = cfg.INPUT.MAX_SIZE_TEST
         
+        print('detectron parameters: ', self.input_format, self.min_size, self.max_size)
+        
     def _resize_shortest_edge(self, img):
         
         h, w = img.size()[1], img.size()[2]
