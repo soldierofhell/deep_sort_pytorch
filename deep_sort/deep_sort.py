@@ -169,19 +169,19 @@ class DeepSort(object):
         # split to teams
         embeddings = self.team_embeddings(crop_list)
         dists = torch.cdist(embeddings, self.team_ref_embeddings)
-        team_id = torch.argmin(dists, dim=1)
+        team_ids = torch.argmin(dists, dim=1)
         
         # number detection
         number_instances = self.number_detector(crop_list)
         
         numbers = []
-        for number_instance in number_instances:
+        for team_id, number_instance in zip(team_ids, number_instances):
             if number_instance.pred_classes.size()[0]>0:
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
                 padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
                 number_crop = player_crop[padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
-                pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32))
+                pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[i])
                 
                 
                 numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
