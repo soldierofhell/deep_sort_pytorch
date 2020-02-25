@@ -44,7 +44,7 @@ class TensorPredictor:
             neww = neww * scale
         neww = int(neww + 0.5)
         newh = int(newh + 0.5)
-        return F.interpolate(img, newh, neww)
+        return F.interpolate(torch.unsqueeze(img,0), newh, neww)[0]
 
     def __call__(self, image_list):
         """
