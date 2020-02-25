@@ -51,9 +51,10 @@ class DeepSort(object):
               self.players_list.append(row)
             
         self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
-        self.team_threshold = 0.75
-        self.team0_ref_img = cv2.imread('/content/team0_ref.jpg')
-        self.team1_ref_img = cv2.imread('/content/team1_ref.jpg')
+        #self.team_threshold = 0.75
+        team_ref_paths = ['/content/team0_ref.jpg', '/content/team1_ref.jpg']
+        team_ref_img = torch.stack([TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths])
+        self.team_ref_embeddings = self.team_embeddings(team_ref_img)
 
     def update(self, bbox_xywh, confidences, ori_img):
         self.height, self.width = ori_img.shape[:2]
@@ -161,7 +162,9 @@ class DeepSort(object):
             player_crop = ori_img[y1:y2,x1:x2]
             crop_list.append(TF.to_tensor(player_crop).cuda())
             
+        # split to teams
         embeddings = self.team_embeddings(crop_list)
+        dists = torch.cdist(embeddings, embeddings)
         
         number_instances = self.number_detector(crop_list)["instances"]
         if number_instances.pred_classes.size()[0]>0:
