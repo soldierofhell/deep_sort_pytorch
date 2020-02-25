@@ -178,10 +178,11 @@ class DeepSort(object):
         team_ids = torch.argmin(dists, dim=1)
         
         # number detection
-        number_instances = self.number_detector(crop_list)
+        number_outputs = self.number_detector(crop_list)
         
         numbers = []
-        for team_id, number_instance in zip(team_ids, number_instances):
+        for team_id, number_output in zip(team_ids, number_outputs):
+            number_instance = number_output['instances']
             if number_instance.pred_classes.size()[0]>0:
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
                 padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
