@@ -194,6 +194,8 @@ class DeepSort(object):
                 numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
             else:
                 numbers.append({'number': None, 'confidence': None, 'bbox': None})
+                
+        print('number dict: ', numbers)
         
         return numbers
     
