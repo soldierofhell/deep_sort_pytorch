@@ -196,6 +196,7 @@ class DeepSort(object):
                 print('player crop: ', player_crop.size())
                 print('number_box: ', number_box)
                 print('padded_box: ', padded_box)
+                print('tests :' number_instance.pred_boxes.tensor[0])
                 number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
                 pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
