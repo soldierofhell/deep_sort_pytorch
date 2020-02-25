@@ -152,6 +152,8 @@ class DeepSort(object):
     
     def _padded_bbox(self, bbox, h, w):
         bw, bh = bbox[2]-bbox[0], bbox[3]-bbox[1]
+        
+        padded_bbox = bbox.copy()
 
         padded_bbox[0] = max(bbox[0]-int(0.1*bw), 0)
         padded_bbox[1] = max(bbox[1]-int(0.1*bh), 0)
