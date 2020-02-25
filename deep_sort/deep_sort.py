@@ -164,7 +164,8 @@ class DeepSort(object):
             
         # split to teams
         embeddings = self.team_embeddings(crop_list)
-        dists = torch.cdist(embeddings, embeddings)
+        dists = torch.cdist(embeddings, self.team_ref_embeddings)
+        team_id = torch.argmin(dists, dim=1)
         
         number_instances = self.number_detector(crop_list)["instances"]
         if number_instances.pred_classes.size()[0]>0:
