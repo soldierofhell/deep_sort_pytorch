@@ -151,8 +151,7 @@ class DeepSort(object):
     
     def _predict_numbers(self, bbox_xywh, ori_img):
         
-        numbers = []
-        
+       
         # todo: 100% CUDA
         
         crop_list = []
@@ -167,16 +166,22 @@ class DeepSort(object):
         dists = torch.cdist(embeddings, self.team_ref_embeddings)
         team_id = torch.argmin(dists, dim=1)
         
-        number_instances = self.number_detector(crop_list)["instances"]
-        if number_instances.pred_classes.size()[0]>0:
-            number_box = number_instances.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
-            padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
-            number_crop = player_crop[padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
+        # number detection
+        number_instances = self.number_detector(crop_list)
+        
+        numbers = []
+        for number_instance in number_instances:
+            if number_instance.pred_classes.size()[0]>0:
+                number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
+                padded_box = self._padded_bbox(number_box, player_crop.shape[0], player_crop.shape[1])     
+                number_crop = player_crop[padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
-            pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32))
-            numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
-        else:
-            numbers.append({'number': None, 'confidence': None, 'bbox': None})
+                pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32))
+                
+                
+                numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
+            else:
+                numbers.append({'number': None, 'confidence': None, 'bbox': None})
         
         return numbers
     
