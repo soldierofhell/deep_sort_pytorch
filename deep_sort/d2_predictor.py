@@ -63,7 +63,7 @@ class TensorPredictor:
                 image = self._resize_shortest_edge(image_tensor)
                 image = image.to(torch.float32).permute(2, 0, 1)
                 print('image size: ', image.size())
-                input_list.append({"image": image, "height": height, "width": width.item()})
+                input_list.append({"image": image, "height": height, "width": width})
                 
             predictions = self.model(input_list)
             return predictions
