@@ -10,9 +10,11 @@ from detectron2.config import get_cfg
 from detectron2.engine import DefaultPredictor
 
 from .deep_text_recognition_benchmark.text_predictor import TextPredictor
-from .similarity.predictor import Predictor as SimilarityPredictor
+from .similarity.predictor import TensorPredictor as SimilarityPredictor
 
-from .d2_predictor import TensorPredictor
+from .d2_predictor import TensorPredictor as ObjectDetector
+
+import torchvision.transforms.functional as TF
 
 import cv2
 
@@ -37,7 +39,7 @@ class DeepSort(object):
         number_cfg.MODEL.MASK_ON = False
         number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
         number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
-        self.number_detector = DefaultPredictor(number_cfg)        
+        self.number_detector = ObjectDetector(number_cfg)        
         
         self.number_decoder = TextPredictor()
         
@@ -153,11 +155,13 @@ class DeepSort(object):
         
         # todo: 100% CUDA
         
-        player_crops
+        player_crops = []
         
         for box in bbox_xywh:
             x1,y1,x2,y2 = self._xywh_to_xyxy(box)
             player_crop = ori_img[y1:y2,x1:x2]
+            player_crops.append(player_crop)
+            
             number_instances = self.number_detector(player_crop)["instances"]
             if number_instances.pred_classes.size()[0]>0:
                 number_box = number_instances.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
