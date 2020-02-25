@@ -18,6 +18,9 @@ import cv2
 
 __all__ = ['DeepSort']
 
+# todo:
+# * usunac xywh, zostawić xyxy?
+
 
 class DeepSort(object):
     def __init__(self, model_path, max_dist=0.2, use_cuda=True):
