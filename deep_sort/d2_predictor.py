@@ -29,7 +29,7 @@ class TensorPredictor:
         self.min_size = cfg.INPUT.MIN_SIZE_TEST
         self.max_size = cfg.INPUT.MAX_SIZE_TEST
         
-        print('detectron parameters: ', self.input_format, self.min_size, self.max_size)
+        #print('detectron parameters: ', self.input_format, self.min_size, self.max_size)
         
     def _resize_shortest_edge(self, img):
         
@@ -62,8 +62,8 @@ class TensorPredictor:
                 height, width = image_tensor.size()[1], image_tensor.size()[2]
                 image = self._resize_shortest_edge(image_tensor)
                 image = image * 256.0 #.permute(2, 0, 1)
-                print('image size: ', image.size())
-                print('height, width: ', height, width)
+                #print('image size: ', image.size())
+                #print('height, width: ', height, width)
                 input_list.append({"image": image, "height": height, "width": width})
                 
             predictions = self.model(input_list)
