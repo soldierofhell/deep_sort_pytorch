@@ -179,26 +179,26 @@ class DeepSort(object):
         dists = torch.cdist(embeddings, self.team_ref_embeddings)
         team_ids = torch.argmin(dists, dim=1)
         
-        print('team_ids: ', team_ids)
+        #print('team_ids: ', team_ids)
         
         # number detection
         number_outputs = self.number_detector(crop_list)
         
-        print('input length: ', len(crop_list))
-        print('output length: ', len(number_outputs))
+        #print('input length: ', len(crop_list))
+        #print('output length: ', len(number_outputs))
         
         numbers = []
         for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
             number_instance = number_output['instances']
-            print('detected boxes: ', number_instance.pred_classes.size()[0])
+            #print('detected boxes: ', number_instance.pred_classes.size()[0])
             
             if number_instance.pred_classes.size()[0]>0:
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
                 padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
-                print('player crop: ', player_crop.size())
-                print('number_box: ', number_box)
-                print('padded_box: ', padded_box)
-                print('tests :', number_instance.pred_boxes.tensor[0])
+                #print('player crop: ', player_crop.size())
+                #print('number_box: ', number_box)
+                #print('padded_box: ', padded_box)
+                #print('tests :', number_instance.pred_boxes.tensor[0])
                 number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
                 pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
@@ -208,7 +208,7 @@ class DeepSort(object):
             else:
                 numbers.append({'number': None, 'confidence': None, 'bbox': None})
                 
-        print('number dict: ', numbers)
+        #print('number dict: ', numbers)
         
         return numbers
     
