@@ -133,8 +133,8 @@ class Tracker:
             i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
 
         distance_metrics = {
-            'I': gated_metric,
-            'F': iou_matching.iou_cost,
+            'I': iou_matching.iou_cost,
+            'F': gated_metric,
             'N': number_cost
         }
         
