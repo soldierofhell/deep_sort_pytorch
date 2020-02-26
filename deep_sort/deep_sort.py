@@ -190,7 +190,7 @@ class DeepSort(object):
         numbers = []
         for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
             number_instance = number_output['instances']
-            #print('detected boxes: ', number_instance.pred_classes.size()[0])
+            print('detected boxes: ', number_instance.pred_classes.size()[0])
             
             if number_instance.pred_classes.size()[0]>0:
                 number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
@@ -208,7 +208,7 @@ class DeepSort(object):
             else:
                 numbers.append({'number': None, 'confidence': None, 'bbox': None})
                 
-        #print('number dict: ', numbers)
+        print('number dict: ', numbers)
         
         return numbers
     
