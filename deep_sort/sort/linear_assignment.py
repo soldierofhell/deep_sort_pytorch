@@ -239,7 +239,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         
         lambda_F = 1.0 * (0.9) ** level
         lambda_I = 2.0 * (0.25) ** level
-        lambda_N = 3.0
+        lambda_N = 0.0
         
         distance_F = lambda_F * distance_metrics['F'](tracks, detections, track_indices, detection_indices)
         distance_I = lambda_I * distance_metrics['I'](tracks, detections, track_indices, detection_indices)
