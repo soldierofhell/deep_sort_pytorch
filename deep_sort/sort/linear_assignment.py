@@ -56,7 +56,7 @@ def min_cost_matching(
     cost_matrix = distance_metric(
         tracks, detections, track_indices, detection_indices)
     cost_matrix[cost_matrix > max_distance] = max_distance + 1e-5
-
+    print(f'track_indices, detection_indices: {track_indices}, {detection_indices}')
     print('final cost matrix:', cost_matrix)
         
     row_indices, col_indices = linear_assignment(cost_matrix)
