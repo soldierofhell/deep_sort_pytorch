@@ -168,7 +168,7 @@ class DeepSort(object):
         # todo: 100% CUDA
         
         batch_size = 8
-        batch_list = list(range(len(crop_list)))
+        batch_list = list(range(len(bbox_xywh)))
         batch_list = [batch_list[i:i + batch_size] for i in range(0, len(batch_list), batch_size)]
                           
         numers_all = []
