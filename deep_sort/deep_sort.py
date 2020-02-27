@@ -167,53 +167,66 @@ class DeepSort(object):
        
         # todo: 100% CUDA
         
-        crop_list = []
+        batch_size = 8
+        batch_list = list(range(len(crop_list))
+        batch_list = [batch_list[i:i + batch_size] for i in range(0, len(batch_list), batch_size)]
+                          
+        numers_all = []
+        for batch_ind in batch_list: 
         
-        for box in bbox_xywh:
-            x1,y1,x2,y2 = self._xywh_to_xyxy(box)
-            player_crop = ori_img[y1:y2,x1:x2]
-            crop_list.append(TF.to_tensor(player_crop).cuda())
-            
-        # split to teams
-        embeddings = self.team_embeddings.predict(crop_list)
-        dists = torch.cdist(embeddings, self.team_ref_embeddings)        
-        team_ids = torch.argmin(dists, dim=1)
-        
-        del embeddings
-        del dists
+            crop_list = []
+
+            for box in [bbox for (i, bbox) in enumerate(bbox_xywh) if i in batch_ind]:
+                x1,y1,x2,y2 = self._xywh_to_xyxy(box)
+                player_crop = ori_img[y1:y2,x1:x2]
+                crop_list.append(TF.to_tensor(player_crop).cuda())
+
+            # split to teams
+            embeddings = self.team_embeddings.predict(crop_list)
+            dists = torch.cdist(embeddings, self.team_ref_embeddings)        
+            team_ids = torch.argmin(dists, dim=1)
+
+            del embeddings
+            del dists
         
         #print('team_ids: ', team_ids)
         
-        # number detection
-        number_outputs = self.number_detector(crop_list)
-        
-        #print('input length: ', len(crop_list))
-        #print('output length: ', len(number_outputs))
-        
-        numbers = []
-        for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
-            number_instance = number_output['instances']
-            print('detected boxes: ', number_instance.pred_classes.size()[0])
-            
-            if number_instance.pred_classes.size()[0]>0:
-                number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
-                padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
-                #print('player crop: ', player_crop.size())
-                #print('number_box: ', number_box)
-                #print('padded_box: ', padded_box)
-                #print('tests :', number_instance.pred_boxes.tensor[0])
-                number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
-                pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
-                
-                
-                numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
-            else:
-                numbers.append({'number': None, 'confidence': None, 'bbox': None})
-                
-        print('number dict: ', numbers)
+       
         
-        return numbers
+                
+            # number detection
+            number_outputs = self.number_detector(crop_list)
+
+            #print('input length: ', len(crop_list))
+            #print('output length: ', len(number_outputs))
+
+            numbers = []
+            for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
+                number_instance = number_output['instances']
+                print('detected boxes: ', number_instance.pred_classes.size()[0])
+
+                if number_instance.pred_classes.size()[0]>0:
+                    number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
+                    padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
+                    #print('player crop: ', player_crop.size())
+                    #print('number_box: ', number_box)
+                    #print('padded_box: ', padded_box)
+                    #print('tests :', number_instance.pred_boxes.tensor[0])
+                    number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
+
+                    pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
+
+
+                    numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
+                else:
+                    numbers.append({'number': None, 'confidence': None, 'bbox': None})
+                
+       
+            numbers_all.extend(numbers)
+        print('number dict: ', numbers_all)
+        
+        return numbers_all
     
 
 
