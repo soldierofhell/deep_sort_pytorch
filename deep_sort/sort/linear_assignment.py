@@ -256,7 +256,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
     unmatched_detections = detection_indices
     matches = []
 
-    cascade_depth = 3
+    cascade_depth = 1
         
     for level in range(cascade_depth):
         
