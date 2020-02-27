@@ -278,7 +278,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         metric_fn = partial(combined_distance_metric, distance_metrics, level)
         matches_l, _, unmatched_detections = \
             min_cost_matching(
-                metric_fn, 1, tracks, detections,
+                metric_fn, 10.0, tracks, detections,
                 track_indices_l, unmatched_detections)
         matches += matches_l
     unmatched_tracks = list(set(track_indices) - set(k for k, _ in matches))
