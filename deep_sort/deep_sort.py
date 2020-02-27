@@ -171,7 +171,7 @@ class DeepSort(object):
         batch_list = list(range(len(bbox_xywh)))
         batch_list = [batch_list[i:i + batch_size] for i in range(0, len(batch_list), batch_size)]
                           
-        numers_all = []
+        numbers_all = []
         for batch_ind in batch_list: 
         
             crop_list = []
