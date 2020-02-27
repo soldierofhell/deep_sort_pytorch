@@ -35,6 +35,7 @@ class Detector(object):
         cfg.MODEL.MASK_ON = False
         cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1 
         #cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
+        cfg.MODEL.ROI_HEADS.NMS_THRESH_TEST = 0.7
 
         self.predictor = DefaultPredictor(cfg)
         self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda)
