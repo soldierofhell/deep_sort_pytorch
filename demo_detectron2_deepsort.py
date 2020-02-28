@@ -116,7 +116,10 @@ class Detector(object):
                     
                 if frame_id > 1:
                     prev_im = ori_im
-                    ori_im = cv2.imread(self.img_list[frame_id])
+                    
+                ori_im = cv2.imread(self.img_list[frame_id])
+                    
+                if frame_id > 1:
 
                     im1_gray = cv2.cvtColor(prev_im, cv2.COLOR_RGB2GRAY)
                     im2_gray = cv2.cvtColor(ori_im, cv2.COLOR_RGB2GRAY)
