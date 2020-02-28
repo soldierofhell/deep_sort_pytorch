@@ -239,8 +239,8 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         
     def combined_distance_metric(distance_metrics, level, tracks, detections, track_indices=None, detection_indices=None):
         
-        lambda_F = 1.0 * (0.9) ** level
-        lambda_I = 2.0 * (0.25) ** level
+        lambda_F = (0.5) ** (1/level) # 1.0 * 
+        lambda_I = (0.5) ** (1/level) # 2.0 * 
         lambda_N = 0.0
         
         distance_F = lambda_F * distance_metrics['F'](tracks, detections, track_indices, detection_indices)
@@ -275,7 +275,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
             print('no tracks since update')                
             continue
         
-        metric_fn = partial(combined_distance_metric, distance_metrics, level)
+        metric_fn = partial(combined_distance_metric, distance_metrics, 1+level)
         matches_l, _, unmatched_detections = \
             min_cost_matching(
                 metric_fn, 10.0, tracks, detections,
