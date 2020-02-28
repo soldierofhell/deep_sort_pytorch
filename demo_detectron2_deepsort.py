@@ -124,7 +124,7 @@ class Detector(object):
                     im1_gray = cv2.cvtColor(prev_im, cv2.COLOR_RGB2GRAY)
                     im2_gray = cv2.cvtColor(ori_im, cv2.COLOR_RGB2GRAY)
 
-                    cc, warp_matrix = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria, None, 1)
+                    cc, _ = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria, None, 1)
                     
                     new_sequence = cc > 0.5
 
