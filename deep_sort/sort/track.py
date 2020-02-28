@@ -79,7 +79,7 @@ class Track:
 
         self._n_init = n_init
         self._max_age = max_age
-        self.match_method = 0
+        self.match_method = 0 # todo: match_weights?
         
         self.number = number
         self.number_confidence = number_confidence
