@@ -71,12 +71,12 @@ class DeepSort(object):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
         features = self._get_features(bbox_xywh, ori_img)
-        numbers = self._predict_numbers(bbox_xywh, ori_img)
+        numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
         
         bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
         
         #temp_number = {'number': None, 'confidence': None} # numbers[i]
-        detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
+        detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
         
         # run on non-maximum supression
         #boxes = np.array([d.tlwh for d in detections])
@@ -186,6 +186,8 @@ class DeepSort(object):
         batch_list = [batch_list[i:i + batch_size] for i in range(0, len(batch_list), batch_size)]
                           
         numbers_all = []
+        team_ids_all = []
+        
         for batch_ind in batch_list: 
         
             crop_list = []
@@ -244,9 +246,11 @@ class DeepSort(object):
                 
        
             numbers_all.extend(numbers)
+            team_ids_all.extend(team_ids)
+            
         print('number dict: ', numbers_all)
         
-        return numbers_all
+        return numbers_all, team_ids_all
     
 
 
