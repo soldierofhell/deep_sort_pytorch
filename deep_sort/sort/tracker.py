@@ -45,6 +45,7 @@ class Tracker:
         self.kf = kalman_filter.KalmanFilter()
         self.tracks = []
         self._next_id = 1
+        self.sequence_duration = 0
 
     def predict(self):
         """Propagate track state distributions one time step forward.
@@ -54,7 +55,7 @@ class Tracker:
         for track in self.tracks:
             track.predict(self.kf)
 
-    def update(self, detections):
+    def update(self, detections, new_sequence):
         """Perform measurement update and track management.
 
         Parameters
@@ -63,6 +64,13 @@ class Tracker:
             A list of detections at the current time step.
 
         """
+
+
+        if new_sequence:
+            self.sequence_duration = 0
+        else:
+            self.sequence_duration += 1
+
         # Run matching cascade.
         matches, unmatched_tracks, unmatched_detections, len_a = \
             self._match(detections)
