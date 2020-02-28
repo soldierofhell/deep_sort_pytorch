@@ -67,7 +67,7 @@ class DeepSort(object):
         team_ref_img = [TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths]
         self.team_ref_embeddings = self.team_embeddings.predict(team_ref_img)
 
-    def update(self, bbox_xywh, confidences, ori_img):
+    def update(self, bbox_xywh, confidences, ori_img, new_sequence):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
         features = self._get_features(bbox_xywh, ori_img)
@@ -86,7 +86,7 @@ class DeepSort(object):
 
         # update tracker
         self.tracker.predict()
-        self.tracker.update(detections)
+        self.tracker.update(detections, new_sequence)
 
         # output bbox identities
         outputs = []
