@@ -163,11 +163,18 @@ class DeepSort(object):
         return padded_bbox
     
     def _valid_box(self, number_bbox, player_bbox):
+        
+        player_area = (player_bbox[2] - player_bbox[0]) * (player_bbox[3] - player_bbox[1])
+        number_area = (number_bbox[2] - number_bbox[0]) * (number_bbox[3] - number_bbox[1])
+        
+        number_y_center = (number_bbox[3]+number_bbox[1])/(2*(player_bbox[3] - player_bbox[1]))
+
+        height_ratio = (number_bbox[3]-number_bbox[1])/(player_bbox[3] - player_bbox[1])
                    
-        number_area/player_area>0.02
-        number_y_center > 0.2
-        number_y_center < 0.4
-        height_ratio > 0.15
+        valid_box = number_area/player_area > 0.02 and number_y_center > 0.2 and number_y_center < 0.4 and height_ratio > 0.15:
+        
+        return valid_box
+            
     
     def _predict_numbers(self, bbox_xywh, ori_img):
         
@@ -217,17 +224,21 @@ class DeepSort(object):
 
                 if number_instance.pred_classes.size()[0]>0:
                     number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
-                    padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
-                    #print('player crop: ', player_crop.size())
-                    #print('number_box: ', number_box)
-                    #print('padded_box: ', padded_box)
-                    #print('tests :', number_instance.pred_boxes.tensor[0])
-                    number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
+                    
+                    if self._valid_box(self, number_bbox, player_bbox):                    
+                        padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
+                        #print('player crop: ', player_crop.size())
+                        #print('number_box: ', number_box)
+                        #print('padded_box: ', padded_box)
+                        #print('tests :', number_instance.pred_boxes.tensor[0])
+                        number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
 
-                    pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
+                        pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
+              
 
-
-                    numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
+                        numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
+                    else:
+                        numbers.append({'number': None, 'confidence': None, 'bbox': None})
                 else:
                     numbers.append({'number': None, 'confidence': None, 'bbox': None})
                 
