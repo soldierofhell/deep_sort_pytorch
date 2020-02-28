@@ -114,7 +114,7 @@ class Tracker:
             if detection_indices is None:
                 detection_indices = np.arange(len(detections))
 
-            cost_matrix = np.zeros((len(track_indices), len(detection_indices)))
+            cost_matrix = np.ones((len(track_indices), len(detection_indices)))
 
             for row, track_idx in enumerate(track_indices):
                 if tracks[track_idx].number is None:
@@ -122,7 +122,7 @@ class Tracker:
 
                 number = tracks[track_idx].number
                 candidates = np.asarray([detections[i].number for i in detection_indices])
-                cost_matrix[row, :] = number == candidates
+                cost_matrix[row, :] = 1 - (number == candidates)
 
                 # todo: dodac warunki na ta sama druzyne, czyli min features
 
