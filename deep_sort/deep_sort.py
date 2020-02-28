@@ -162,6 +162,13 @@ class DeepSort(object):
 
         return padded_bbox
     
+    def _valid_box(self, number_bbox, player_bbox):
+                   
+        number_area/player_area>0.02
+        number_y_center > 0.2
+        number_y_center < 0.4
+        height_ratio > 0.15
+    
     def _predict_numbers(self, bbox_xywh, ori_img):
         
        
@@ -175,8 +182,10 @@ class DeepSort(object):
         for batch_ind in batch_list: 
         
             crop_list = []
+            
+            bbox_list = [bbox for (i, bbox) in enumerate(bbox_xywh) if i in batch_ind]
 
-            for box in [bbox for (i, bbox) in enumerate(bbox_xywh) if i in batch_ind]:
+            for box in bbox_list:
                 x1,y1,x2,y2 = self._xywh_to_xyxy(box)
                 player_crop = ori_img[y1:y2,x1:x2]
                 crop_list.append(TF.to_tensor(player_crop).cuda())
@@ -191,7 +200,7 @@ class DeepSort(object):
         
         #print('team_ids: ', team_ids)
         
-
+            
        
         
                 
@@ -202,7 +211,7 @@ class DeepSort(object):
             #print('output length: ', len(number_outputs))
 
             numbers = []
-            for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
+            for team_id, number_output, player_crop, bbox in zip(team_ids, number_outputs, crop_list, bbox_list):
                 number_instance = number_output['instances']
                 print('detected boxes: ', number_instance.pred_classes.size()[0])
 
