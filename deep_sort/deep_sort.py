@@ -183,10 +183,10 @@ class DeepSort(object):
         
             crop_list = []
             
-            bbox_list = [bbox for (i, bbox) in enumerate(bbox_xywh) if i in batch_ind]
+            bbox_list = [self._xywh_to_xyxy(bbox) for (i, bbox) in enumerate(bbox_xywh) if i in batch_ind]
 
-            for box in bbox_list:
-                x1,y1,x2,y2 = self._xywh_to_xyxy(box)
+            for bbox in bbox_list:
+                x1,y1,x2,y2 = bbox
                 player_crop = ori_img[y1:y2,x1:x2]
                 crop_list.append(TF.to_tensor(player_crop).cuda())
 
@@ -211,7 +211,7 @@ class DeepSort(object):
             #print('output length: ', len(number_outputs))
 
             numbers = []
-            for team_id, number_output, player_crop, bbox in zip(team_ids, number_outputs, crop_list, bbox_list):
+            for team_id, number_output, player_crop, player_bbox in zip(team_ids, number_outputs, crop_list, bbox_list):
                 number_instance = number_output['instances']
                 print('detected boxes: ', number_instance.pred_classes.size()[0])
 
