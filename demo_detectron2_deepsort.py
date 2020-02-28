@@ -15,6 +15,12 @@ from util import COLORS_10, draw_bboxes
 
 import glob, json, shutil
 
+number_of_iterations = 100
+termination_eps = 0.00001
+warp_mode = cv2.MOTION_EUCLIDEAN
+warp_matrix = np.eye(2, 3, dtype=np.float32)
+criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations,  termination_eps)
+
 
 class Detector(object):
     def __init__(self, args):
@@ -94,6 +100,9 @@ class Detector(object):
             shutil.copytree(self.args.detections_dir, self.args.detections_dir + '_tracked')
         
         while True: #self.vdo.grab():
+            
+            new_sequence = False
+            
             if not args.image_input:                
                 frame_id = int(round(self.vdo.get(1)))            
                 if frame_id < start_frameid:
@@ -104,7 +113,18 @@ class Detector(object):
             else:
                 if frame_id>=(len(self.img_list)):
                     break
-                ori_im = cv2.imread(self.img_list[frame_id])
+                    
+                if frame_id > 1:
+                    prev_im = ori_im
+                    ori_im = cv2.imread(self.img_list[frame_id])
+
+                    im1_gray = cv2.cvtColor(prev_im, cv2.COLOR_RGB2GRAY)
+                    im2_gray = cv2.cvtColor(ori_im, cv2.COLOR_RGB2GRAY)
+
+                    cc, warp_matrix = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria, None, 1)
+                    
+                    new_sequence = cc > 0.5
+
                 frame_id+=1                
             
             if self.args.save_frames:
