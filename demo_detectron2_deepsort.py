@@ -99,7 +99,9 @@ class Detector(object):
         if self.args.update_tracks:
             shutil.copytree(self.args.detections_dir, self.args.detections_dir + '_tracked')
         
-        while True: #self.vdo.grab():
+        while True:
+            
+            print(f'FRAME_ID: {frame_id}')
             
             new_sequence = False
             
