@@ -92,7 +92,7 @@ class Tracker:
                 track_idx = match[0]
                 iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:])[0]
                 max_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:], method='MAX')[0]
-                print(f'IOU for {track_idx} and {detection_idx}: {iou_with_matched}, {max_with_matched}') 
+                print(f'IOU for {self.tracks[track_idx].track_id} and {detection_idx}: {iou_with_matched}, {max_with_matched}') 
                 if iou_with_matched > 0.5 or max_with_matched > 0.8:
                     new_track = False
                     break
@@ -100,7 +100,7 @@ class Tracker:
                 self._initiate_track(detections[detection_idx])
                 detections[detection_idx].track_id = self.tracks[-1].track_id # for supervisely export
             else:
-                print(f'for detection {detection_idx}: too close to {track_idx} (IOU: {iou_with_matched}, {max_with_matched}')
+                print(f'for detection {detection_idx}: too close to {self.tracks[track_idx].track_id} (IOU: {iou_with_matched}, {max_with_matched}')
 
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
 
