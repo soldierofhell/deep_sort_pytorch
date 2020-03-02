@@ -39,7 +39,7 @@ def iou(bbox, candidates, method='IOU'):
     if method == 'IOU':
         return area_intersection / (area_bbox + area_candidates - area_intersection)
     else:
-        return np.max(area_intersection / area_bbox, area_intersection / area_candidates)
+        return np.maximum(area_intersection / area_bbox, area_intersection / area_candidates)
 
 
 def iou_cost(tracks, detections, track_indices=None,
