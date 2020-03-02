@@ -151,7 +151,23 @@ class Tracker:
 
                 # todo: dodac warunki na ta sama druzyne, czyli min features
 
-            return cost_matrix  
+            return cost_matrix 
+        
+        def confidence_cost(tracks, detections, track_indices=None, detection_indices=None):    
+            if track_indices is None:
+                track_indices = np.arange(len(tracks))
+            if detection_indices is None:
+                detection_indices = np.arange(len(detections))
+
+            cost_matrix = np.ones((len(track_indices), len(detection_indices)))
+
+            for row, track_idx in enumerate(track_indices):
+
+                candidates = np.asarray([detections[i].confidence for i in detection_indices])               
+               
+                cost_matrix[row, :] = 1 - candidates
+
+            return cost_matrix 
 
         # Split track set into confirmed and unconfirmed tracks.
         confirmed_tracks = [
@@ -162,7 +178,8 @@ class Tracker:
         distance_metrics = {
             'I': iou_matching.iou_cost,
             'F': gated_metric,
-            'N': number_cost
+            'N': number_cost,
+            'C': confidence_cost
         }
         
         matches_a, unmatched_tracks_a, unmatched_detections = \
