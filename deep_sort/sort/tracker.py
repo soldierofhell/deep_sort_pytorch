@@ -88,7 +88,8 @@ class Tracker:
             self.tracks[track_idx].mark_missed()
         for detection_idx in unmatched_detections:
             new_track = True
-            for row, track_idx in enumerate(matches):
+            for row, match in enumerate(matches):
+                track_idx = match[0]
                 iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh)
                 if iou_with_matched > 0.8:
                     new_track = False
