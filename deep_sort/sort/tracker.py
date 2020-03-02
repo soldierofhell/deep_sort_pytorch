@@ -87,13 +87,18 @@ class Tracker:
         for track_idx in unmatched_tracks:
             self.tracks[track_idx].mark_missed()
         for detection_idx in unmatched_detections:
+            new_track = True
             for row, track_idx in enumerate(matches):
                 iou_with_matched = iou(tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh)
-                if iou_with_matched < 0.8:
-                    self._initiate_track(detections[detection_idx])
-                    detections[detection_idx].track_id = self.tracks[-1].track_id # for supervisely export
-                else:
-                    print(f'for detection {detection_idx}: too close to {track_idx} (IOU: {iou_with_matched}')
+                if iou_with_matched > 0.8:
+                    new_track = False
+                    break
+            if new_track:
+                self._initiate_track(detections[detection_idx])
+                detections[detection_idx].track_id = self.tracks[-1].track_id # for supervisely export
+            else:
+                print(f'for detection {detection_idx}: too close to {track_idx} (IOU: {iou_with_matched}')
+
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
 
         # Update distance metric.
