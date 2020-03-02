@@ -92,7 +92,7 @@ class Tracker:
                 track_idx = match[0]
                 iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:])
                 print(f'IOU for {track_idx} and {detection_idx}: {iou_with_matched}') 
-                if iou_with_matched > 0.8:
+                if iou_with_matched > 0.5:
                     new_track = False
                     break
             if new_track:
