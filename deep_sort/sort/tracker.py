@@ -90,7 +90,7 @@ class Tracker:
             new_track = True
             for row, match in enumerate(matches):
                 track_idx = match[0]
-                iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh)
+                iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:])
                 if iou_with_matched > 0.8:
                     new_track = False
                     break
