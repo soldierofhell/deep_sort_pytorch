@@ -30,7 +30,8 @@ def draw_bbox(img, box, cls_name, identity=None, offset=(0,0)):
     return img
 
 
-def draw_bboxes(img, bbox, identities=None, match_method=None, number=None, number_box=None, offset=(0,0)):
+def draw_bboxes(frame_id, img, bbox, identities=None, match_method=None, number=None, number_box=None, offset=(0,0)):
+    cv2.putText(img, f'FRAME_ID: {frame_id}', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)
     for i,box in enumerate(bbox):
         x1,y1,x2,y2 = [int(i) for i in box]
         x1 += offset[0]
