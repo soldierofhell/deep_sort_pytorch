@@ -4,7 +4,7 @@ import numpy as np
 from . import linear_assignment
 
 
-def iou(bbox, candidates):
+def iou(bbox, candidates, method='IOU'):
     """Computer intersection over union.
 
     Parameters
@@ -36,7 +36,10 @@ def iou(bbox, candidates):
     area_intersection = wh.prod(axis=1)
     area_bbox = bbox[2:].prod()
     area_candidates = candidates[:, 2:].prod(axis=1)
-    return area_intersection / (area_bbox + area_candidates - area_intersection)
+    if method == 'IOU':
+        return area_intersection / (area_bbox + area_candidates - area_intersection)
+    else:
+        return np.max(area_intersection / area_bbox, area_intersection / area_candidates)
 
 
 def iou_cost(tracks, detections, track_indices=None,
