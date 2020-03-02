@@ -90,10 +90,10 @@ class Tracker:
             new_track = True
             for row, match in enumerate(matches):
                 track_idx = match[0]
-                iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:])
-                max_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:], method='MAX')
+                iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:])[0]
+                max_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:], method='MAX')[0]
                 print(f'IOU for {track_idx} and {detection_idx}: {iou_with_matched}, {max_with_matched}') 
-                if iou_with_matched > 0.5 or iou_with_matched > 0.8:
+                if iou_with_matched > 0.5 or max_with_matched > 0.8:
                     new_track = False
                     break
             if new_track:
