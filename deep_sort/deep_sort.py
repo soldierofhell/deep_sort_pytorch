@@ -205,10 +205,10 @@ class DeepSort(object):
             team_ids = torch.argmin(dists, dim=1)
 
             # todo: judge, goalkeeper
-del embeddings
+            del embeddings
             del dists
         
-        #print('team_ids: ', team_ids)
+            #print('team_ids: ', team_ids)
         
             
        
