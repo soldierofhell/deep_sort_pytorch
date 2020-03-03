@@ -93,7 +93,7 @@ class Tracker:
                 iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:])[0]
                 max_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:], method='MAX')[0]
                 print(f'IOU for {self.tracks[track_idx].track_id} and {detection_idx}: {iou_with_matched}, {max_with_matched}') 
-                if iou_with_matched > 0.5 or max_with_matched > 0.8:
+                if iou_with_matched > 0.4 or max_with_matched > 0.7:
                     new_track = False
                     break
             if new_track:
