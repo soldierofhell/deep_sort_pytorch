@@ -5,6 +5,11 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment as linear_assignment
 from . import kalman_filter
 
+import logging
+
+#logger = logging.getLogger(__name__)
+logging.basicConfig(filename='/content/app.log', filemode='w')
+
 
 INFTY_COST = 1e+5
 
@@ -184,14 +189,14 @@ def gate_cost_matrix(
     """
     gating_dim = 2 if only_position else 4
     gating_threshold = kalman_filter.chi2inv95[gating_dim]
-    print(f'gating_threshold: {gating_threshold}')
+    logging.debug(f'gating_threshold: {gating_threshold}')
     measurements = np.asarray(
         [detections[i].to_xyah() for i in detection_indices])
     for row, track_idx in enumerate(track_indices):
         track = tracks[track_idx]
         gating_distance = kf.gating_distance(
             track.mean, track.covariance, measurements, only_position)
-        print(f'gating_distance for {track_idx}: {gating_distance}')
+        logging.debug(f'gating_distance for {track_idx}: {gating_distance}')
         cost_matrix[row, gating_distance > gating_threshold] = gated_cost
     return cost_matrix
 
@@ -251,7 +256,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         distance_N = lambda_N * distance_metrics['N'](tracks, detections, track_indices, detection_indices)
         distance_C = lambda_C * distance_metrics['C'](tracks, detections, track_indices, detection_indices)
         
-        print(f"{level}: {distance_F}, {distance_I}, {distance_N}, {distance_C}")
+        logging.debug(f"{level}: {distance_F}, {distance_I}, {distance_N}, {distance_C}")
         
         value = distance_F + distance_I + distance_N + distance_C
         
@@ -262,13 +267,13 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
 
     cascade_depth = 5
         
-    print([tracks[k].time_since_update for k in track_indices]) 
+    logging.debug([tracks[k].time_since_update for k in track_indices]) 
         
     for level in range(cascade_depth):
         
-        print(f'level: {level}')
+        logging.debug(f'level: {level}')
         if len(unmatched_detections) == 0:  # No detections left
-            print('no unmatched')
+            logging.debug('no unmatched')
             break
 
 
@@ -278,7 +283,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
             if tracks[k].time_since_update == 1+level # 1 + level
         ]
         if len(track_indices_l) == 0:  # Nothing to match at this level
-            print('no tracks since update')                
+            logging.debug('no tracks since update')                
             continue
         
         metric_fn = partial(combined_distance_metric, distance_metrics, 1+level)
