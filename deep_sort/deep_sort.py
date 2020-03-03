@@ -99,7 +99,9 @@ class DeepSort(object):
             match_method = track.match_method
             number = track.number if track.number is not None else -1
             number_bbox = track.number_bbox if track.number_bbox is not None else [0,0,0,0]
-            outputs.append(np.array([x1,y1,x2,y2,track_id, match_method, number, number_bbox[0],number_bbox[1],number_bbox[2],number_bbox[3]], dtype=np.int))
+            detection_id = track.detection_id
+            min_cost = track.min_cost
+            outputs.append(np.array([x1,y1,x2,y2,track_id, match_method, number, number_bbox[0],number_bbox[1],number_bbox[2],number_bbox[3], detection_id, min_cost], dtype=np.int))
         if len(outputs) > 0:
             outputs = np.stack(outputs,axis=0)
         return outputs, detections
