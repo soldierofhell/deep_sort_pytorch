@@ -199,8 +199,10 @@ class Detector(object):
                     identities = outputs[:, 4]
                     match_method = outputs[:, 5]
                     number = outputs[:, 6]
-                    number_bbox = outputs[:, 7:]
-                    ori_im = draw_bboxes(frame_id, ori_im, bbox_xyxy, identities, match_method, number, number_bbox)
+                    number_bbox = outputs[:, 7:11]
+                    detection_id = outputs[:, 11]
+                    min_cost = outputs[:, 12]
+                    ori_im = draw_bboxes(frame_id, ori_im, bbox_xyxy, identities, match_method, number, number_bbox, detection_id, min_cost)
                     
                     if self.args.save_txt:
                         for j in range(bbox_xyxy.shape[0]):
