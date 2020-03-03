@@ -21,6 +21,10 @@ warp_mode = cv2.MOTION_EUCLIDEAN
 warp_matrix = np.eye(2, 3, dtype=np.float32)
 criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations,  termination_eps)
 
+import logging
+
+logging.basicConfig(filename='/content/app.log', filemode='w')
+
 
 class Detector(object):
     def __init__(self, args):
@@ -102,6 +106,7 @@ class Detector(object):
         while True:
             
             print(f'FRAME_ID: {frame_id}')
+            logging.debug(f'FRAME_ID: {frame_id}')
             
             new_sequence = False
             
