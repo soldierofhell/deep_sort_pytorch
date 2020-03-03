@@ -62,7 +62,7 @@ def min_cost_matching(
         tracks, detections, track_indices, detection_indices)
     cost_matrix[cost_matrix > max_distance] = max_distance + 1e-5
     logging.debug(f'track_indices, detection_indices: {track_indices}, {detection_indices}')
-    logging.debug('final cost matrix:', cost_matrix)
+    logging.debug('final cost matrix:', cost_matrix.tolist())
         
     row_indices, col_indices = linear_assignment(cost_matrix)
 
