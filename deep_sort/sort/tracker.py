@@ -75,7 +75,7 @@ class Tracker:
             self.sequence_duration += 1
 
         # Run matching cascade.
-        matches, unmatched_tracks, unmatched_detections, len_a, min_cost = \
+        matches, unmatched_tracks, unmatched_detections, min_cost = \
             self._match(detections)
         
         logging.debug(f'matches, unmatched_tracks, unmatched_detections: {matches}, {unmatched_tracks}, {unmatched_detections}, {min_cost}')
@@ -83,7 +83,7 @@ class Tracker:
         # Update track set.
         for idx, match in enumerate(matches):
             track_idx, detection_idx = match
-            match_method = 1 if idx<len_a else 2
+            match_method = 1
             self.tracks[track_idx].update(
                 self.kf, detections[detection_idx], match_method, detection_idx, min_cost[idx])
             detections[detection_idx].track_id = self.tracks[track_idx].track_id # for supervisely export
@@ -193,7 +193,7 @@ class Tracker:
                     distance_metrics,
                     self.tracks, detections)        
            
-        return matches, unmatched_tracks, unmatched_detections, len(matches_a), min_cost
+        return matches, unmatched_tracks, unmatched_detections, min_cost
 
     def _initiate_track(self, detection):
         mean, covariance = self.kf.initiate(detection.to_xyah())
