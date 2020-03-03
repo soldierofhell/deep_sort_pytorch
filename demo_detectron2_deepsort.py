@@ -135,7 +135,10 @@ class Detector(object):
                     
                     new_sequence = cc > 0.5
 
-                frame_id+=1                
+                
+                frame_id+=1 
+                
+            logging.debug(f'NEW_SEQUENCE: {new_sequence}')
             
             if self.args.save_frames:
                 if not args.image_input:
