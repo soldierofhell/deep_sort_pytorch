@@ -23,7 +23,7 @@ criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iteration
 
 import logging
 
-logging.basicConfig(filename='/content/app.log', filemode='w')
+logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
 
 
 class Detector(object):
