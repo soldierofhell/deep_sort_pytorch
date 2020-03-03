@@ -64,7 +64,7 @@ class Track:
     """
 
     def __init__(self, mean, covariance, track_id, n_init, max_age,
-                 feature=None, number=None, number_confidence=None, number_bbox=None, team_id=None):
+                 feature=None, number=None, number_confidence=None, number_bbox=None, team_id=None, detection_id=None):
         self.mean = mean
         self.covariance = covariance
         self.track_id = track_id
@@ -86,6 +86,9 @@ class Track:
         self.number_bbox = number_bbox
         
         self.team_id = team_id
+        
+        self.detection_id = detection_id
+        self.min_cost = -1
 
     def to_tlwh(self):
         """Get current position in bounding box format `(top left x, top left y,
@@ -130,7 +133,7 @@ class Track:
         self.age += 1
         self.time_since_update += 1
 
-    def update(self, kf, detection, match_method):
+    def update(self, kf, detection, match_method, detection_id, min_cost):
         """Perform Kalman filter measurement update step and update the feature
         cache.
 
@@ -153,7 +156,10 @@ class Track:
         self.time_since_update = 0
         if self.state == TrackState.Tentative and self.hits >= self._n_init:
             self.state = TrackState.Confirmed
+            
         self.match_method = match_method
+        self.detection_id = detection_id
+        self.min_cost = min_cost
 
     def mark_missed(self):
         """Mark this track as missed (no association at the current time step).
