@@ -188,7 +188,7 @@ def gate_cost_matrix(
 
     """
     gating_dim = 2 if only_position else 4
-    gating_threshold = kalman_filter.chi2inv95[gating_dim]
+    gating_threshold = 5*kalman_filter.chi2inv95[gating_dim]
     logging.debug(f'gating_threshold: {gating_threshold}')
     measurements = np.asarray(
         [detections[i].to_xyah() for i in detection_indices])
