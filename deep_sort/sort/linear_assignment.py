@@ -184,12 +184,14 @@ def gate_cost_matrix(
     """
     gating_dim = 2 if only_position else 4
     gating_threshold = kalman_filter.chi2inv95[gating_dim]
+    print(f'gating_threshold: {gating_threshold}')
     measurements = np.asarray(
         [detections[i].to_xyah() for i in detection_indices])
     for row, track_idx in enumerate(track_indices):
         track = tracks[track_idx]
         gating_distance = kf.gating_distance(
             track.mean, track.covariance, measurements, only_position)
+        print(f'gating_distance for {track_idx}: {gating_distance}')
         cost_matrix[row, gating_distance > gating_threshold] = gated_cost
     return cost_matrix
 
