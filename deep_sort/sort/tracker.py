@@ -100,7 +100,7 @@ class Tracker:
                     new_track = False
                     break
             if new_track:
-                self._initiate_track(detections[detection_idx])
+                self._initiate_track(detections[detection_idx], detection_idx)
                 detections[detection_idx].track_id = self.tracks[-1].track_id # for supervisely export
             else:
                 logging.debug(f'for detection {detection_idx}: too close to {self.tracks[track_idx].track_id} (IOU: {iou_with_matched}, {max_with_matched}')
@@ -195,9 +195,9 @@ class Tracker:
            
         return matches, unmatched_tracks, unmatched_detections, min_cost
 
-    def _initiate_track(self, detection):
+    def _initiate_track(self, detection, detection_idx):
         mean, covariance = self.kf.initiate(detection.to_xyah())
         self.tracks.append(Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
-            detection.feature))
+            detection.feature, detection_idx))
         self._next_id += 1
