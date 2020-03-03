@@ -6,6 +6,9 @@ from . import linear_assignment
 from . import iou_matching
 from .track import Track
 
+import logging
+logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
+
 class Tracker:
     """
     This is the multi-target tracker.
@@ -72,17 +75,17 @@ class Tracker:
             self.sequence_duration += 1
 
         # Run matching cascade.
-        matches, unmatched_tracks, unmatched_detections, len_a = \
+        matches, unmatched_tracks, unmatched_detections, len_a, min_cost = \
             self._match(detections)
         
-        print(f'matches, unmatched_tracks, unmatched_detections: {matches}, {unmatched_tracks}, {unmatched_detections}')
+        logging.debug(f'matches, unmatched_tracks, unmatched_detections: {matches}, {unmatched_tracks}, {unmatched_detections}, {min_cost}')
 
         # Update track set.
         for idx, match in enumerate(matches):
             track_idx, detection_idx = match
             match_method = 1 if idx<len_a else 2
             self.tracks[track_idx].update(
-                self.kf, detections[detection_idx], match_method)
+                self.kf, detections[detection_idx], match_method, detection_idx, min_cost[idx])
             detections[detection_idx].track_id = self.tracks[track_idx].track_id # for supervisely export
         for track_idx in unmatched_tracks:
             self.tracks[track_idx].mark_missed()
@@ -92,7 +95,7 @@ class Tracker:
                 track_idx = match[0]
                 iou_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:])[0]
                 max_with_matched = iou_matching.iou(self.tracks[track_idx].to_tlwh(), detections[detection_idx].tlwh[None,:], method='MAX')[0]
-                print(f'IOU for {self.tracks[track_idx].track_id} and {detection_idx}: {iou_with_matched}, {max_with_matched}') 
+                logging.debug(f'IOU for {self.tracks[track_idx].track_id} and {detection_idx}: {iou_with_matched}, {max_with_matched}') 
                 if iou_with_matched > 0.4 or max_with_matched > 0.7:
                     new_track = False
                     break
@@ -100,13 +103,13 @@ class Tracker:
                 self._initiate_track(detections[detection_idx])
                 detections[detection_idx].track_id = self.tracks[-1].track_id # for supervisely export
             else:
-                print(f'for detection {detection_idx}: too close to {self.tracks[track_idx].track_id} (IOU: {iou_with_matched}, {max_with_matched}')
+                logging.debug(f'for detection {detection_idx}: too close to {self.tracks[track_idx].track_id} (IOU: {iou_with_matched}, {max_with_matched}')
 
         self.tracks = [t for t in self.tracks if not t.is_deleted()]
 
         # Update distance metric.
         active_targets = [t.track_id for t in self.tracks] #  if t.is_confirmed()
-        print(f'active_targets: {active_targets}')
+        logging.debug(f'active_targets: {active_targets}')
         features, targets = [], []
         for track in self.tracks:
             #if not track.is_confirmed():
@@ -175,8 +178,8 @@ class Tracker:
         unconfirmed_tracks = [
             i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
         
-        print(f'confirmed_tracks: {confirmed_tracks}')
-        print(f'unconfirmed_tracks: {unconfirmed_tracks}')
+        logging.debug(f'confirmed_tracks: {confirmed_tracks}')
+        logging.debug(f'unconfirmed_tracks: {unconfirmed_tracks}')
 
         distance_metrics = {
             'I': iou_matching.iou_cost,
@@ -185,38 +188,12 @@ class Tracker:
             'C': confidence_cost
         }
         
-        matches_a, unmatched_tracks_a, unmatched_detections = \
+        matches, unmatched_tracks, unmatched_detections, min_cost = \
                 linear_assignment.new_matching_cascade(
                     distance_metrics,
-                    self.tracks, detections)
-        
-        
-        matches = matches_a
-        unmatched_tracks = unmatched_tracks_a
-
-        if False:
-            # Associate confirmed tracks using appearance features.
-            matches_a, unmatched_tracks_a, unmatched_detections = \
-                linear_assignment.matching_cascade(
-                    gated_metric, self.metric.matching_threshold, self.max_age,
-                    self.tracks, detections, confirmed_tracks)
-
-            # Associate remaining tracks together with unconfirmed tracks using IOU.
-            iou_track_candidates = unconfirmed_tracks + [
-                k for k in unmatched_tracks_a if
-                self.tracks[k].time_since_update == 1]
-            unmatched_tracks_a = [
-                k for k in unmatched_tracks_a if
-                self.tracks[k].time_since_update != 1]
-            matches_b, unmatched_tracks_b, unmatched_detections = \
-                linear_assignment.min_cost_matching(
-                    iou_matching.iou_cost, self.max_iou_distance, self.tracks,
-                    detections, iou_track_candidates, unmatched_detections)
-
-            matches = matches_a + matches_b
-            unmatched_tracks = list(set(unmatched_tracks_a + unmatched_tracks_b))
-            
-        return matches, unmatched_tracks, unmatched_detections, len(matches_a)
+                    self.tracks, detections)        
+           
+        return matches, unmatched_tracks, unmatched_detections, len(matches_a), min_cost
 
     def _initiate_track(self, detection):
         mean, covariance = self.kf.initiate(detection.to_xyah())
