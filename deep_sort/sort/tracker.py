@@ -174,6 +174,9 @@ class Tracker:
             i for i, t in enumerate(self.tracks) if t.is_confirmed()]
         unconfirmed_tracks = [
             i for i, t in enumerate(self.tracks) if not t.is_confirmed()]
+        
+        print(f'confirmed_tracks: {confirmed_tracks}')
+        print(f'unconfirmed_tracks: {unconfirmed_tracks}')
 
         distance_metrics = {
             'I': iou_matching.iou_cost,
