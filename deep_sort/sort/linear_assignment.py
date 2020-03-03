@@ -8,7 +8,7 @@ from . import kalman_filter
 import logging
 
 #logger = logging.getLogger(__name__)
-logging.basicConfig(filename='/content/app.log', filemode='w')
+logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
 
 
 INFTY_COST = 1e+5
