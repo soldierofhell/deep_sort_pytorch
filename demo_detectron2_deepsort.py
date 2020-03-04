@@ -205,7 +205,7 @@ class Detector(object):
                     number_bbox = outputs[:, 7:11]
                     detection_id = outputs[:, 11]
                     min_cost = outputs[:, 12]
-                    ori_im = draw_bboxes(frame_id, ori_im, bbox_xyxy, identities, match_method, number, number_bbox, detection_id, min_cost)
+                    draw_im = draw_bboxes(frame_id, ori_im, bbox_xyxy, identities, match_method, number, number_bbox, detection_id, min_cost)
                     
                     if self.args.save_txt:
                         for j in range(bbox_xyxy.shape[0]):
@@ -228,11 +228,11 @@ class Detector(object):
             print("time: {}s, fps: {}".format(end - start, 1 / (end - start)))
 
             if self.args.display:
-                cv2.imshow("test", ori_im)
+                cv2.imshow("test", draw_im)
                 cv2.waitKey(1)
 
             if self.args.save_path:
-                self.output.write(ori_im)
+                self.output.write(draw_im)
 
 
 
