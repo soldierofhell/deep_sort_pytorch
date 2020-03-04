@@ -17,6 +17,9 @@ import torchvision.transforms.functional as TF
 
 import cv2
 
+import logging
+logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
+
 __all__ = ['DeepSort']
 
 # todo:
@@ -212,7 +215,8 @@ class DeepSort(object):
         
             #print('team_ids: ', team_ids)
         
-            
+            for crop in crop_list:
+                logging.debug('crop size: ',crop.size())
        
         
                 
