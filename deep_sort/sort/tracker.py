@@ -219,9 +219,9 @@ class Tracker:
       
         candidate_tracks = [t for t in candidate_tracks if t['mean_confidence']>0.8 and t['detected']>1 and t['detected']/t['all']>0.5]
         
-        for sequence_no in range(self.sequence_no):
-            
-            for candidate_track in candidate_tracks:
-                if candidate_track.sequence_no == sequence_no:
+        #for sequence_no in range(self.sequence_no):
+        #    
+        #    for candidate_track in candidate_tracks:
+        #        if candidate_track.sequence_no == sequence_no:
                     
 
