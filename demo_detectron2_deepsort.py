@@ -133,7 +133,8 @@ class Detector(object):
 
                     cc, _ = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria, None, 1)
                     
-                    new_sequence = cc > 0.5
+                    new_sequence = cc < 0.5
+                    logging.debug(f'ECC: {cc}')
 
                 
                 frame_id+=1 
