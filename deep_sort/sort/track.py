@@ -153,6 +153,7 @@ class Track:
         self.number = detection.number
         self.number_confidence = detection.number_confidence
         self.number_bbox = detection.number_bbox
+        self.team_id = detection.team_id
 
         self.hits += 1
         self.time_since_update = 0
