@@ -199,7 +199,7 @@ class DeepSort(object):
             
             bbox_list = [self._xywh_to_xyxy(bbox) for (i, bbox) in enumerate(bbox_xywh) if i in batch_ind]
 
-            h, w = ori_img.shape
+            h, w = ori_img.shape[:2]
             
             for bbox in bbox_list:
                 x1,y1,x2,y2 = bbox
