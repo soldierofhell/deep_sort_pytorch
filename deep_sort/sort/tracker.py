@@ -208,12 +208,14 @@ class Tracker:
         candidates_tracks = []
         
         for track in self.tracks:      
-            if current_track.age - self.sequence_duration < track.age: # previous sequence          
-            for number_dict in track.number_history:
-
+            if self.sequence_duration < track.age: # previous sequence
+                confidence = []
+                for number_dict in track.number_history:
                     if number_dict['number'] == current.track_number and number_dict['team_id'] == current.team_id:
-                        confidence.append(number_dict['confidence'])
+                        #if 
+                        #confidence.append(number_dict['confidence'])
+                        pass
             candidates_tracks.append({'mean_confidence': confidence.mean(), 'ratio': len(confidence)/len(number_dict)>0.5})
         
-        for candidate_track in candidate_tracks:
-            if
+        #for candidate_track in candidate_tracks:
+        #    if
