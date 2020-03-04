@@ -49,6 +49,7 @@ class Tracker:
         self.tracks = []
         self._next_id = 1
         self.sequence_duration = 0
+        self.sequence_no = 0
 
     def predict(self):
         """Propagate track state distributions one time step forward.
@@ -71,6 +72,7 @@ class Tracker:
 
         if new_sequence:
             self.sequence_duration = 0
+            self.sequence_no += 1
         else:
             self.sequence_duration += 1
 
@@ -199,7 +201,7 @@ class Tracker:
         mean, covariance = self.kf.initiate(detection.to_xyah())
         self.tracks.append(Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
-            detection.feature, detection_id=detection_idx))
+            detection.feature, detection_id=detection_idx, sequence_no=self.sequence_no))
         self._next_id += 1
         
     def _match_number(self, track_id):
