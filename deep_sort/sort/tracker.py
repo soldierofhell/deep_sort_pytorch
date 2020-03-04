@@ -215,5 +215,5 @@ class Tracker:
                         confidence.append(number_dict['confidence'])
                 candidates_tracks.append({'track_id': track.track_id, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
       
-        for candidate_track in candidate_tracks:
-            if
+        candidate_tracks = [t for t in candidate_tracks if t['mean_confidence']>0.8 and t['detected']>1 and t['detected']/t['all']>0.5]
+
