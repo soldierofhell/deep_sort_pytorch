@@ -212,10 +212,8 @@ class Tracker:
                 confidence = []
                 for number_dict in track.number_history:
                     if number_dict['number'] == current.track_number and number_dict['team_id'] == current.team_id:
-                        #if 
-                        #confidence.append(number_dict['confidence'])
-                        pass
-            candidates_tracks.append({'mean_confidence': confidence.mean(), 'ratio': len(confidence)/len(number_dict)>0.5})
-        
-        #for candidate_track in candidate_tracks:
-        #    if
+                        confidence.append(number_dict['confidence'])
+                candidates_tracks.append({'track_id': track.track_id, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
+      
+        for candidate_track in candidate_tracks:
+            if
