@@ -199,8 +199,16 @@ class DeepSort(object):
             
             bbox_list = [self._xywh_to_xyxy(bbox) for (i, bbox) in enumerate(bbox_xywh) if i in batch_ind]
 
+            h, w = ori_img.shape
+            
             for bbox in bbox_list:
                 x1,y1,x2,y2 = bbox
+                bbox_w = y2-y1
+                if bbox_w <10:
+                    if y2+10-bbox_w < w:
+                        y2 += 10-bbox_w
+                    else:
+                        y1 -= 10-bbox_w
                 player_crop = ori_img[y1:y2,x1:x2]
                 crop_list.append(TF.to_tensor(player_crop).cuda())
 
