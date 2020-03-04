@@ -206,7 +206,7 @@ class Tracker:
         
     def _match_number(self, track_id):
         
-        current_track = selft.tracks[track_id]
+        current_track = self.tracks[track_id]
         candidates_tracks = []
         
         for track in self.tracks:      
@@ -215,7 +215,13 @@ class Tracker:
                 for number_dict in track.number_history:
                     if number_dict['number'] == current.track_number and number_dict['team_id'] == current.team_id:
                         confidence.append(number_dict['confidence'])
-                candidates_tracks.append({'track_id': track.track_id, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
+                candidates_tracks.append({'track_id': track.track_id, 'sequence_no': track_sequence_no, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
       
         candidate_tracks = [t for t in candidate_tracks if t['mean_confidence']>0.8 and t['detected']>1 and t['detected']/t['all']>0.5]
+        
+        for sequence_no in range(self.sequence_no):
+            
+            for candidate_track in candidate_tracks:
+                if candidate_track.sequence_no == sequence_no:
+                    
 
