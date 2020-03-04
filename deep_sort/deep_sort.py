@@ -203,12 +203,12 @@ class DeepSort(object):
             
             for bbox in bbox_list:
                 x1,y1,x2,y2 = bbox
-                bbox_w = y2-y1
+                bbox_w = x2-x1
                 if bbox_w <10:
-                    if y2+10-bbox_w < w:
-                        y2 += 10-bbox_w
+                    if x2+(10-bbox_w) < w:
+                        x2 += 10-bbox_w
                     else:
-                        y1 -= 10-bbox_w
+                        x1 -= 10-bbox_w
                 player_crop = ori_img[y1:y2,x1:x2]
                 crop_list.append(TF.to_tensor(player_crop).cuda())
 
