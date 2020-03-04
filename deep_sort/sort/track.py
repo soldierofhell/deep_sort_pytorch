@@ -85,6 +85,8 @@ class Track:
         self.number_confidence = number_confidence
         self.number_bbox = number_bbox
         
+        self.number_history = [] # {'age': 22, 'number': 10, 'confidence': 0.9, team_id: 0}
+        
         self.team_id = team_id
         
         self.detection_id = detection_id
@@ -160,6 +162,8 @@ class Track:
         self.match_method = match_method
         self.detection_id = detection_id
         self.min_cost = min_cost
+        
+        self.number_history.append({'age': self.age, 'number': self.number, 'confidence': self.number_confidence, 'team_id': self.team_id})
 
     def mark_missed(self):
         """Mark this track as missed (no association at the current time step).
