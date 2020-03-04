@@ -205,9 +205,15 @@ class Tracker:
     def _match_number(self, track_id):
         
         current_track = selft.tracks[track_id]
-        for track in self.tracks:
+        candidates_tracks = []
+        
+        for track in self.tracks:      
+            if current_track.age - self.sequence_duration < track.age: # previous sequence          
             for number_dict in track.number_history:
-                if number_dict['number'] == current.track_number and number_dict['team_id'] == current.team_id:
-                    confidence.append(number_dict['confidence'])
+
+                    if number_dict['number'] == current.track_number and number_dict['team_id'] == current.team_id:
+                        confidence.append(number_dict['confidence'])
             candidates_tracks.append({'mean_confidence': confidence.mean(), 'ratio': len(confidence)/len(number_dict)>0.5})
-                t
+        
+        for candidate_track in candidate_tracks:
+            if
