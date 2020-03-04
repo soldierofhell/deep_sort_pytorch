@@ -206,7 +206,7 @@ class Detector(object):
                     number_bbox = outputs[:, 7:11]
                     detection_id = outputs[:, 11]
                     min_cost = outputs[:, 12]
-                    draw_im = draw_bboxes(frame_id, ori_im, bbox_xyxy, identities, match_method, number, number_bbox, detection_id, min_cost)
+                    draw_im = draw_bboxes(frame_id, new_sequence, ori_im, bbox_xyxy, identities, match_method, number, number_bbox, detection_id, min_cost)
                     
                     if self.args.save_txt:
                         for j in range(bbox_xyxy.shape[0]):
