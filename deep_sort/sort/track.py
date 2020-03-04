@@ -64,7 +64,7 @@ class Track:
     """
 
     def __init__(self, mean, covariance, track_id, n_init, max_age,
-                 feature=None, number=None, number_confidence=None, number_bbox=None, team_id=None, detection_id=None):
+                 feature=None, number=None, number_confidence=None, number_bbox=None, team_id=None, detection_id=None, sequence_no=None):
         self.mean = mean
         self.covariance = covariance
         self.track_id = track_id
@@ -91,6 +91,8 @@ class Track:
         
         self.detection_id = detection_id
         self.min_cost = -1
+        
+        self.sequence_no = sequence_no # should not change
 
     def to_tlwh(self):
         """Get current position in bounding box format `(top left x, top left y,
