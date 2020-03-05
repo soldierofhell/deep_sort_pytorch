@@ -233,12 +233,12 @@ class Tracker:
         self.matched_numbers[self.sequence_no] = {}
         
         for track in self.tracks:
-            logging.debug(f'sequence_no: {self.sequence_no}, {track.sequence_no}')
+            #logging.debug(f'sequence_no: {self.sequence_no}, {track.sequence_no}')
             if self.sequence_no == track.sequence_no: # self.sequence_no - 1
                 
                 detected_numbers = len(track.number_history)
                 
-                logging.debug(f'detected_numbers: {detected_numbers}')
+                #logging.debug(f'detected_numbers: {detected_numbers}')
                 
                 numbers = {}
                 for number_dict in track.number_history:
@@ -253,8 +253,9 @@ class Tracker:
                         conf_mean = sum(conf_list)/conf_count
                         if conf_count >= 2 and conf_mean > 0.5 and number in self.team_numbers[team_id]: 
                             matched = self.matched_numbers[self.sequence_no].setdefault(team_id, {}).setdefault(number, {})                                
-                            if matched == {} or matched['score'] < conf_mean:
-                                matched = {'track_id': track.track_id, 'score': conf_mean}        
+                            if !matched or matched['score'] < conf_mean:
+                                self.matched_numbers[self.sequence_no][team_id][number] = {'track_id': track.track_id, 'score': conf_mean} 
+                                #matched = {'track_id': track.track_id, 'score': conf_mean}        
                 
 
                     
