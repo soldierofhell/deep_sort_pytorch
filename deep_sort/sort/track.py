@@ -166,7 +166,8 @@ class Track:
         self.detection_id = detection_id
         self.min_cost = min_cost
         
-        self.number_history.append({'age': self.age, 'number': self.number, 'confidence': self.number_confidence, 'team_id': self.team_id})
+        if self.number is not None:
+         self.number_history.append({'age': self.age, 'number': self.number, 'confidence': self.number_confidence, 'team_id': self.team_id})
 
     def mark_missed(self):
         """Mark this track as missed (no association at the current time step).
