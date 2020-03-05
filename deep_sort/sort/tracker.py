@@ -232,15 +232,20 @@ class Tracker:
         
         self.matched_numbers[self.sequence_no] = {}
         
-        for track in self.tracks:      
+        for track in self.tracks:
+            logging.debug(f'sequence_no: {self.sequence_no}, {track.sequence_no}')
             if self.sequence_no == track.sequence_no: # self.sequence_no - 1
                 
                 detected_numbers = len(track.number_history)
+                
+                logging.debug(f'detected_numbers: {detected_numbers}')
                 
                 numbers = {}
                 for number_dict in track.number_history:
                     if number_dict['confidence'] is not None:
                         numbers.setdefault(number_dict['team_id'], {}).setdefault(number_dict['number'], []).append(number_dict['confidence'])
+                
+                logging.debug(f'numbers: {numbers}')
                 
                 for team_id, number_dict in numbers.items():
                     for number, conf_list in number_dict.items():
