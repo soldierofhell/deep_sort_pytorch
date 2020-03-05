@@ -91,7 +91,8 @@ class DeepSort(object):
 
         # update tracker
         if new_sequence:
-            self.update_numbers()
+            self.tracker.update_numbers()
+            logging.debug(self.tracker.matched_numbers)
             
         self.tracker.predict()
         self.tracker.update(detections, new_sequence)
