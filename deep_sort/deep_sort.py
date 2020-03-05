@@ -38,7 +38,7 @@ class DeepSort(object):
         max_cosine_distance = max_dist
         nn_budget = 100
         metric = NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
-        self.tracker = Tracker(metric)
+        
         
         number_cfg = get_cfg()
         number_cfg.merge_from_file("/content/detectron2_repo/configs/Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml")
@@ -69,6 +69,8 @@ class DeepSort(object):
         team_ref_paths = ['/content/team0_ref.jpg', '/content/team1_ref.jpg']
         team_ref_img = [TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths]
         self.team_ref_embeddings = self.team_embeddings.predict(team_ref_img)
+        
+        self.tracker = Tracker(metric, team_numbers=self.team_numbers)
 
     def update(self, bbox_xywh, confidences, ori_img, new_sequence):
         self.height, self.width = ori_img.shape[:2]
