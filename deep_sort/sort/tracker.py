@@ -253,7 +253,7 @@ class Tracker:
                         conf_mean = sum(conf_list)/conf_count
                         if conf_count >= 2 and conf_mean > 0.5 and number in self.team_numbers[team_id]: 
                             matched = self.matched_numbers[self.sequence_no].setdefault(team_id, {}).setdefault(number, {})                                
-                            if !matched or matched['score'] < conf_mean:
+                            if not bool(matched) or matched['score'] < conf_mean:
                                 self.matched_numbers[self.sequence_no][team_id][number] = {'track_id': track.track_id, 'score': conf_mean} 
                                 #matched = {'track_id': track.track_id, 'score': conf_mean}        
                 
