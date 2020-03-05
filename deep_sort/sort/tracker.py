@@ -228,16 +228,19 @@ class Tracker:
         
         for track in self.tracks:      
             if self.sequence_no == track.sequence_no:
-                numbers = {}
-                for number_list in track.number_history:
-                    
-                    detected_numbers = len(number_list)
-                    
-                    numbers_dict.setdefault(number_dict['team_id'], {}).setdefault(number_dict['number'], []).append(number_dict['confidence'])
                 
-                    for team_id, number_dict in numbers_dict.items():
-                        for number, conf_list in number_dict.items():
-                            numbers[team_id][number] = (len(conf_list), sum(conf_list))
+                detected_numbers = len(track.number_history)
+                
+                numbers = {}
+                for number_dict in track.number_history:                    
+                    numbers.setdefault(number_dict['team_id'], {}).setdefault(number_dict['number'], []).append(number_dict['confidence'])
+                
+                for team_id, number_dict in numbers.items():
+                    for number, conf_list in number_dict.items():
+                        conf_count = len(conf_list)
+                        conf_sum = sum(conf_list)
+                        if conf_count >= 2 and conf_sum/conf_count > 0.5:
+                            numbers[team_id][number] = conf_count
                 
                 
                 candidates_tracks.append({'track_id': track.track_id, 'sequence_no': track_sequence_no, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
