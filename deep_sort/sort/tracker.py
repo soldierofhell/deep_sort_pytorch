@@ -238,8 +238,9 @@ class Tracker:
                 detected_numbers = len(track.number_history)
                 
                 numbers = {}
-                for number_dict in track.number_history:                    
-                    numbers.setdefault(number_dict['team_id'], {}).setdefault(number_dict['number'], []).append(number_dict['confidence'])
+                for number_dict in track.number_history:
+                    if number_dict['confidence'] is not None:
+                        numbers.setdefault(number_dict['team_id'], {}).setdefault(number_dict['number'], []).append(number_dict['confidence'])
                 
                 for team_id, number_dict in numbers.items():
                     for number, conf_list in number_dict.items():
