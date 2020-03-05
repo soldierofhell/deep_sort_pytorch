@@ -39,7 +39,7 @@ class Tracker:
 
     """
 
-    def __init__(self, metric, max_iou_distance=0.7, max_age=70, n_init=0):
+    def __init__(self, metric, max_iou_distance=0.7, max_age=70, n_init=0, team_numbers=None):
         self.metric = metric
         self.max_iou_distance = max_iou_distance
         self.max_age = max_age
@@ -50,6 +50,10 @@ class Tracker:
         self._next_id = 1
         self.sequence_duration = 0
         self.sequence_no = 0
+        
+        self.matched_numbers = {}
+        
+        self.team_numbers = team_numbers
 
     def predict(self):
         """Propagate track state distributions one time step forward.
@@ -226,8 +230,10 @@ class Tracker:
         
     def update_numbers(self):
         
+        self.matched_numbers[self.sequence_no] = {}
+        
         for track in self.tracks:      
-            if self.sequence_no == track.sequence_no:
+            if self.sequence_no == track.sequence_no: # self.sequence_no - 1
                 
                 detected_numbers = len(track.number_history)
                 
@@ -238,14 +244,15 @@ class Tracker:
                 for team_id, number_dict in numbers.items():
                     for number, conf_list in number_dict.items():
                         conf_count = len(conf_list)
-                        conf_sum = sum(conf_list)
-                        if conf_count >= 2 and conf_sum/conf_count > 0.5:
-                            numbers[team_id][number] = conf_count
+                        conf_mean = sum(conf_list)/conf_count
+                        if conf_count >= 2 and conf_mean > 0.5 and number in self.team_numbers[team_id]: 
+                            matched = self.matched_numbers[self.sequence_no].setdefault(team_id, {}).setdefault(number, {})                                
+                            if matched == {} or matched['score'] < conf_mean:
+                                matched = {'track_id': track.track_id, 'score': conf_mean}
+                            
+            self.matched_numbers[self.sequence_no]
                 
                 
-                candidates_tracks.append({'track_id': track.track_id, 'sequence_no': track_sequence_no, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
-      
-        candidate_tracks = [t for t in candidate_tracks if t['mean_confidence']>0.8 and t['detected']>1 and t['detected']/t['all']>0.5]
-        
+
                     
 
