@@ -223,5 +223,26 @@ class Tracker:
         #    
         #    for candidate_track in candidate_tracks:
         #        if candidate_track.sequence_no == sequence_no:
+        
+    def update_numbers(self):
+        
+        for track in self.tracks:      
+            if self.sequence_no == track.sequence_no:
+                numbers = {}
+                for number_list in track.number_history:
+                    
+                    detected_numbers = len(number_list)
+                    
+                    numbers_dict.setdefault(number_dict['team_id'], {}).setdefault(number_dict['number'], []).append(number_dict['confidence'])
+                
+                    for team_id, number_dict in numbers_dict.items():
+                        for number, conf_list in number_dict.items():
+                            numbers[team_id][number] = (len(conf_list), sum(conf_list))
+                
+                
+                candidates_tracks.append({'track_id': track.track_id, 'sequence_no': track_sequence_no, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
+      
+        candidate_tracks = [t for t in candidate_tracks if t['mean_confidence']>0.8 and t['detected']>1 and t['detected']/t['all']>0.5]
+        
                     
 
