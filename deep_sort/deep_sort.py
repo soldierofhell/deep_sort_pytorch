@@ -221,7 +221,7 @@ class DeepSort(object):
             # split to teams
             embeddings = self.team_embeddings.predict(crop_list)
             dists = torch.cdist(embeddings, self.team_ref_embeddings)        
-            team_ids = torch.argmin(dists, dim=1)
+            team_ids = torch.argmin(dists, dim=1).cpu().numpy().tolist()
 
             # todo: judge, goalkeeper
             del embeddings
