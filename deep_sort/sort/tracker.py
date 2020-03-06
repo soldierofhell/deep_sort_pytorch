@@ -197,7 +197,7 @@ class Tracker:
         matches, unmatched_tracks, unmatched_detections, min_cost = \
                 linear_assignment.new_matching_cascade(
                     distance_metrics,
-                    self.tracks, detections)        
+                    self.tracks, detections, self.sequence_duration)        
            
         return matches, unmatched_tracks, unmatched_detections, min_cost
 
