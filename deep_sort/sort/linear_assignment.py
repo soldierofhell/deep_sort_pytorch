@@ -204,7 +204,7 @@ def gate_cost_matrix(
 
 from functools import partial
 
-def new_matching_cascade(distance_metrics, tracks, detections, track_indices=None, detection_indices=None):
+def new_matching_cascade(distance_metrics, tracks, detections, track_indices=None, detection_indices=None, sequence_duration=None):
     """Run matching cascade.
 
     Parameters
@@ -272,7 +272,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         
     logging.debug([tracks[k].time_since_update for k in track_indices]) 
         
-    for level in range(cascade_depth):
+    for level in range(min(cascade_depth, sequence_duration+1)):
         
         logging.debug(f'level: {level}')
         if len(unmatched_detections) == 0:  # No detections left
