@@ -133,7 +133,7 @@ class Detector(object):
 
                     cc, _ = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria, None, 1)
                     
-                    new_sequence = cc < 0.5
+                    new_sequence = cc < args.ecc_threshold
                     logging.debug(f'ECC: {cc}')
 
                 
@@ -258,6 +258,7 @@ def parse_args():
     parser.add_argument("--save_fps", type=int, default=20)
     parser.add_argument("--detections_dir", type=str, default="")
     parser.add_argument("--update_tracks", action="store_true")
+    parser.add_argument("--ecc_threshold", type=float, default=0.4)
     
     
     return parser.parse_args()
