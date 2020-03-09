@@ -16,6 +16,7 @@ import torch
 import torchvision.transforms.functional as TF
 
 import cv2
+import json
 
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
@@ -282,6 +283,27 @@ class DeepSort(object):
         
         return numbers_all, team_ids_all
     
+    
+        def _export(self, export_path):
+            track_list = []
+            for track in self.tracker.tracks:
+                track_dict = {}
+                track_dict['track_id'] = track.track_id
+                track_dict['detection_id'] = track.detection_id
+                
+                if track.is_deleted() or track.time_since_update > 0:
+                    continue
+                box = track.to_tlwh()
+                x1,y1,x2,y2 = self._tlwh_to_xyxy(box)
+
+                number = track.number if track.number is not None else -1
+                number_bbox = track.number_bbox if track.number_bbox is not None else [0,0,0,0]
+
+                min_cost = track.min_cost
+                track_list.append(np.array([x1,y1,x2,y2,track_id, match_method, number, number_bbox[0],number_bbox[1],number_bbox[2],number_bbox[3], detection_id, min_cost], dtype=np.int))
+           
+            with open(export_path, 'a') as f:
+                json.dump(track_list, f)
 
 
 
