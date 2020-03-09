@@ -29,11 +29,14 @@ __all__ = ['DeepSort']
 
 
 class DeepSort(object):
-    def __init__(self, model_path, max_dist=0.2, use_cuda=True):
+    def __init__(self, model_path, max_dist=0.2, use_cuda=True, extractor='pedestrian'):
         self.min_confidence = 0.6
-        self.nms_max_overlap = 1.0
+        #self.nms_max_overlap = 1.0
 
-        self.extractor = Extractor(model_path, use_cuda=use_cuda)
+        if extractor='pedestrian':
+            self.extractor = Extractor(model_path, use_cuda=use_cuda)
+        else:
+            self.extractor = SimilarityPredictor('/content/teams_ckpt.pth')
 
         max_cosine_distance = max_dist
         nn_budget = 100
@@ -64,6 +67,8 @@ class DeepSort(object):
                 else:
                     self.team_numbers[1].append(row['NUMBER'])        
             
+        
+        
         self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
         #self.team_threshold = 0.75
         team_ref_paths = ['/content/team0_ref.jpg', '/content/team1_ref.jpg']
