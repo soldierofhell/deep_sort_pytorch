@@ -208,6 +208,7 @@ class DeepSort(object):
                           
         numbers_all = []
         team_ids_all = []
+        features_all = []
         
         for batch_ind in batch_list: 
         
@@ -228,6 +229,10 @@ class DeepSort(object):
                 player_crop = ori_img[y1:y2,x1:x2]
                 crop_list.append(TF.to_tensor(player_crop).cuda())
 
+            # features
+            
+            features = self.extractor.predict(crop_list)            
+            
             # split to teams
             embeddings = self.team_embeddings.predict(crop_list)
             dists = torch.cdist(embeddings, self.team_ref_embeddings)        
@@ -278,10 +283,14 @@ class DeepSort(object):
        
             numbers_all.extend(numbers)
             team_ids_all.extend(team_ids)
+            features_all.extend(features)
             
         print('number dict: ', numbers_all)
         
-        return numbers_all, team_ids_all
+        if self.extractor == 'pedestrian':        
+            return numbers_all, team_ids_all
+        else:
+            return numbers_all, team_ids_all, features_all
     
     
         def _export(self, export_path):
