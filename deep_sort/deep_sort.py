@@ -33,7 +33,8 @@ class DeepSort(object):
         self.min_confidence = 0.6
         #self.nms_max_overlap = 1.0
 
-        if extractor='pedestrian':
+        self.extractor = extractor
+        if self.extractor == 'pedestrian':
             self.extractor = Extractor(model_path, use_cuda=use_cuda)
         else:
             self.extractor = SimilarityPredictor('/content/teams_ckpt.pth')
