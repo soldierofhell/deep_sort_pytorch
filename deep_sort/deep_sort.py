@@ -293,6 +293,7 @@ class DeepSort(object):
                     'state': track.state,
                     'time_since_update': track.time_since_update,
                     'kalman_box': self._tlwh_to_xyxy(track.to_tlwh()),
+                    'detection_box': self._tlwh_to_xyxy(track.detection.tlwh),
                     'number': track.number if track.number is not None else 0,
                     'number_bbox': track.number_bbox if track.number_bbox is not None else [0,0,0,0],
                     'min_cost': track.min_cost,
