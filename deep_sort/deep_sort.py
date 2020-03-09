@@ -81,7 +81,10 @@ class DeepSort(object):
     def update(self, bbox_xywh, confidences, ori_img, new_sequence):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
-        features = self._get_features(bbox_xywh, ori_img)
+        if self.extractor == 'pedestrian':
+            features = self._get_features(bbox_xywh, ori_img)
+        # else in _predict_numbers(), TODO: change this name           
+            
         numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
         
         bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
