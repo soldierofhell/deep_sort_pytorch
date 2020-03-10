@@ -314,7 +314,7 @@ class DeepSort(object):
                     'min_cost': track.min_cost,
                 }
                 track_list.append(track_dict)           
-           self.track_history.append({frame_id: track_list})
+            self.track_history.append({frame_id: track_list})
             
         def export(self, export_path):  
             with open(export_path, 'w') as f:
