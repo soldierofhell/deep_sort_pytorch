@@ -78,8 +78,10 @@ class DeepSort(object):
         self.team_ref_embeddings = self.team_embeddings.predict(team_ref_img)
         
         self.tracker = Tracker(metric, team_numbers=self.team_numbers)
+        
+        self.track_history = []
 
-    def update(self, bbox_xywh, confidences, ori_img, new_sequence):
+    def update(self, bbox_xywh, confidences, ori_img, new_sequence, frame_id):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
         if self.extractor == 'pedestrian':
@@ -293,7 +295,7 @@ class DeepSort(object):
             return numbers_all, team_ids_all, features_all
     
     
-        def _export(self, export_path):
+        def _add_frame_history(self, frame_id):
             track_list = []
             for track in self.tracker.tracks:
                 track_dict = {
@@ -307,10 +309,12 @@ class DeepSort(object):
                     'number_bbox': track.number_bbox if track.number_bbox is not None else [0,0,0,0],
                     'min_cost': track.min_cost,
                 }
-                track_list.append(track_dict)
-           
-            with open(export_path, 'a') as f:
-                json.dump(track_list, f)
+                track_list.append(track_dict)           
+           self.track_history.append({frame_id: track_list})
+            
+        def _export(self, export_path):  
+            with open(export_path, 'w') as f:
+                json.dump(self.track_history, f)
 
 
 
