@@ -299,7 +299,7 @@ class DeepSort(object):
         if self.extractor_type == 'pedestrian':        
             return numbers_all, team_ids_all
         else:
-            return numbers_all, team_ids_all, np.array(features_all)
+            return numbers_all, team_ids_all, np.array(features_all.cpu().numpy())
     
     
     def _add_frame_history(self, img_name):
