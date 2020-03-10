@@ -237,7 +237,8 @@ class DeepSort(object):
 
             # features
             
-            features = self.extractor.predict(crop_list)            
+            if self.extractor != 'pedestrian':        
+                features = self.extractor.predict(crop_list)            
             
             # split to teams
             embeddings = self.team_embeddings.predict(crop_list)
