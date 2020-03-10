@@ -254,8 +254,7 @@ class DeepSort(object):
             #print('team_ids: ', team_ids)
         
             for crop in crop_list:
-                logging.debug('crop size: ', torch.tensor(crop.size()).cpu().numpy())
-       
+                logging.debug('crop size: ', torch.tensor(crop.size()).cpu().numpy()[0].tolist())      
         
                 
             # number detection
