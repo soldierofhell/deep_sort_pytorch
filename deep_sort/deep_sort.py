@@ -254,7 +254,7 @@ class DeepSort(object):
             #print('team_ids: ', team_ids)
         
             for crop in crop_list:
-                logging.debug('crop size: ', torch.tensor(crop.size()))
+                logging.debug('crop size: ', torch.tensor(crop.size()).cpu().numpy())
        
         
                 
@@ -299,7 +299,8 @@ class DeepSort(object):
         if self.extractor_type == 'pedestrian':        
             return numbers_all, team_ids_all
         else:
-            return numbers_all, team_ids_all, np.array(features_all.cpu().numpy())
+            features_all = np.array([f.cpu().numpy() for f in features_all])
+            return numbers_all, team_ids_all, features_all
     
     
     def _add_frame_history(self, img_name):
