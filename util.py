@@ -64,7 +64,6 @@ def softmin(x):
     return x_exp/x_exp.sum()   
 
 def draw_offline(track_json, sequence_json, config_yml):
-def draw_offline(track_json, sequence_json, config_yml):
     sequence_label = "NEW SEQUENCE" if new_sequence else ""
     cv2.putText(img, f'FRAME_ID: {frame_id} | {sequence_label}', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)
     for i,box in enumerate(bbox):
