@@ -56,6 +56,7 @@ class DeepSort(object):
         self.number_decoder = TextPredictor()
         
         self.game_id = 0
+        self.team_0 = 'Belgium'
         self.players_list = []
         self.team_numbers = [[],[]]
         import csv
@@ -64,7 +65,7 @@ class DeepSort(object):
           for row in reader:
             if row['GAME_ID'] == str(self.game_id):
                 self.players_list.append(row)
-                if row['TEAM'] == 'Belgium':
+                if row['TEAM'] == self.team_0:
                     self.team_numbers[0].append(row['NUMBER'])
                 else:
                     self.team_numbers[1].append(row['NUMBER'])        
