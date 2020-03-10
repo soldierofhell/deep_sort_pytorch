@@ -238,7 +238,8 @@ class DeepSort(object):
             # features
             
             if self.extractor_type != 'pedestrian':        
-                features = self.extractor.predict(crop_list)            
+                features = self.extractor.predict(crop_list)
+                features_all.extend(features)
             
             # split to teams
             embeddings = self.team_embeddings.predict(crop_list)
@@ -290,7 +291,7 @@ class DeepSort(object):
        
             numbers_all.extend(numbers)
             team_ids_all.extend(team_ids)
-            features_all.extend(features)
+
             
         print('number dict: ', numbers_all)
         
