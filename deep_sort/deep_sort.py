@@ -30,12 +30,12 @@ __all__ = ['DeepSort']
 
 
 class DeepSort(object):
-    def __init__(self, model_path, max_dist=0.2, use_cuda=True, extractor='pedestrian'):
+    def __init__(self, model_path, max_dist=0.2, use_cuda=True, extractor_type='pedestrian'):
         self.min_confidence = 0.6
         #self.nms_max_overlap = 1.0
 
-        self.extractor = extractor
-        if self.extractor == 'pedestrian':
+        self.extractor_type = extractor_type
+        if self.extractor_type == 'pedestrian':
             self.extractor = Extractor(model_path, use_cuda=use_cuda)
         else:
             self.extractor = SimilarityPredictor('/content/teams_ckpt.pth')
@@ -84,8 +84,7 @@ class DeepSort(object):
     def update(self, bbox_xywh, confidences, ori_img, new_sequence, frame_id):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
-        print('extractor: ', self.extractor)
-        if self.extractor == 'pedestrian':
+        if self.extractor_type == 'pedestrian':
             features = self._get_features(bbox_xywh, ori_img)
             numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
         else:
@@ -238,7 +237,7 @@ class DeepSort(object):
 
             # features
             
-            if self.extractor != 'pedestrian':        
+            if self.extractor_type != 'pedestrian':        
                 features = self.extractor.predict(crop_list)            
             
             # split to teams
@@ -295,7 +294,7 @@ class DeepSort(object):
             
         print('number dict: ', numbers_all)
         
-        if self.extractor == 'pedestrian':        
+        if self.extractor_type == 'pedestrian':        
             return numbers_all, team_ids_all
         else:
             return numbers_all, team_ids_all, np.array(features_all)
