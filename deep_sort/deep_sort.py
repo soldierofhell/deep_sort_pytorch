@@ -86,10 +86,12 @@ class DeepSort(object):
         # generate detections
         if self.extractor == 'pedestrian':
             features = self._get_features(bbox_xywh, ori_img)
-        # else in _predict_numbers(), TODO: change this name           
+            numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
+        else:
+            numbers, team_ids, features = self._predict_numbers(bbox_xywh, ori_img)
+        # TODO: change this name           
             
-        numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
-        
+       
         bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
         
         #temp_number = {'number': None, 'confidence': None} # numbers[i]
