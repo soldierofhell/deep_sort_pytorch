@@ -61,7 +61,7 @@ def softmax(x):
 def softmin(x):
     assert isinstance(x, np.ndarray), "expect x be a numpy array"
     x_exp = np.exp(-x)
-    return x_exp/x_exp.sum()
+    return x_exp/x_exp.sum()   
 
 
 
