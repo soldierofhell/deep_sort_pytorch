@@ -254,7 +254,7 @@ class DeepSort(object):
             #print('team_ids: ', team_ids)
         
             for crop in crop_list:
-                logging.debug('crop size: ',crop.size())
+                logging.debug('crop size: ', torch.tensor(crop.size()))
        
         
                 
@@ -267,7 +267,7 @@ class DeepSort(object):
             numbers = []
             for team_id, number_output, player_crop, player_bbox in zip(team_ids, number_outputs, crop_list, bbox_list):
                 number_instance = number_output['instances']
-                print('detected boxes: ', number_instance.pred_classes.size()[0])
+                logging.debug('detected boxes: ', number_instance.pred_classes.size()[0])
 
                 if number_instance.pred_classes.size()[0]>0:
                     number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
