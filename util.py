@@ -75,31 +75,24 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
     with open(track_json) as f:
       track_list = json.load(f)
     
+    if config['output']['video']:
+        vw = cv2.VideoWriter(config['output']['video'], cv2.VideoWriter_fourcc(*'MJPG'), config['output']['fps'], (config['output']['width'], config['output']['height'])) 
+    
     for idx, img_file in enumerate(sorted(os.listdir(img_dir))):       
  
         img = cv2.imread(os.path.join(img_dir, img_file))
         tracks = track_list[idx][str(idx)] # track_dict[img_file] # track_dict = {'img_file': []}
+
+        for track in tracks:
+            track_id = track['track_id']            
+            color = COLORS_10[id%len(COLORS_10)] # todo: 
             
-        sequence_label = "NEW SEQUENCE" if new_sequence else ""
-        cv2.putText(img, f'FRAME_ID: {frame_id} | {sequence_label}', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)
-        for i,box in enumerate(bbox):
-            x1,y1,x2,y2 = [int(i) for i in box]
-            x1 += offset[0]
-            x2 += offset[0]
-            y1 += offset[1]
-            y2 += offset[1]
-            # box text and bar
-            id = int(identities[i]) if identities is not None else 0    
-            color = COLORS_10[id%len(COLORS_10)]
-            match_dict = {0: 'N', 1: 'F', 2: 'I'}  
-            label = '{}{:d}|{}|{}|{}'.format("", id, number[i], detection_id[i], min_cost[i]) # match_dict[match_method[i]]
-            label = '{:d}'.format(id)           
-            t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
-            cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
-            cv2.rectangle(img,(x1, y1),(x1+t_size[0]+3,y1+t_size[1]+4), color,-1)
-            #if np.max(number_box)>0:
-            #    cv2.rectangle(img,(x1+number_box[i,0], y1 + number_box[i,1]),(x1+number_box[i,2], y1 + number_box[i,3]),color,3)
-            cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
+            if config['flags']['bbox']:
+                x1,y1,x2,y2 = track[config['bbox']['type']]            
+                cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
+                
+        if config['output']['video']:
+            vw.write(draw_im)
 
 
 if __name__ == '__main__':
