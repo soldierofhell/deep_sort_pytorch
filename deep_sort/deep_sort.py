@@ -110,6 +110,8 @@ class DeepSort(object):
             
         self.tracker.predict()
         self.tracker.update(detections, new_sequence)
+        
+        self._add_frame_history(frame_id)
 
         # output bbox identities
         outputs = []
@@ -314,7 +316,7 @@ class DeepSort(object):
                 track_list.append(track_dict)           
            self.track_history.append({frame_id: track_list})
             
-        def _export(self, export_path):  
+        def export(self, export_path):  
             with open(export_path, 'w') as f:
                 json.dump(self.track_history, f)
 
