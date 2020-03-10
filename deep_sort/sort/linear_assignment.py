@@ -5,10 +5,19 @@ import numpy as np
 from scipy.optimize import linear_sum_assignment as linear_assignment
 from . import kalman_filter
 
+n = 100
+import pandas as pd
+pd.set_option('precision', 3)
+pd.set_option('max_rows', n)
+pd.set_option('max_columns', n)
+
+def to_pd(x):
+        return pd.DataFrame(x)
+
 import logging
 
 #logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
+logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w', format='%(message)s')
 
 
 INFTY_COST = 1e+5
@@ -62,7 +71,7 @@ def min_cost_matching(
         tracks, detections, track_indices, detection_indices)
     cost_matrix[cost_matrix > max_distance] = max_distance + 1e-5
     logging.debug(f'track_indices, detection_indices: {track_indices}, {detection_indices}')
-    logging.debug('final cost matrix:', cost_matrix.tolist())
+    logging.debug('final cost matrix:', to_pd(cost_matrix))
         
     row_indices, col_indices = linear_assignment(cost_matrix)
 
@@ -258,7 +267,11 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         distance_N = lambda_N * distance_metrics['N'](tracks, detections, track_indices, detection_indices)
         distance_C = lambda_C * distance_metrics['C'](tracks, detections, track_indices, detection_indices)
         
-        logging.debug(f"{level}: {distance_F}, {distance_I}, {distance_N}, {distance_C}")
+        logging.debug(f"{level}:")
+        logging.debug(to_pd(distance_F))
+        logging.debug(to_pd(distance_I))
+        logging.debug(to_pd(distance_N))
+        logging.debug(to_pd(distance_C))
         
         value = distance_F + distance_I + distance_N + distance_C
         
