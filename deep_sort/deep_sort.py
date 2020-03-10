@@ -38,7 +38,7 @@ class DeepSort(object):
         if self.extractor_type == 'pedestrian':
             self.extractor = Extractor(model_path, use_cuda=use_cuda)
         else:
-            self.extractor = SimilarityPredictor('/content/teams_ckpt.pth')
+            self.extractor = SimilarityPredictor('/content/players_ckpt.pth')
 
         max_cosine_distance = max_dist
         nn_budget = 100
