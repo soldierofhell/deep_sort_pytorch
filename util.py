@@ -100,7 +100,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
         for track in tracks:            
             track_id = track['track_id']
             if config['flags'].getboolean('sequence_override'):
-                track_id =             
+                track_id = sequence_dict[]            
             color = COLORS_10[track_id%len(COLORS_10)] # todo:
             
 
