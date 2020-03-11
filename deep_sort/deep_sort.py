@@ -341,6 +341,8 @@ class DeepSort(object):
             json.dump(self.track_history, f)
         with open(os.path.join(export_dir, 'detections.json'), 'w') as f:
             json.dump(self.detection_history, f)
+        with open(os.path.join(export_dir, 'matched.json'), 'w') as f:
+            json.dump(self.tracker.matched_tracks, f)
 
 
 
