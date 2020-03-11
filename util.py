@@ -82,8 +82,10 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
  
         img = cv2.imread(os.path.join(img_dir, img_file))
         tracks = track_dict[os.path.join(img_dir, img_file)] # track_dict[img_file] # track_dict = {'img_file': []}
+        
+        print(img.shape)
 
-        for track in tracks:
+        for track in tracks:            
             track_id = track['track_id']            
             color = COLORS_10[track_id%len(COLORS_10)] # todo: 
             
@@ -93,6 +95,9 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
                 
         if config['output']['video']:
             vw.write(img)
+            
+    if config['output']['video']:
+        vw.release()
 
 
 if __name__ == '__main__':
