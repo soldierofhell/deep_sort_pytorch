@@ -69,7 +69,7 @@ def min_cost_matching(
 
     cost_matrix = distance_metric(
         tracks, detections, track_indices, detection_indices)
-    cost_matrix[cost_matrix > max_distance] = max_distance #+ 1e-5
+    cost_matrix[cost_matrix > max_distance] = max_distance + 1e-5
     logging.debug(f'track_indices, detection_indices: {track_indices}, {detection_indices}')
     logging.debug('final cost matrix:', to_pd(cost_matrix, track_indices, detection_indices))
         
