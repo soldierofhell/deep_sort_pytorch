@@ -194,7 +194,7 @@ class Tracker:
             'F': gated_metric,
             'N': number_cost,
             'C': confidence_cost,
-            'M': partial(iou_matching.iou_cost(method='MIN')),
+            'M': partial(iou_matching.iou_cost, method='MIN'),
         }
         
         matches, unmatched_tracks, unmatched_detections, min_cost = \
