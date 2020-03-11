@@ -86,7 +86,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
         if config['flags'].getboolean('frame_id'):
             main_label = f'FRAME_ID: {idx+1}'
             if config['flags'].getboolean('frame_id'):
-                main_label += '| {sequence_label}'
+                main_label += '| '
             cv2.putText(img, main_label, (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)           
 
         tracks = track_dict[img_path] # track_dict[img_file] # track_dict = {'img_file': []}
