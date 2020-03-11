@@ -92,8 +92,9 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
             
             if config['flags']['player_box']:
                 print(track[config['bbox']['type']])
-                x1,y1,x2,y2 = track[config['bbox']['type']]            
-                cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
+                if track['time_since_update'] == 0:
+                    x1,y1,x2,y2 = track[config['bbox']['type']]            
+                    cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
                 
         if config['output']['video']:
             vw.write(img)
