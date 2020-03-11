@@ -11,8 +11,8 @@ pd.set_option('precision', 3)
 pd.set_option('max_rows', n)
 pd.set_option('max_columns', n)
 
-def to_pd(x):
-        return pd.DataFrame(x)
+def to_pd(x, rows, cols):
+        return pd.DataFrame(x, index = rows, columns = cols)
 
 import logging
 
@@ -71,7 +71,7 @@ def min_cost_matching(
         tracks, detections, track_indices, detection_indices)
     cost_matrix[cost_matrix > max_distance] = max_distance #+ 1e-5
     logging.debug(f'track_indices, detection_indices: {track_indices}, {detection_indices}')
-    logging.debug('final cost matrix:', to_pd(cost_matrix))
+    logging.debug('final cost matrix:', to_pd(cost_matrix, track_indices, detection_indices))
         
     row_indices, col_indices = linear_assignment(cost_matrix)
 
@@ -270,11 +270,11 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         distance_M = lambda_M * distance_metrics['M'](tracks, detections, track_indices, detection_indices)
         
         logging.debug(f"{level}:")
-        logging.debug(f'F: {to_pd(distance_F)}')
-        logging.debug(f'I: {to_pd(distance_I)}')
-        logging.debug(f'N: {to_pd(distance_N)}')
-        logging.debug(f'C: {to_pd(distance_C)}')
-        logging.debug(f'M: {to_pd(distance_M)}')
+        logging.debug(f'F: {to_pd(distance_F, track_indices, detection_indices)}')
+        logging.debug(f'I: {to_pd(distance_I, track_indices, detection_indices)}')
+        logging.debug(f'N: {to_pd(distance_N, track_indices, detection_indices)}')
+        logging.debug(f'C: {to_pd(distance_C, track_indices, detection_indices)}')
+        logging.debug(f'M: {to_pd(distance_M, track_indices, detection_indices)}')
         
         value = distance_F + distance_I + distance_N + distance_C
         
