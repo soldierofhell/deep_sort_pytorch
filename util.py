@@ -91,7 +91,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
             color = COLORS_10[track_id%len(COLORS_10)] # todo:
             
             if config['flags'].getboolean('frame_id'):
-                cv2.putText(img, f'FRAME_ID: {frame_id}', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)
+                cv2.putText(img, f'FRAME_ID: {track['frame_id']}', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)
             
             if config['flags'].getboolean('player_box'):
                 print(track[config['bbox']['type']])
