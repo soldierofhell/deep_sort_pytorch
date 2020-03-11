@@ -320,6 +320,7 @@ class DeepSort(object):
                 'number_bbox': track.number_bbox if track.number_bbox is not None else [0,0,0,0],
                 'min_cost': track.min_cost,
                 'detection_conf': track.detection.confidence,
+                'team_id': team_id,
             }
             track_list.append(track_dict)           
         self.track_history[img_name] = track_list
