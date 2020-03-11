@@ -258,20 +258,23 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
     def combined_distance_metric(distance_metrics, level, tracks, detections, track_indices=None, detection_indices=None):
         
         lambda_F = (0.5) ** (1/level) # 1.0 * 
-        lambda_I = (0.5) ** (1/level) # 2.0 * 
+        lambda_I = 0.5 * (0.5) ** (1/level) # 2.0 * 
         lambda_N = 0.5
         lambda_C = 1
+        lambda_M = 0.5 * (0.5) ** (1/level)
         
         distance_F = lambda_F * distance_metrics['F'](tracks, detections, track_indices, detection_indices)
         distance_I = lambda_I * distance_metrics['I'](tracks, detections, track_indices, detection_indices)
         distance_N = lambda_N * distance_metrics['N'](tracks, detections, track_indices, detection_indices)
         distance_C = lambda_C * distance_metrics['C'](tracks, detections, track_indices, detection_indices)
+        distance_M = lambda_M * distance_metrics['M'](tracks, detections, track_indices, detection_indices)
         
         logging.debug(f"{level}:")
-        logging.debug(to_pd(distance_F))
-        logging.debug(to_pd(distance_I))
-        logging.debug(to_pd(distance_N))
-        logging.debug(to_pd(distance_C))
+        logging.debug(f'F: {to_pd(distance_F)}')
+        logging.debug(f'I: {to_pd(distance_I)}')
+        logging.debug(f'N: {to_pd(distance_N)}')
+        logging.debug(f'C: {to_pd(distance_C)}')
+        logging.debug(f'M: {to_pd(distance_M)}')
         
         value = distance_F + distance_I + distance_N + distance_C
         
