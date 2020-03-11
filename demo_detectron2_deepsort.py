@@ -195,7 +195,7 @@ class Detector(object):
                 #bbox_xcycwh[:, 3:] *= 1.2
 
                 outputs, detections = self.deepsort.update(bbox_xcycwh, cls_conf, im, new_sequence, frame_id-1, self.img_list[frame_id-1])
-                self.deepsort.export('/content/export.json')
+                self.deepsort.export('/content')
                 if len(outputs) > 0:                    
                     bbox_xyxy = outputs[:, :4]
                     #dh = ((0.1/1.2)*(bbox_xyxy[:,3]-bbox_xyxy[:,1])).astype(int)
