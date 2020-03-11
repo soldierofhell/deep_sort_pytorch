@@ -94,7 +94,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
                 cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
                 
         if config['output']['video']:
-            print('write..'
+            print('write..')
             vw.write(img)
             
     if config['output']['video']:
