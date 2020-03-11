@@ -82,6 +82,11 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
  
         img_path = os.path.join(img_dir, img_file)
         img = cv2.imread(img_path)
+
+        if config['flags'].getboolean('frame_id'):
+            cv2.putText(img, f'FRAME_ID: {img_path}', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)
+            
+
         tracks = track_dict[img_path] # track_dict[img_file] # track_dict = {'img_file': []}
 
         print(tracks)
@@ -90,9 +95,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
             track_id = track['track_id']            
             color = COLORS_10[track_id%len(COLORS_10)] # todo:
             
-            if config['flags'].getboolean('frame_id'):
-                cv2.putText(img, f'FRAME_ID: {track['frame_id']}', (0, 50), cv2.FONT_HERSHEY_PLAIN, 3, [255,255,255], 2)
-            
+
             if config['flags'].getboolean('player_box'):
                 print(track[config['bbox']['type']])
                 if track['time_since_update'] == 0:
