@@ -6,6 +6,8 @@ from . import linear_assignment
 from . import iou_matching
 from .track import Track
 
+from functools import partial
+
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
 
@@ -191,7 +193,8 @@ class Tracker:
             'I': iou_matching.iou_cost,
             'F': gated_metric,
             'N': number_cost,
-            'C': confidence_cost
+            'C': confidence_cost,
+            'M': partial(iou_matching.iou_cost(method='MIN'),
         }
         
         matches, unmatched_tracks, unmatched_detections, min_cost = \
