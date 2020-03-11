@@ -334,9 +334,11 @@ class DeepSort(object):
         self.detection_history[img_name] = detection_list
             
 
-    def export(self, export_path):  
-        with open(export_path, 'w') as f:
+    def export(self, export_dir):  
+        with open(os.path.join(export_dir, 'tracks.json'), 'w') as f:
             json.dump(self.track_history, f)
+        with open(os.path.join(export_dir, 'detections.json'), 'w') as f:
+            json.dump(self.detection_history, f)
 
 
 
