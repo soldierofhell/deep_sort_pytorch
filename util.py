@@ -83,7 +83,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
         img = cv2.imread(os.path.join(img_dir, img_file))
         tracks = track_dict[os.path.join(img_dir, img_file)] # track_dict[img_file] # track_dict = {'img_file': []}
         
-        print(img.shape)
+        #print(img.shape)
 
         for track in tracks:            
             track_id = track['track_id']            
@@ -94,6 +94,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
                 cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
                 
         if config['output']['video']:
+            print('write..'
             vw.write(img)
             
     if config['output']['video']:
