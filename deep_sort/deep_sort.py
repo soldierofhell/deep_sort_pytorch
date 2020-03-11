@@ -81,6 +81,7 @@ class DeepSort(object):
         self.tracker = Tracker(metric, team_numbers=self.team_numbers)
         
         self.track_history = {}
+        self.detection_history = {}
 
     def update(self, bbox_xywh, confidences, ori_img, new_sequence, frame_id, img_name):
         self.height, self.width = ori_img.shape[:2]
@@ -96,7 +97,7 @@ class DeepSort(object):
         bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
         
         #temp_number = {'number': None, 'confidence': None} # numbers[i]
-        detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
+        self.detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
         
         # run on non-maximum supression
         #boxes = np.array([d.tlwh for d in detections])
@@ -110,7 +111,7 @@ class DeepSort(object):
             logging.debug(self.tracker.matched_numbers)
             
         self.tracker.predict()
-        self.tracker.update(detections, new_sequence)
+        self.tracker.update(self.detections, new_sequence)
         
         self._add_frame_history(img_name)
 
@@ -130,7 +131,7 @@ class DeepSort(object):
             outputs.append(np.array([x1,y1,x2,y2,track_id, match_method, number, number_bbox[0],number_bbox[1],number_bbox[2],number_bbox[3], detection_id, min_cost], dtype=np.int))
         if len(outputs) > 0:
             outputs = np.stack(outputs,axis=0)
-        return outputs, detections
+        return outputs, self.detections
 
 
     """
@@ -321,6 +322,17 @@ class DeepSort(object):
             }
             track_list.append(track_dict)           
         self.track_history[img_name] = track_list
+        
+        detection_list = []
+        for idx, detection in enumerate(self.detections):
+            detection_dict = {
+                'detection_id': idx,
+                'bbox': self._tlwh_to_xyxy(detection.tlwh)
+                'confidence': detection.confidence,
+            }
+            detection_list.append(detection_dict)           
+        self.detection_history[img_name] = detection_list
+            
 
     def export(self, export_path):  
         with open(export_path, 'w') as f:
