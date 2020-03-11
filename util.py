@@ -91,7 +91,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
 
         tracks = track_dict[img_path] # track_dict[img_file] # track_dict = {'img_file': []}
 
-        print(tracks)
+        #print(tracks)
 
         for track in tracks:            
             track_id = track['track_id']            
@@ -99,21 +99,21 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
             
 
             if config['flags'].getboolean('player_box'):
-                print(track[config['bbox']['type']])
+                #print(track[config['bbox']['type']])
                 if track['time_since_update'] == 0:
                     x1,y1,x2,y2 = track[config['bbox']['type']]            
                     cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
                         
                     if config['flags'].getboolean('number'):
                         label = str(track['number'])
-                        print(label)
+                        #print(label)
                         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
                         cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
                         
                         
                     if config['flags'].getboolean('track_id'):
                         label = str(track['track_id'])
-                        print(label)
+                        #print(label)
                         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
                         cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
                 
