@@ -73,7 +73,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
     config.read('draw_config.ini')
     
     with open(track_json) as f:
-      track_list = json.load(f)
+      track_dict = json.load(f)
     
     if config['output']['video']:
         vw = cv2.VideoWriter(config['output']['video'], cv2.VideoWriter_fourcc(*'MJPG'), int(config['output']['fps']), (int(config['output']['width']), int(config['output']['height']))) 
@@ -81,7 +81,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
     for idx, img_file in enumerate(sorted(os.listdir(img_dir))):       
  
         img = cv2.imread(os.path.join(img_dir, img_file))
-        tracks = track_list[idx][str(idx)] # track_dict[img_file] # track_dict = {'img_file': []}
+        tracks = track_dict[os.path.join(img_dir, img_file)] # track_dict[img_file] # track_dict = {'img_file': []}
 
         for track in tracks:
             track_id = track['track_id']            
