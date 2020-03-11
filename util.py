@@ -67,13 +67,17 @@ import configparser
 import json
 import os
 
-def draw_offline(img_dir, track_json, sequence_json, config_yml):
+def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml):
             
     config = configparser.ConfigParser()
     config.read('draw_config.ini')
     
     with open(track_json) as f:
       track_dict = json.load(f)
+    with open(detection_json) as f:
+      detection_dict = json.load(f)
+    with open(sequence_json) as f:
+      sequence_dict = json.load(f)
     
     if config['output']['video']:
         vw = cv2.VideoWriter(config['output']['video'], cv2.VideoWriter_fourcc(*'MJPG'), int(config['output']['fps']), (int(config['output']['width']), int(config['output']['height'])))
@@ -94,7 +98,9 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
         #print(tracks)
 
         for track in tracks:            
-            track_id = track['track_id']            
+            track_id = track['track_id']
+            if config['flags'].getboolean('sequence_override'):
+                track_id =             
             color = COLORS_10[track_id%len(COLORS_10)] # todo:
             
 
