@@ -87,7 +87,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
             track_id = track['track_id']            
             color = COLORS_10[track_id%len(COLORS_10)] # todo: 
             
-            if config['flags']['player_bbox']:
+            if config['flags']['player_box']:
                 x1,y1,x2,y2 = track[config['bbox']['type']]            
                 cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
                 
