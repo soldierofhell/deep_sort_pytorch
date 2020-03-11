@@ -90,20 +90,20 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
             track_id = track['track_id']            
             color = COLORS_10[track_id%len(COLORS_10)] # todo: 
             
-            if config['flags']['player_box']:
+            if config['flags'].getboolean('player_box'):
                 print(track[config['bbox']['type']])
                 if track['time_since_update'] == 0:
                     x1,y1,x2,y2 = track[config['bbox']['type']]            
                     cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
                         
-            if config['flags']['number']:
+            if config['flags'].getboolean('number'):
                 label = str(track['number'])
                 print(label)
                 t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
                 cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
                         
                         
-            if config['flags']['track_id']:
+            if config['flags'].getboolean('track_id'):
                 label = str(track['track_id'])
                 print(label)
                 t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
