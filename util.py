@@ -85,7 +85,7 @@ def draw_offline(img_dir, track_json, sequence_json, config_yml):
 
         for track in tracks:
             track_id = track['track_id']            
-            color = COLORS_10[id%len(COLORS_10)] # todo: 
+            color = COLORS_10[track_id%len(COLORS_10)] # todo: 
             
             if config['flags']['bbox']:
                 x1,y1,x2,y2 = track[config['bbox']['type']]            
