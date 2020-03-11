@@ -284,7 +284,7 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
     matches = []
     min_cost = [] # debug
 
-    cascade_depth = 5
+    cascade_depth = 10
         
     logging.debug([tracks[k].time_since_update for k in track_indices]) 
         
