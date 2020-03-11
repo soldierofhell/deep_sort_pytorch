@@ -54,6 +54,7 @@ class Tracker:
         self.sequence_no = 0
         
         self.matched_numbers = {}
+        self.matched_tracks = {}
         
         self.team_numbers = team_numbers
 
@@ -258,7 +259,8 @@ class Tracker:
                             matched = self.matched_numbers[self.sequence_no].setdefault(team_id, {}).setdefault(number, {})                                
                             if not bool(matched) or matched['score'] < conf_mean:
                                 self.matched_numbers[self.sequence_no][team_id][number] = {'track_id': track.track_id , 'score': conf_mean}
-                                #matched = {'track_id': track.track_id, 'score': conf_mean}        
+                                #matched = {'track_id': track.track_id, 'score': conf_mean}
+                                self.matched_tracks[track.track_id] = {'team_id': team_id, 'number': number}
                 
 
                     
