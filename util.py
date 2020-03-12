@@ -107,7 +107,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
             if config['player_box'].getboolean('raw_detection'):                
                 for detection in detections:
                     detection_id = detection['detection_id']
-                    color = COLORS_10[detection_id%len(COLORS_10)]
+                    color = [255,255,255] #COLORS_10[detection_id%len(COLORS_10)]
                     x1,y1,x2,y2 = detection['bbox']            
                     cv2.rectangle(img, (x1,y1), (x2,y2), color, 3)            
                     if config['flags'].getboolean('detection_id'):
@@ -120,31 +120,28 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                     
             if config['player_box'].getboolean('kalman_box') or config['player_box'].getboolean('detection_box'): 
                 for track in tracks:            
-                    track_id = track['track_id']
-                    print('sequence_override: ', config['flags'].getboolean('sequence_override'))
-                    if config['flags'].getboolean('sequence_override'):
-                        track_id = sequence_dict[track_id]            
+                    track_id = track['track_id']           
                     color = COLORS_10[track_id%len(COLORS_10)] # todo:
 
+                    if track['time_since_update'] == 0:
+                        x1,y1,x2,y2 = track[config['bbox']['type']]            
+                        cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
+                        if config['flags'].getboolean('sequence_override'):
+                            number_in_sequence = sequence_dict[track_id]['number']
+                            t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
+                            cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
 
-                    if config['flags'].getboolean('player_box'):
-                        #print(track[config['bbox']['type']])
-                        if track['time_since_update'] == 0:
-                            x1,y1,x2,y2 = track[config['bbox']['type']]            
-                            cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
-
-                            if config['flags'].getboolean('number'):
-                                label = str(track['number'])
-                                #print(label)
-                                t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
-                                cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
+                        if config['flags'].getboolean('number'):
+                            label = str(track['number'])
+                            #print(label)
+                            t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
+                            cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
 
 
-                            if config['flags'].getboolean('track_id'):
-                                label = str(track['track_id'])
-                                #print(label)
-                                t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
-                                cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
+                        if config['flags'].getboolean('track_id'):
+                            label = str(track['track_id'])
+                            t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
+                            cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
                 
                         
                 
