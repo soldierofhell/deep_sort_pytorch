@@ -45,7 +45,7 @@ class Detector(object):
         cfg.MODEL.MASK_ON = False
         cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1 
         #cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
-        cfg.MODEL.ROI_HEADS.NMS_THRESH_TEST = 0.7
+        cfg.MODEL.ROI_HEADS.NMS_THRESH_TEST = 0.5
 
         self.predictor = DefaultPredictor(cfg)
         self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda, extractor_type=args.extractor_type, game_id=args.game_id, team_0=args.team_0)
