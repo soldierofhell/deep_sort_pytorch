@@ -70,7 +70,7 @@ import os
 def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml):
             
     config = configparser.ConfigParser()
-    config.read('draw_config.ini')
+    config.read(config_yml)
     
     with open(track_json) as f:
       track_dict = json.load(f)
