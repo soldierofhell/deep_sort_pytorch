@@ -107,7 +107,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
             if config['player_box'].getboolean('raw_detection'):                
                 for detection in detections:
                     detection_id = detection['detection_id']
-                    color = [255,255,255] #COLORS_10[detection_id%len(COLORS_10)]
+                    color = COLORS_10[detection_id%len(COLORS_10)]
                     x1,y1,x2,y2 = detection['bbox']            
                     cv2.rectangle(img, (x1,y1), (x2,y2), color, 3)            
                     if config['flags'].getboolean('detection_id'):
