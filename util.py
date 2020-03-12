@@ -113,6 +113,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
             if config['player_box'].getboolean('kalman_box') or config['player_box'].getboolean('detection_box'): 
                 for track in tracks:            
                     track_id = track['track_id']
+                    print('sequence_override: ', config['flags'].getboolean('sequence_override'))
                     if config['flags'].getboolean('sequence_override'):
                         track_id = sequence_dict[track_id]            
                     color = COLORS_10[track_id%len(COLORS_10)] # todo:
