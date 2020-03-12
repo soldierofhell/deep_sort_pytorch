@@ -31,7 +31,7 @@ __all__ = ['DeepSort']
 
 
 class DeepSort(object):
-    def __init__(self, model_path, max_dist=0.2, use_cuda=True, extractor_type='pedestrian'):
+    def __init__(self, model_path, max_dist=0.2, use_cuda=True, extractor_type='pedestrian', game_id=0, team_0='Belgium'):
         self.min_confidence = 0.6
         #self.nms_max_overlap = 1.0
 
@@ -56,8 +56,8 @@ class DeepSort(object):
         
         self.number_decoder = TextPredictor()
         
-        self.game_id = 0
-        self.team_0 = 'Belgium'
+        self.game_id = game_id
+        self.team_0 = team_0
         self.players_list = []
         self.team_numbers = [[],[]]
         import csv
