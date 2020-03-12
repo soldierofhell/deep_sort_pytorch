@@ -48,7 +48,7 @@ class Detector(object):
         cfg.MODEL.ROI_HEADS.NMS_THRESH_TEST = 0.7
 
         self.predictor = DefaultPredictor(cfg)
-        self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda, extractor_type=args.extractor_type)
+        self.deepsort = DeepSort(args.deepsort_checkpoint, use_cuda=use_cuda, extractor_type=args.extractor_type, game_id=args.game_id, team_0=args.team_0)
         #self.class_names = self.yolo3.class_names
 
     def __enter__(self):
@@ -261,6 +261,8 @@ def parse_args():
     parser.add_argument("--update_tracks", action="store_true")
     parser.add_argument("--ecc_threshold", type=float, default=0.4)
     parser.add_argument("--extractor_type", type=str, default="pedestrian")
+    parser.add_argument("--game_id", type=int, default=0)
+    parser.add_argument("--team_0", type=str, default="Belgium")
     
     
     return parser.parse_args()
