@@ -32,7 +32,7 @@ __all__ = ['DeepSort']
 
 class DeepSort(object):
     def __init__(self, model_path, max_dist=0.2, use_cuda=True, extractor_type='pedestrian', game_id=0, team_0='Belgium'):
-        self.min_confidence = 0.6
+        self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
 
         self.extractor_type = extractor_type
