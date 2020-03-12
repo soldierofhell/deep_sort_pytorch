@@ -82,6 +82,8 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
     if config['output']['video']:
         vw = cv2.VideoWriter(config['output']['video'], cv2.VideoWriter_fourcc(*'MJPG'), int(config['output']['fps']), (int(config['output']['width']), int(config['output']['height'])))
     
+    # TODO: remove tracks that were Tentative + Deleted
+
     for idx, img_file in enumerate(sorted(os.listdir(img_dir))):       
  
         img_path = os.path.join(img_dir, img_file)
@@ -96,6 +98,8 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
         tracks = track_dict[img_path] # track_dict[img_file] # track_dict = {'img_file': []}
 
         detections = detection_dict[img_path]
+            
+
 
         #print(tracks)
         
@@ -111,6 +115,8 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                         label = f'{detection_id}:{confidence:.2f}' 
                         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
                         cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
+                        
+
                     
             if config['player_box'].getboolean('kalman_box') or config['player_box'].getboolean('detection_box'): 
                 for track in tracks:            
