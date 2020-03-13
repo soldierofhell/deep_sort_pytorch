@@ -92,7 +92,9 @@ class Track:
         
         self.number_history = [] # {'age': 22, 'number': 10, 'confidence': 0.9, team_id: 0}
         
-        self.team_id = team_id
+        self.team_id = team_id                
+        self.team_ids = []
+        self.team_ids.append(team_id)
         
         self.detection_id = detection_id
         self.min_cost = -1
@@ -166,6 +168,7 @@ class Track:
         self.number_confidence = detection.number_confidence
         self.number_bbox = detection.number_bbox
         self.team_id = detection.team_id
+        self.team_ids.append(detection.team_id)
         
         self.detection = detection
 
