@@ -132,11 +132,11 @@ class Tracker:
 
     def _match(self, detections):
 
-        def gated_metric(tracks, dets, track_indices, detection_indices, feature_type='player'):
-            if feature_type=='player':
-                features = np.array([dets[i].feature for i in detection_indices])
-            else:
-                features = np.array([dets[i].team_feature for i in detection_indices])
+        def gated_metric(tracks, dets, track_indices, detection_indices): # , feature_type='player'
+            #if feature_type=='player':
+            features = np.array([dets[i].feature for i in detection_indices])
+            #else:
+            #    features = np.array([dets[i].team_feature for i in detection_indices])
             targets = np.array([tracks[i].track_id for i in track_indices])
             cost_matrix = self.metric.distance(features, targets)
             cost_matrix = linear_assignment.gate_cost_matrix(
@@ -200,7 +200,7 @@ class Tracker:
             'N': number_cost, # number
             'C': confidence_cost, # confidence
             'M': partial(iou_matching.iou_cost, method='MIN'), # Io Min
-            'T': partial(gated_metric, feature_type='team'), # team features
+            #'T': partial(gated_metric, feature_type='team'), # team features
         }
         
         matches, unmatched_tracks, unmatched_detections, min_cost = \
@@ -215,7 +215,7 @@ class Tracker:
         self.tracks.append(Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
             detection.feature, detection_id=detection_idx,
-            sequence_no=self.sequence_no, detection=detection, team_feature=detection.team_feature))
+            sequence_no=self.sequence_no, detection=detection)) # , team_feature=detection.team_feature
         self._next_id += 1
         
        
