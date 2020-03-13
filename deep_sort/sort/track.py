@@ -64,7 +64,7 @@ class Track:
     """
 
     def __init__(self, mean, covariance, track_id, n_init, max_age,
-                 feature=None, number=None, number_confidence=None, number_bbox=None, team_id=None, detection_id=None, sequence_no=None, detection=None):
+                 feature=None, number=None, number_confidence=None, number_bbox=None, team_id=None, detection_id=None, sequence_no=None, detection=None, team_feature=team_feature):
         self.mean = mean
         self.covariance = covariance
         self.track_id = track_id
@@ -76,6 +76,10 @@ class Track:
         self.features = []
         if feature is not None:
             self.features.append(feature)
+            
+        self.team_features = []
+        if team_feature is not None:
+            self.team_features.append(team_feature)
 
         self._n_init = n_init
         self._max_age = max_age
@@ -153,7 +157,10 @@ class Track:
         """
         self.mean, self.covariance = kf.update(
             self.mean, self.covariance, detection.to_xyah())
+        
         self.features.append(detection.feature)
+        self.team_features.append(detection.team_feature)
+        
         self.number = detection.number
         self.number_confidence = detection.number_confidence
         self.number_bbox = detection.number_bbox
