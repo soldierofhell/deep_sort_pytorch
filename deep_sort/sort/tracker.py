@@ -164,6 +164,20 @@ class Tracker:
                 team_id_candidates = np.asarray([detections[i].team_id for i in detection_indices])
                 
                 cost_matrix[row, :] = 1 - np.logical_and(number == candidates, team_id == team_id_candidates)
+                
+        def team_cost(tracks, detections, track_indices=None, detection_indices=None):    
+            if track_indices is None:
+                track_indices = np.arange(len(tracks))
+            if detection_indices is None:
+                detection_indices = np.arange(len(detections))
+
+            cost_matrix = np.ones((len(track_indices), len(detection_indices)))
+
+            for row, track_idx in enumerate(track_indices):               
+                team_id = tracks[track_idx].team_id
+                team_id_candidates = np.asarray([detections[i].team_id for i in detection_indices])
+                
+                cost_matrix[row, :] = 1 - np.logical_and(number == candidates, team_id == team_id_candidates)
 
                 # todo: dodac warunki na ta sama druzyne, czyli min features
 
@@ -201,6 +215,7 @@ class Tracker:
             'C': confidence_cost, # confidence
             'M': partial(iou_matching.iou_cost, method='MIN'), # Io Min
             #'T': partial(gated_metric, feature_type='team'), # team features
+            'T': team_cost,
         }
         
         matches, unmatched_tracks, unmatched_detections, min_cost = \
