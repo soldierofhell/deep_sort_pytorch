@@ -31,7 +31,7 @@ class Detection(object):
         self.confidence = float(confidence)
         
         self.feature = np.asarray(feature, dtype=np.float32)
-        self.team_feature = np.asarray(team_feature, dtype=np.float32)
+        #self.team_feature = np.asarray(team_feature, dtype=np.float32)
         
         self.track_id = 0
         
