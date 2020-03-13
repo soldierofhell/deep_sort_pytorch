@@ -26,10 +26,13 @@ class Detection(object):
 
     """
 
-    def __init__(self, tlwh, confidence, feature, number, team_id):
+    def __init__(self, tlwh, confidence, feature, team_feature, number, team_id):
         self.tlwh = np.asarray(tlwh, dtype=np.float)
         self.confidence = float(confidence)
+        
         self.feature = np.asarray(feature, dtype=np.float32)
+        self.team_feature = np.asarray(feature, dtype=np.float32)
+        
         self.track_id = 0
         
         self.number = number['number']
