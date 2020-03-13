@@ -124,6 +124,7 @@ class Tracker:
             #if not track.is_confirmed():
             #    continue
             features += track.features
+            team_features += track.team_features
             targets += [track.track_id for _ in track.features]
             track.features = []
         self.metric.partial_fit(
