@@ -131,8 +131,11 @@ class Tracker:
 
     def _match(self, detections):
 
-        def gated_metric(tracks, dets, track_indices, detection_indices):
-            features = np.array([dets[i].feature for i in detection_indices])
+        def gated_metric(tracks, dets, track_indices, detection_indices, feature_type='player'):
+            if feature_type=='player':
+                features = np.array([dets[i].feature for i in detection_indices])
+            else:
+                features = np.array([dets[i].team_feature for i in detection_indices])
             targets = np.array([tracks[i].track_id for i in track_indices])
             cost_matrix = self.metric.distance(features, targets)
             cost_matrix = linear_assignment.gate_cost_matrix(
@@ -191,11 +194,12 @@ class Tracker:
         logging.debug(f'unconfirmed_tracks: {unconfirmed_tracks}')
 
         distance_metrics = {
-            'I': iou_matching.iou_cost,
-            'F': gated_metric,
-            'N': number_cost,
-            'C': confidence_cost,
-            'M': partial(iou_matching.iou_cost, method='MIN'),
+            'I': iou_matching.iou_cost, # IoU
+            'F': gated_metric, # player features
+            'N': number_cost, # number
+            'C': confidence_cost, # confidence
+            'M': partial(iou_matching.iou_cost, method='MIN'), # Io Min
+            'T': partial(gated_metric, feature_type='team'), # team features
         }
         
         matches, unmatched_tracks, unmatched_detections, min_cost = \
@@ -209,29 +213,11 @@ class Tracker:
         mean, covariance = self.kf.initiate(detection.to_xyah())
         self.tracks.append(Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
-            detection.feature, detection_id=detection_idx, sequence_no=self.sequence_no, detection=detection))
+            detection.feature, detection_id=detection_idx,
+            sequence_no=self.sequence_no, detection=detection, team_feature=detection.team_feature))
         self._next_id += 1
         
-    def _match_number(self, track_id):
-        
-        current_track = self.tracks[track_id]
-        candidates_tracks = []
-        
-        for track in self.tracks:      
-            if self.sequence_duration < track.age: # previous sequence
-                confidence = []
-                for number_dict in track.number_history:
-                    if number_dict['number'] == current.track_number and number_dict['team_id'] == current.team_id:
-                        confidence.append(number_dict['confidence'])
-                candidates_tracks.append({'track_id': track.track_id, 'sequence_no': track_sequence_no, 'mean_confidence': np.array(confidence).mean(), 'detected': len(confidence), 'total': len(number_dict)})
-      
-        candidate_tracks = [t for t in candidate_tracks if t['mean_confidence']>0.8 and t['detected']>1 and t['detected']/t['all']>0.5]
-        
-        #for sequence_no in range(self.sequence_no):
-        #    
-        #    for candidate_track in candidate_tracks:
-        #        if candidate_track.sequence_no == sequence_no:
-        
+       
     def update_numbers(self):
         
         self.matched_numbers[self.sequence_no] = {}
