@@ -74,26 +74,26 @@ class DeepSort(object):
         
         self.number_decoder = TextPredictor()
         
-        self.game_id = game_id
-        self.team_0 = team_0
+        # external data
+        
+        #self.game_id = game_id
+        #self.team_0 = team_0
+        
         self.players_list = []
         self.team_numbers = [[],[]]
         import csv
-        with open('/content/datasets.csv') as csvfile:
+        with open(config['game_data']['game_csv']) as csvfile:
           reader = csv.DictReader(csvfile)
           for row in reader:
-            if row['GAME_ID'] == str(self.game_id):
+            if row['GAME_ID'] == str(config['game_data']['game_id']):
                 self.players_list.append(row)
-                if row['TEAM'] == self.team_0:
+                if row['TEAM'] == config['game_data']['team_0_name']:
                     self.team_numbers[0].append(row['NUMBER'])
                 else:
-                    self.team_numbers[1].append(row['NUMBER'])        
-            
-        
-        
+                    self.team_numbers[1].append(row['NUMBER'])       
 
         #self.team_threshold = 0.75
-        team_ref_paths = ['/content/team0_ref.jpg', '/content/team1_ref.jpg']
+        team_ref_paths = [config['game_data']['team_0_photo'], config['game_data']['team_1_photo']]
         team_ref_img = [TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths]
         self.team_ref_embeddings = self.team_embeddings.predict(team_ref_img)
         
