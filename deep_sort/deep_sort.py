@@ -224,6 +224,9 @@ class DeepSort(object):
         return valid_box
             
     
+    def export_detections(self):
+        pass
+    
     def _predict_numbers(self, bbox_xywh, ori_img):
         
        
