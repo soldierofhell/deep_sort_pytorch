@@ -29,6 +29,8 @@ class TensorPredictor:
         self.min_size = cfg.INPUT.MIN_SIZE_TEST
         self.max_size = cfg.INPUT.MAX_SIZE_TEST
         
+        self.batch_size = cfg.IMAGES_PER_BATCH_TEST
+        
         #print('detectron parameters: ', self.input_format, self.min_size, self.max_size)
         
     def _resize_shortest_edge(self, img):
@@ -51,20 +53,29 @@ class TensorPredictor:
     def __call__(self, image_list):
         """
         """
+        
+        batch_list = [batch_list[i:i + self.batch_size] for i in range(0, len(image_list), self.batch_size)]
+        
         with torch.no_grad():
-            input_list = []
             
-            for image_tensor in image_list:
-                # Apply pre-processing to image.
-                if self.input_format == "RGB":
-                    # whether the model expects BGR inputs or RGB
-                    image_tensor = image_tensor[:, :, ::-1]
-                height, width = image_tensor.size()[1], image_tensor.size()[2]
-                image = self._resize_shortest_edge(image_tensor)
-                image = image * 256.0 #.permute(2, 0, 1)
-                #print('image size: ', image.size())
-                #print('height, width: ', height, width)
-                input_list.append({"image": image, "height": height, "width": width})
+            predictions = []
+            
+            for batch_ind in batch_list:                
+                input_list = []                
+                #image_batch = [image for (i, image) in enumerate(image_list) if i in batch_ind]
+                for idx in batch_ind:
+                    image_tensor = image_list[idx]
+                    # Apply pre-processing to image.
+                    if self.input_format == "RGB":
+                        # whether the model expects BGR inputs or RGB
+                        image_tensor = image_tensor[:, :, ::-1]
+                    height, width = image_tensor.size()[1], image_tensor.size()[2]
+                    image = self._resize_shortest_edge(image_tensor)
+                    image = image * 256.0 #.permute(2, 0, 1)
+                    #print('image size: ', image.size())
+                    #print('height, width: ', height, width)
+                    input_list.append({"image": image, "height": height, "width": width})
                 
-            predictions = self.model(input_list)
+                predictions.extend(self.model(input_list))
+                
             return predictions
