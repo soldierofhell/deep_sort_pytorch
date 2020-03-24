@@ -29,21 +29,34 @@ __all__ = ['DeepSort']
 
 # * parametry: players_list_path, game_id, ref_img_paths (format gameid_team.jpg), checkpoint_paths, 
 
+# config
+# 
+
+
 
 class DeepSort(object):
-    def __init__(self, model_path, max_dist=0.2, use_cuda=True, extractor_type='pedestrian', game_id=0, team_0='Belgium'):
+    def __init__(self, config_path):
+        
+        config = configparser.ConfigParser()
+        config.read(config_path)
+        
         self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
 
-        self.extractor_type = extractor_type
-        if self.extractor_type == 'pedestrian':
-            self.extractor = Extractor(model_path, use_cuda=use_cuda)
-        else:
-            self.extractor = SimilarityPredictor('/content/players_ckpt.pth')
+
 
         max_cosine_distance = max_dist
         nn_budget = 100
         metric = NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
+
+        # player_reid model
+        
+        self.extractor_type = config['player_reid']['extractor_type']
+        if self.extractor_type == 'pedestrian':
+            self.extractor = Extractor(config['player_reid']['checkpoint'], use_cuda=True)
+        else:
+            self.extractor = SimilarityPredictor(config['player_reid']['checkpoint'])
+        
         
         
         number_cfg = get_cfg()
