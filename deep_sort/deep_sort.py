@@ -41,14 +41,11 @@ class DeepSort(object):
         
         self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
-
-
-
-        max_cosine_distance = max_dist
-        nn_budget = 100
-        metric = NearestNeighborDistanceMetric("cosine", max_cosine_distance, nn_budget)
+        
 
         # player_reid model
+        
+        metric = NearestNeighborDistanceMetric(config['player_reid']['metric'], config['player_reid']['max_distance'], config['player_reid']['budget'])
         
         self.extractor_type = config['player_reid']['extractor_type']
         if self.extractor_type == 'pedestrian':
