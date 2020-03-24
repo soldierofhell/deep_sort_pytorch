@@ -47,7 +47,7 @@ class PlayerMapper:
           image_crop = image[bbox[1]:(bbox[1]+bbox[3]),bbox[0]:(bbox[0]+bbox[2])]
           #image_crop, _ = T.apply_transform_gens(self.tfm_gens, image_crop)
           #image_crop = torch.as_tensor(np.ascontiguousarray(image.transpose(2, 0, 1)))
-          image_crop = TF.to_tensor(image)
+          image_crop = TF.to_tensor(np.ascontiguousarray(image_crop))
 
           image_list.append({
               "image": image_crop,
