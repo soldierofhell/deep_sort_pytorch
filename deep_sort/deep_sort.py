@@ -345,6 +345,9 @@ class DeepSort(object):
         
         detection_list = []
         for idx, detection in enumerate(self.detections):
+            
+            # or from detection.__dict__
+            
             detection_dict = {
                 'detection_id': idx,
                 'bbox': self._tlwh_to_xyxy(detection.tlwh),
