@@ -29,8 +29,7 @@ __all__ = ['DeepSort']
 
 # * parametry: players_list_path, game_id, ref_img_paths (format gameid_team.jpg), checkpoint_paths, 
 
-# config
-# 
+
 
 
 
