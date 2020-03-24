@@ -42,6 +42,8 @@ class DeepSort(object):
         self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
         
+        # player detections
+        
 
         # player reid
         
