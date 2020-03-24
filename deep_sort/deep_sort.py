@@ -43,7 +43,7 @@ class DeepSort(object):
         #self.nms_max_overlap = 1.0
         
 
-        # player_reid model
+        # player reid
         
         metric = NearestNeighborDistanceMetric(config['player_reid']['metric'], config['player_reid']['max_distance'], config['player_reid']['budget'])
         
@@ -52,16 +52,25 @@ class DeepSort(object):
             self.extractor = Extractor(config['player_reid']['checkpoint'], use_cuda=True)
         else:
             self.extractor = SimilarityPredictor(config['player_reid']['checkpoint'])
+            
+        # team reid
         
+        self.team_embeddings = SimilarityPredictor(config['team_reid']['checkpoint'])
         
+        # number detection
         
         number_cfg = get_cfg()
-        number_cfg.merge_from_file("/content/detectron2_repo/configs/Misc/cascade_mask_rcnn_X_152_32x8d_FPN_IN5k_gn_dconv.yaml")
-        number_cfg.MODEL.WEIGHTS = "/content/model_0036999.pth"
+        number_cfg.merge_from_file(config['number_detection']['cfg'])
+        number_cfg.MODEL.WEIGHTS = config['number_detection']['checkpoint']
         number_cfg.MODEL.MASK_ON = False
         number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
-        number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5
-        self.number_detector = ObjectDetector(number_cfg)        
+        number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = config['number_detection']['detection_threshold']
+        
+        number_cfg.IMAGES_PER_BATCH_TEST = config['number_detection']['batch_size']
+        
+        self.number_detector = ObjectDetector(number_cfg)
+        
+        # number recognition
         
         self.number_decoder = TextPredictor()
         
@@ -82,7 +91,7 @@ class DeepSort(object):
             
         
         
-        self.team_embeddings = SimilarityPredictor('/content/teams_ckpt.pth')
+
         #self.team_threshold = 0.75
         team_ref_paths = ['/content/team0_ref.jpg', '/content/team1_ref.jpg']
         team_ref_img = [TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths]
