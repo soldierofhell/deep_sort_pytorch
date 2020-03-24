@@ -46,7 +46,7 @@ class DeepSort(object):
         
         # TODO: filter corrupted detections
         
-        players_loader = build_players_loader(config['player_detections']['json_path'], config['input']['image_dir'], config['player_detections']['batch_size'])        
+        self.players_loader = build_players_loader(config['player_detections']['json_path'], config['input']['image_dir'], config['player_detections']['batch_size'])        
 
         # player reid
         
@@ -229,22 +229,23 @@ class DeepSort(object):
         return valid_box
             
     
-    def export_detections(self):
+    def process_detections(self):
         
         features_all = []
         team_ids_all = []
         numbers_all = []
-
         
         with torch.no_grad():
-            for idx, inputs in enumerate(players_loader):
-
+            for idx, crop_list in enumerate(self.players_loader):
    
+                # player reid
+    
                 if self.extractor_type != 'pedestrian':        
                     features = self.extractor.predict(crop_list)
-                    features_all.extend(features)
+                    features_all.extend(features).cpu().numpy()
             
-                # split to teams
+                # team reid
+                
                 embeddings = self.team_embeddings.predict(crop_list)
                 dists = torch.cdist(embeddings, self.team_ref_embeddings)        
                 team_ids = torch.argmin(dists, dim=1).cpu().numpy().tolist()
@@ -258,7 +259,6 @@ class DeepSort(object):
                 #for crop in crop_list:
                     #logging.debug('crop size: ', torch.tensor(crop.size()).cpu().numpy().tolist())
                     #print(torch.tensor(crop.size()).cpu().numpy().tolist())
-
 
                 # number detection
                 number_outputs = self.number_detector(crop_list)
@@ -302,7 +302,6 @@ class DeepSort(object):
             if self.extractor_type == 'pedestrian':        
                 return numbers_all, team_ids_all
             else:
-                features_all = np.array([f.cpu().numpy() for f in features_all])
                 return numbers_all, team_ids_all, features_all
     
     def _predict_numbers(self, bbox_xywh, ori_img):
