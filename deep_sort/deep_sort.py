@@ -239,7 +239,9 @@ class DeepSort(object):
         numbers_all = []
         
         with torch.no_grad():
-            for idx, crop_list in enumerate(self.players_loader):
+            for idx, input_list in enumerate(self.players_loader):
+                
+                crop_list = [input['image'] for input in input_list]
    
                 # player reid
     
