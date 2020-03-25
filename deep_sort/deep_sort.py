@@ -228,8 +228,11 @@ class DeepSort(object):
         
         return valid_box
             
+    def import_detections(self):
+        
+        # pickle.load()
     
-    def process_detections(self):
+    def export_detections(self):
         
         features_all = []
         team_ids_all = []
