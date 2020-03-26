@@ -41,7 +41,7 @@ class PlayerMapper:
 
         image_list = []
 
-        for ann in dataset_dict['annotations']:
+        for idx, ann in enumerate(dataset_dict['annotations']):
           #bbox = BoxMode.convert(ann['bbox'], BoxMode.XYWH_ABS, BoxMode.XYXY_ABS)
           bbox = [int(x) for x in ann['bbox']]
           image_crop = image[bbox[1]:(bbox[1]+bbox[3]),bbox[0]:(bbox[0]+bbox[2])]
@@ -54,6 +54,7 @@ class PlayerMapper:
               "height": bbox[3],
               "width": bbox[2],
               "file_name": dataset_dict["file_name"],
+              "box_id": idx,
           })          
 
         #dataset_dict["image_list"] = image_list
