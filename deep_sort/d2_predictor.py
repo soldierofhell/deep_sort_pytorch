@@ -21,7 +21,7 @@ class TensorPredictor:
         self.model = build_model(self.cfg)
         self.model.eval()
         
-        print('model device: ', model.device)
+        print('model device: ', self.model.device)
         
         self.metadata = MetadataCatalog.get(cfg.DATASETS.TEST[0])
 
