@@ -48,7 +48,7 @@ class DeepSort(object):
         
         self.detections_path = config['output']['detections_path']
         
-        if config['player_detections']['use_gt']:
+        if config['player_detections'].getboolean('use_gt'):
             json_path = config['player_detections']['gt_json']
         else:
             json_path = config['player_detections']['predicted_json']       
@@ -58,7 +58,7 @@ class DeepSort(object):
 
         # player reid
         
-        metric = NearestNeighborDistanceMetric(config['player_reid']['metric'], config['player_reid']['max_distance'], config['player_reid']['budget'])
+        metric = NearestNeighborDistanceMetric(config['player_reid']['metric'], config['player_reid'].getfloat('max_distance'), config['player_reid'].getint('budget'))
         
         self.extractor_type = config['player_reid']['extractor_type']
         if self.extractor_type == 'pedestrian':
