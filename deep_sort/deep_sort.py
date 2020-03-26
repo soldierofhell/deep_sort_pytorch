@@ -75,20 +75,24 @@ class DeepSort(object):
         
         # number detection
         
-        number_cfg = get_cfg()
-        number_cfg.merge_from_file(config['number_detection']['cfg'])
-        number_cfg.MODEL.WEIGHTS = config['number_detection']['checkpoint']
-        number_cfg.MODEL.MASK_ON = False
-        number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
-        number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = config['number_detection'].getfloat('detection_threshold')
+        self.number_enabled = config['number_detection'].getboolean('enabled')
         
-        number_cfg.IMAGES_PER_BATCH_TEST = config['number_detection'].getint('batch_size')
+        if self.number_enabled:
         
-        self.number_detector = ObjectDetector(number_cfg)
-        
-        # number recognition
-        
-        self.number_decoder = TextPredictor(config['number_recognition']['checkpoint'])
+            number_cfg = get_cfg()
+            number_cfg.merge_from_file(config['number_detection']['cfg'])
+            number_cfg.MODEL.WEIGHTS = config['number_detection']['checkpoint']
+            number_cfg.MODEL.MASK_ON = False
+            number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
+            number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = config['number_detection'].getfloat('detection_threshold')
+
+            number_cfg.IMAGES_PER_BATCH_TEST = config['number_detection'].getint('batch_size')
+
+            self.number_detector = ObjectDetector(number_cfg)
+
+            # number recognition
+
+            self.number_decoder = TextPredictor(config['number_recognition']['checkpoint'])
         
         # external data
         
@@ -297,42 +301,47 @@ class DeepSort(object):
 
                 # number detection
                 
-                tick = time.time() 
+                if self.number_enabled:
                 
-                number_outputs = self.number_detector(crop_list)
-                
-                print('number detection: ', time.time()-tick)
+                    number_outputs = self.number_detector(crop_list)
 
-                #print('input length: ', len(crop_list))
-                #print('output length: ', len(number_outputs))
-                
-                #tick = time.time()
+                    print('number detection: ', time.time()-tick)
 
-                numbers = []
-                for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
-                    number_instance = number_output['instances']
-                    #logging.debug('detected boxes: ', number_instance.pred_classes.size()[0])
-                    #print('detected boxes: ', torch.tensor(number_instance.pred_classes.size())[0].numpy().tolist())
+                    #print('input length: ', len(crop_list))
+                    #print('output length: ', len(number_outputs))
 
-                    if number_instance.pred_classes.size()[0]>0:
-                        number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
+                    #tick = time.time()
 
-                        if self._valid_box(number_box, player_crop.shape[1], player_crop.shape[2]):                    
-                            padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
-                            #print('player crop: ', player_crop.size())
-                            #print('number_box: ', number_box)
-                            #print('padded_box: ', padded_box)
-                            #print('tests :', number_instance.pred_boxes.tensor[0])
-                            number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
+                    numbers = []
+                    for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
+                        number_instance = number_output['instances']
+                        #logging.debug('detected boxes: ', number_instance.pred_classes.size()[0])
+                        #print('detected boxes: ', torch.tensor(number_instance.pred_classes.size())[0].numpy().tolist())
 
-                            pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
+                        if number_instance.pred_classes.size()[0]>0:
+                            number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
+
+                            if self._valid_box(number_box, player_crop.shape[1], player_crop.shape[2]):                    
+                                padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
+                                #print('player crop: ', player_crop.size())
+                                #print('number_box: ', number_box)
+                                #print('padded_box: ', padded_box)
+                                #print('tests :', number_instance.pred_boxes.tensor[0])
+                                number_crop = player_crop[:, padded_box[1]:padded_box[3], padded_box[0]:padded_box[2]]
+
+                                pred, confidence_score = self.number_decoder.predict(number_crop, input_size=(100, 32), dictionary=self.team_numbers[team_id])
 
 
-                            numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
+                                numbers.append({'number': pred, 'confidence': confidence_score, 'bbox': number_box.tolist()})
+                            else:
+                                numbers.append({'number': None, 'confidence': None, 'bbox': None})
                         else:
                             numbers.append({'number': None, 'confidence': None, 'bbox': None})
+                            
                     else:
-                        numbers.append({'number': None, 'confidence': None, 'bbox': None})
+                        numbers = []
+                        for idx in range(len(crop_list)):
+                            numbers.append({'number': None, 'confidence': None, 'bbox': None}) for 
                         
                 #print('number recognition: ', time.time()-tick)
 
