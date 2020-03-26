@@ -260,8 +260,9 @@ class DeepSort(object):
                 # player reid
     
                 if self.extractor_type != 'pedestrian':        
-                    features = self.extractor.predict(crop_list)
-                    features_all.extend(features.cpu().numpy())
+                    features = self.extractor.predict(crop_list).cpu().numpy()
+                    features = [features[idx] for idx in range(features.shape[0]]
+                    features_all.extend(features)
             
                 # team reid
                 
