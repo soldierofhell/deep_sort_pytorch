@@ -80,6 +80,7 @@ class TensorPredictor:
                     #print('height, width: ', height, width)
                     input_list.append({"image": image, "height": height, "width": width})
                 
+                print('before predict: ', input_list)
                 predictions.extend(self.model(input_list))
                 
             return predictions
