@@ -83,7 +83,7 @@ class DeepSort(object):
         
         # number recognition
         
-        self.number_decoder = TextPredictor(config['number_detection']['checkpoint'])
+        self.number_decoder = TextPredictor(config['number_recognition']['checkpoint'])
         
         # external data
         
