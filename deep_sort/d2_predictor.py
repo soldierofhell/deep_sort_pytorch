@@ -78,6 +78,7 @@ class TensorPredictor:
                     image = image * 256.0 #.permute(2, 0, 1)
                     #print('image size: ', image.size())
                     #print('height, width: ', height, width)
+                    print('image device: ', image.device)
                     input_list.append({"image": image, "height": height, "width": width})
                     
                 print('preprocessing: ', time.time() - tick)
