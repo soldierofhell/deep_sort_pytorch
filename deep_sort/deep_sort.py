@@ -231,6 +231,7 @@ class DeepSort(object):
     def import_detections(self):
         
         # pickle.load()
+        pass
     
     def export_detections(self):
         
