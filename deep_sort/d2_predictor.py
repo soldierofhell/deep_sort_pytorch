@@ -55,6 +55,8 @@ class TensorPredictor:
         """
         
         batch_list = list(range(len(image_list)))
+        print(len(image_list))
+        print([i for i in range(0, len(image_list), self.batch_size)])
         batch_list = [batch_list[i:i + self.batch_size] for i in range(0, len(image_list), self.batch_size)]
         
         with torch.no_grad():
