@@ -41,7 +41,9 @@ class Detection(object):
         
         self.team_id = team_id
         
-        self.categroy = None
+        self.category = None
+        self.x = None
+        self.y = None
 
     def to_tlbr(self):
         """Convert bounding box to format `(min x, min y, max x, max y)`, i.e.,
