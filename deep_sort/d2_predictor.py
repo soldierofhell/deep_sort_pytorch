@@ -10,6 +10,8 @@ from detectron2.utils.logger import setup_logger
 
 import torch.nn.functional as F
 
+import time
+
 class TensorPredictor:
     """
     """
@@ -61,7 +63,8 @@ class TensorPredictor:
             
             predictions = []
             
-            for batch_ind in batch_list:                
+            for batch_ind in batch_list:
+                tick = time.time()
                 input_list = []                
                 #image_batch = [image for (i, image) in enumerate(image_list) if i in batch_ind]
                 for idx in batch_ind:
@@ -76,7 +79,11 @@ class TensorPredictor:
                     #print('image size: ', image.size())
                     #print('height, width: ', height, width)
                     input_list.append({"image": image, "height": height, "width": width})
+                    
+                print('preprocessing: ', time.time() - tick)
                 
+                tick = time.time()
                 predictions.extend(self.model(input_list))
+                print('forward: ', time.time() - tick)
                 
             return predictions
