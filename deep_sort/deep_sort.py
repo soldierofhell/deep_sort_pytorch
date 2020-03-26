@@ -311,10 +311,8 @@ class DeepSort(object):
 
             #print('number dict: ', numbers_all)
 
-            if self.extractor_type == 'pedestrian':        
-                return numbers_all, team_ids_all
-            else:
-                return numbers_all, team_ids_all, features_all
+            if self.extractor_type != 'pedestrian':        
+                np.save(numbers_all, team_ids_all, features_all)
     
     def _predict_numbers(self, bbox_xywh, ori_img):
         
