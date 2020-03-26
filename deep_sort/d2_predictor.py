@@ -54,10 +54,7 @@ class TensorPredictor:
         """
         """
         
-        print(image_list)
         batch_list = list(range(len(image_list)))
-        print(batch_list)
-        print([i for i in range(0, len(image_list), self.batch_size)])
         batch_list = [batch_list[i:i + self.batch_size] for i in range(0, len(image_list), self.batch_size)]
         
         with torch.no_grad():
@@ -80,7 +77,6 @@ class TensorPredictor:
                     #print('height, width: ', height, width)
                     input_list.append({"image": image, "height": height, "width": width})
                 
-                print('before predict: ', input_list)
                 predictions.extend(self.model(input_list))
                 
             return predictions
