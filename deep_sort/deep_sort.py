@@ -19,6 +19,8 @@ import cv2
 import json
 import os
 
+import tqdm
+
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
 
@@ -250,7 +252,7 @@ class DeepSort(object):
         numbers_all = []
         
         with torch.no_grad():
-            for idx, input_list in enumerate(self.players_loader):
+            for idx, input_list in tqdm.tqdm(enumerate(self.players_loader)):
                 
                 file_names_all.extend([input["file_name"] for input in input_list])
                 box_ids_all.extend([input["box_id"] for input in input_list])
