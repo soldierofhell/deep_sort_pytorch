@@ -46,7 +46,13 @@ class DeepSort(object):
         
         # TODO: filter corrupted detections
         
-        self.players_loader = build_players_loader(config['player_detections']['json_path'], config['input']['image_dir'], config['player_detections']['batch_size'])        
+        if config['player_detections']['use_gt']:
+            json_path = config['player_detections']['gt_json']
+        else:
+            json_path = config['player_detections']['predicted_json']       
+  
+        
+        self.players_loader = build_players_loader(json_path, config['input']['image_dir'], config['player_detections']['batch_size'])        
 
         # player reid
         
