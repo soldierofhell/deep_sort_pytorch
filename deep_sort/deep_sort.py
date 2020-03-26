@@ -52,7 +52,7 @@ class DeepSort(object):
             json_path = config['player_detections']['predicted_json']       
   
         
-        self.players_loader = build_players_loader(json_path, config['input']['image_dir'], config['player_detections']['batch_size'].getint())        
+        self.players_loader = build_players_loader(json_path, config['input']['image_dir'], config['player_detections'].getint('batch_size'))        
 
         # player reid
         
