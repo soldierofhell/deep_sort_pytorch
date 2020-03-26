@@ -54,6 +54,7 @@ class TensorPredictor:
         """
         """
         
+        print(len(image_list))
         batch_list = list(range(len(image_list)))
         print(batch_list)
         print([i for i in range(0, len(image_list), self.batch_size)])
