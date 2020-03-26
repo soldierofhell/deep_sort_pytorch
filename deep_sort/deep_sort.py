@@ -77,9 +77,9 @@ class DeepSort(object):
         number_cfg.MODEL.WEIGHTS = config['number_detection']['checkpoint']
         number_cfg.MODEL.MASK_ON = False
         number_cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
-        number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = config['number_detection']['detection_threshold']
+        number_cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = config['number_detection'].getfloat('detection_threshold')
         
-        number_cfg.IMAGES_PER_BATCH_TEST = config['number_detection']['batch_size']
+        number_cfg.IMAGES_PER_BATCH_TEST = config['number_detection'].getint('batch_size')
         
         self.number_detector = ObjectDetector(number_cfg)
         
