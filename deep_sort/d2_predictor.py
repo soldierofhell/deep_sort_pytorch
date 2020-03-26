@@ -29,7 +29,7 @@ class TensorPredictor:
         self.min_size = cfg.INPUT.MIN_SIZE_TEST
         self.max_size = cfg.INPUT.MAX_SIZE_TEST
         
-        self.batch_size = cfg.IMAGES_PER_BATCH_TEST
+        self.batch_size = int(cfg.IMAGES_PER_BATCH_TEST)
         
         #print('detectron parameters: ', self.input_format, self.min_size, self.max_size)
         
