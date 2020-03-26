@@ -223,12 +223,12 @@ class DeepSort(object):
 
         return padded_bbox
     
-    def _valid_box(self, number_bbox, player_bbox):
+    def _valid_box(self, number_bbox, h, w):
         
-        player_area = (player_bbox[2] - player_bbox[0]) * (player_bbox[3] - player_bbox[1])
+        player_area = w * h
         number_area = (number_bbox[2] - number_bbox[0]) * (number_bbox[3] - number_bbox[1])
         
-        number_y_center = (number_bbox[3]+number_bbox[1])/(2*(player_bbox[3] - player_bbox[1]))
+        number_y_center = (number_bbox[3]+number_bbox[1])/(2*h)
 
         height_ratio = (number_bbox[3]-number_bbox[1])/(player_bbox[3] - player_bbox[1])
                    
@@ -295,7 +295,7 @@ class DeepSort(object):
                     if number_instance.pred_classes.size()[0]>0:
                         number_box = number_instance.pred_boxes.tensor[0].detach().cpu().numpy().astype(int)
 
-                        if self._valid_box(number_box, player_bbox):                    
+                        if self._valid_box(number_box, player_crop.shape[1], player_crop.shape[2]):                    
                             padded_box = self._padded_bbox(number_box, player_crop.shape[1], player_crop.shape[2])     
                             #print('player crop: ', player_crop.size())
                             #print('number_box: ', number_box)
