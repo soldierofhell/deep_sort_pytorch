@@ -230,7 +230,7 @@ class DeepSort(object):
         
         number_y_center = (number_bbox[3]+number_bbox[1])/(2*h)
 
-        height_ratio = (number_bbox[3]-number_bbox[1])/(player_bbox[3] - player_bbox[1])
+        height_ratio = (number_bbox[3]-number_bbox[1])/h
                    
         valid_box = number_area/player_area > 0.02 and number_y_center > 0.2 and number_y_center < 0.4 and height_ratio > 0.15
         
