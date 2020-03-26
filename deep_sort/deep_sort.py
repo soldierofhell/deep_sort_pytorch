@@ -287,7 +287,7 @@ class DeepSort(object):
                 #print('output length: ', len(number_outputs))
 
                 numbers = []
-                for team_id, number_output, player_crop, player_bbox in zip(team_ids, number_outputs, crop_list, bbox_list):
+                for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
                     number_instance = number_output['instances']
                     #logging.debug('detected boxes: ', number_instance.pred_classes.size()[0])
                     #print('detected boxes: ', torch.tensor(number_instance.pred_classes.size())[0].numpy().tolist())
