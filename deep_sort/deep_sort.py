@@ -22,6 +22,8 @@ import os
 import tqdm
 import time
 
+import pickle
+
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
 
@@ -361,7 +363,9 @@ class DeepSort(object):
                         'features': features_all[idx],
                     })
                         
-                np.save(self.detections_path, out_dict)
+                #np.save(self.detections_path, out_dict)
+                with open(self.detections_path, 'wb') as f:
+                    pickle.dump(out_dict, f)
     
     def _predict_numbers(self, bbox_xywh, ori_img):
         
