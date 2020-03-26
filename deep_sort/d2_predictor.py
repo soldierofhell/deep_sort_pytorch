@@ -74,7 +74,7 @@ class TensorPredictor:
                         # whether the model expects BGR inputs or RGB
                         image_tensor = image_tensor[:, :, ::-1]
                     height, width = image_tensor.size()[1], image_tensor.size()[2]
-                    image = self._resize_shortest_edge(image_tensor)
+                    image = self._resize_shortest_edge(image_tensor.cuda())
                     image = image * 256.0 #.permute(2, 0, 1)
                     #print('image size: ', image.size())
                     #print('height, width: ', height, width)
