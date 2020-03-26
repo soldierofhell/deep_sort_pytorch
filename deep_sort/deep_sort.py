@@ -46,6 +46,8 @@ class DeepSort(object):
         
         # TODO: filter corrupted detections
         
+        self.detections_path = config['output']['detections_path']
+        
         if config['player_detections']['use_gt']:
             json_path = config['player_detections']['gt_json']
         else:
@@ -326,7 +328,7 @@ class DeepSort(object):
                         'features': features_all[idx],
                     })
                         
-                np.save(out_dict)
+                np.save(self.detections_path, out_dict)
     
     def _predict_numbers(self, bbox_xywh, ori_img):
         
