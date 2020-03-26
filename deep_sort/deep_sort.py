@@ -20,6 +20,7 @@ import json
 import os
 
 import tqdm
+import time
 
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
@@ -254,19 +255,29 @@ class DeepSort(object):
         with torch.no_grad():
             for idx, input_list in tqdm.tqdm(enumerate(self.players_loader)):
                 
+                tick = time.time()
+                
                 file_names_all.extend([input["file_name"] for input in input_list])
                 box_ids_all.extend([input["box_id"] for input in input_list])
                 
                 crop_list = [input['image'] for input in input_list]
-   
+                
+                print('init processing: ', time.time()-tick)
                 # player reid
-    
+                
+                
+                tick = time.time()                
+                
                 if self.extractor_type != 'pedestrian':        
                     features = self.extractor.predict(crop_list).cpu().numpy()
                     features = [features[idx] for idx in range(features.shape[0])]
                     features_all.extend(features)
+                    
+                print('player reid: ', time.time()-tick)
             
                 # team reid
+                
+                tick = time.time() 
                 
                 embeddings = self.team_embeddings.predict(crop_list)
                 dists = torch.cdist(embeddings, self.team_ref_embeddings)        
@@ -275,6 +286,8 @@ class DeepSort(object):
                 # todo: judge, goalkeeper
                 del embeddings
                 del dists
+                
+                print('team reid: ', time.time()-tick)
 
                 #print('team_ids: ', team_ids)
 
@@ -283,10 +296,17 @@ class DeepSort(object):
                     #print(torch.tensor(crop.size()).cpu().numpy().tolist())
 
                 # number detection
+                
+                tick = time.time() 
+                
                 number_outputs = self.number_detector(crop_list)
+                
+                print('number detection: ', time.time()-tick)
 
                 #print('input length: ', len(crop_list))
                 #print('output length: ', len(number_outputs))
+                
+                tick = time.time()
 
                 numbers = []
                 for team_id, number_output, player_crop in zip(team_ids, number_outputs, crop_list):
@@ -313,7 +333,8 @@ class DeepSort(object):
                             numbers.append({'number': None, 'confidence': None, 'bbox': None})
                     else:
                         numbers.append({'number': None, 'confidence': None, 'bbox': None})
-
+                        
+                print('number recognition: ', time.time()-tick)
 
                 numbers_all.extend(numbers)
                 team_ids_all.extend(team_ids)
