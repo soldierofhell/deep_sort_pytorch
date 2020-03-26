@@ -67,7 +67,7 @@ class TensorPredictor:
             predictions = []
             
             for batch_ind in batch_list:
-                tick = time.time()
+                #tick = time.time()
                 input_list = []                
                 #image_batch = [image for (i, image) in enumerate(image_list) if i in batch_ind]
                 for idx in batch_ind:
@@ -84,10 +84,10 @@ class TensorPredictor:
                     print('image device: ', image.device)
                     input_list.append({"image": image, "height": height, "width": width})
                     
-                print('preprocessing: ', time.time() - tick)
+                #print('preprocessing: ', time.time() - tick)
                 
-                tick = time.time()
+                #tick = time.time()
                 predictions.extend(self.model(input_list))
-                print('forward: ', time.time() - tick)
+                #print('forward: ', time.time() - tick)
                 
             return predictions
