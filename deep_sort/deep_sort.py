@@ -341,7 +341,7 @@ class DeepSort(object):
                     else:
                         numbers = []
                         for idx in range(len(crop_list)):
-                            numbers.append({'number': None, 'confidence': None, 'bbox': None}) for 
+                            numbers.append({'number': None, 'confidence': None, 'bbox': None})
                         
                 #print('number recognition: ', time.time()-tick)
 
