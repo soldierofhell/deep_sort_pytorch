@@ -261,7 +261,7 @@ class DeepSort(object):
     
                 if self.extractor_type != 'pedestrian':        
                     features = self.extractor.predict(crop_list)
-                    features_all.extend(features).cpu().numpy()
+                    features_all.extend(features.cpu().numpy())
             
                 # team reid
                 
