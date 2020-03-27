@@ -52,6 +52,8 @@ class DeepSort(object):
         
         self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))
         
+        self.ecc_threshold = config['sequence_detection'].getfloat('ecc_threshold')
+        
         # player detections
         
         # TODO: filter corrupted detections
@@ -261,7 +263,7 @@ class DeepSort(object):
 
                 cc, _ = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria, None, 1)
 
-                new_sequence = cc < args.ecc_threshold
+                new_sequence = cc < self.ecc_threshold
                 logging.debug(f'ECC: {cc}')
                 
             im = ori_im # ?
