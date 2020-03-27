@@ -86,6 +86,8 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
     
     # TODO: remove tracks that were Tentative + Deleted
 
+    image_list = detection_dict.keys() #sorted(os.listdir(img_dir))       
+
     for idx, img_file in enumerate(sorted(os.listdir(img_dir))):       
  
         img_path = os.path.join(img_dir, img_file)
