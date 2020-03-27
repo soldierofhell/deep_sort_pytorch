@@ -47,6 +47,8 @@ class DeepSort(object):
         self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
         
+        self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))
+        
         # player detections
         
         # TODO: filter corrupted detections
@@ -245,6 +247,47 @@ class DeepSort(object):
         
         return valid_box
             
+    def forward_tracking(self):
+        number_of_iterations = 100
+        termination_eps = 0.00001
+        warp_mode = cv2.MOTION_EUCLIDEAN
+        warp_matrix = np.eye(2, 3, dtype=np.float32)
+        criteria = (cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, number_of_iterations,  termination_eps)
+        
+
+        img_test = cv2.imread(self.img_list[0])
+        self.im_height, self.im_width = img_test.shape[:2]
+        
+        for frame_id, image_path in enumerate(self.img_list):  
+            
+            new_sequence = False
+            
+                   
+            if frame_id > 0:
+                prev_im = ori_im
+                    
+            ori_im = cv2.imread(self.img_list[frame_id])
+            
+            if frame_id > 0:
+
+                im1_gray = cv2.cvtColor(prev_im, cv2.COLOR_RGB2GRAY) # todo: redundant
+                im2_gray = cv2.cvtColor(ori_im, cv2.COLOR_RGB2GRAY)
+
+                cc, _ = cv2.findTransformECC(im1_gray, im2_gray, warp_matrix, warp_mode, criteria, None, 1)
+
+                new_sequence = cc < args.ecc_threshold
+                logging.debug(f'ECC: {cc}')
+                
+            im = ori_im # ?
+            
+            self.import_detections()
+            
+            # bbox_xcycwh = torch.cat((xcyc, wh), 1)[wh_min >=4].detach().cpu().numpy()
+            # cls_conf
+                
+            outputs, detections = self.deepsort.update(bbox_xcycwh, cls_conf, im, new_sequence, frame_id, self.img_list[frame_id])
+    
+    
     def import_detections(self):
         
         # pickle.load()
