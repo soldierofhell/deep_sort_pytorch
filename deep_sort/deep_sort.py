@@ -25,6 +25,8 @@ import time
 import pickle
 import glob
 
+import numpy as np
+
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
 
@@ -263,6 +265,8 @@ class DeepSort(object):
             
             new_sequence = False
             
+            #image_file
+            
                    
             if frame_id > 0:
                 prev_im = ori_im
@@ -282,6 +286,14 @@ class DeepSort(object):
             im = ori_im # ?
             
             self.import_detections()
+            
+            detections = self.detections_dict[image_path]
+            
+            bbox_xcycwh = np.zeros(len(detections), 4)
+            cls_conf = np.ones(len(detections)) # TODO: fill it with real numbers
+            
+            for idx, detection in enumerate(self.detections_dict[image_path]):
+                bbox_xcycwh[idx,:] = np.array(detection['bbox'])
             
             # bbox_xcycwh = torch.cat((xcyc, wh), 1)[wh_min >=4].detach().cpu().numpy()
             # cls_conf
