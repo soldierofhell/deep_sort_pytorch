@@ -298,7 +298,7 @@ class DeepSort(object):
             # bbox_xcycwh = torch.cat((xcyc, wh), 1)[wh_min >=4].detach().cpu().numpy()
             # cls_conf
                 
-            outputs, detections = self.deepsort.update(bbox_xcycwh, cls_conf, im, new_sequence, frame_id, self.img_list[frame_id])
+            outputs, detections = self.update(bbox_xcycwh, cls_conf, im, new_sequence, frame_id, self.img_list[frame_id])
     
     
     def import_detections(self):
