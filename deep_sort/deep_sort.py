@@ -50,7 +50,7 @@ class DeepSort(object):
         self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
         
-        self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))
+        self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))[:10]
         
         self.ecc_threshold = config['sequence_detection'].getfloat('ecc_threshold')
         
@@ -142,7 +142,7 @@ class DeepSort(object):
         # TODO: change this name           
             
        
-        bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
+        #bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
         
         #temp_number = {'number': None, 'confidence': None} # numbers[i]
         self.detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
