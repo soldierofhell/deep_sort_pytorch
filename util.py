@@ -69,6 +69,8 @@ import os
 
 def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml):
             
+    # TODO: tracking_config.ini    
+
     config = configparser.ConfigParser()
     config.read(config_yml)
     
