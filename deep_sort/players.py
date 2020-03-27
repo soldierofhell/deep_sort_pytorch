@@ -55,6 +55,8 @@ class PlayerMapper:
               "width": bbox[2],
               "file_name": dataset_dict["file_name"],
               "box_id": idx,
+              "bbox": bbox,
+              # TODO: confidence
           })          
 
         #dataset_dict["image_list"] = image_list
