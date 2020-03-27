@@ -136,14 +136,17 @@ class Tracker:
             #if feature_type=='player':
             features = np.array([dets[i].feature for i in detection_indices])
             
-            print('features: ', features)
+            
             #else:
             #    features = np.array([dets[i].team_feature for i in detection_indices])
             targets = np.array([tracks[i].track_id for i in track_indices])
             cost_matrix = self.metric.distance(features, targets)
+            print('cost_matrix 1: ', cost_matrix)
             cost_matrix = linear_assignment.gate_cost_matrix(
                 self.kf, cost_matrix, tracks, dets, track_indices,
                 detection_indices)
+            
+            print('cost_matrix 2: ', cost_matrix)
 
             return cost_matrix
         
