@@ -264,15 +264,10 @@ def new_matching_cascade(distance_metrics, tracks, detections, track_indices=Non
         lambda_M = 0.5 * (0.5) ** (1/level)
         
         distance_F = lambda_F * distance_metrics['F'](tracks, detections, track_indices, detection_indices)
-        print('F')
         distance_I = lambda_I * distance_metrics['I'](tracks, detections, track_indices, detection_indices)
-        print('I')
         distance_N = lambda_N * distance_metrics['N'](tracks, detections, track_indices, detection_indices)
-        print('N')
         distance_C = lambda_C * distance_metrics['C'](tracks, detections, track_indices, detection_indices)
-        print('C')
         distance_M = lambda_M * distance_metrics['M'](tracks, detections, track_indices, detection_indices)
-        print('M')
         
         logging.debug(f"{level}:")
         logging.debug(f'F: {to_pd(distance_F, track_indices, detection_indices)}')
