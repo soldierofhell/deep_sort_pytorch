@@ -303,6 +303,7 @@ class DeepSort(object):
         file_names_all = []
         box_ids_all = []
         bboxes_all = []
+        categories_all = []
         
         features_all = []
         team_ids_all = []
@@ -311,13 +312,14 @@ class DeepSort(object):
         with torch.no_grad():
             for idx, input_list in tqdm.tqdm(enumerate(self.players_loader)):
                 
-                #print([input["category_id"] for input in input_list])
+                
                 
                 #tick = time.time()
                 
                 file_names_all.extend([input["file_name"] for input in input_list])
                 box_ids_all.extend([input["box_id"] for input in input_list])
                 bboxes_all.extend([input["bbox"] for input in input_list])
+                categories_all.extend([input["category_id"] for input in input_list])
                 
                 crop_list = [input['image'] for input in input_list]
                 
@@ -415,6 +417,7 @@ class DeepSort(object):
                         'number': numbers_all[idx],
                         'team_id': team_ids_all[idx],
                         'features': features_all[idx],
+                        'category_id': categories_all[idx],
                     })
                         
                 #np.save(self.detections_path, out_dict)
@@ -557,7 +560,7 @@ class DeepSort(object):
     def export(self, export_dir):  
         with open(os.path.join(export_dir, 'tracks.json'), 'w') as f:
             json.dump(self.track_history, f)
-        with open(os.path.join(export_dir, 'detections.json'), 'w') as f:
+        with open(os.path.join(export_dir, 'detections_2.json'), 'w') as f:
             json.dump(self.detection_history, f)
         with open(os.path.join(export_dir, 'matched.json'), 'w') as f:
             json.dump(self.tracker.matched_tracks, f)
