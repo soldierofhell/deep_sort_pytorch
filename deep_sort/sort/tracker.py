@@ -174,6 +174,8 @@ class Tracker:
                 
                 cost_matrix[row, :] = 1 - np.logical_and(number == candidates, team_id == team_id_candidates)
                 
+            return cost_matrix
+                
         def team_cost(tracks, detections, track_indices=None, detection_indices=None):    
             if track_indices is None:
                 track_indices = np.arange(len(tracks))
