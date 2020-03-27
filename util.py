@@ -125,8 +125,13 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                     track_id = track['track_id']           
                     color = COLORS_10[track_id%len(COLORS_10)] # todo:
 
+                    if config['player_box'].getboolean('kalman_box'):
+                        box_type = 'kalman_box'
+                    else:
+                        box_type = 'detection_box'
+            
                     if track['time_since_update'] == 0:
-                        x1,y1,x2,y2 = track[config['bbox']['type']]            
+                        x1,y1,x2,y2 = track[box_type]            
                         cv2.rectangle(img,(x1, y1),(x2,y2),color,3)
                         if config['flags'].getboolean('sequence_override'):
                             number_in_sequence = sequence_dict[track_id]['number']
