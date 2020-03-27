@@ -129,7 +129,7 @@ class DeepSort(object):
         self.track_history = {}
         self.detection_history = {}
 
-    def update(self, bbox_xywh, confidences, features, ori_img, new_sequence, frame_id, img_name):
+    def update(self, bbox_xywh, confidences, features, numbers, ori_img, new_sequence, frame_id, img_name):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
         #if self.extractor_type == 'pedestrian':
@@ -272,17 +272,19 @@ class DeepSort(object):
             
             bbox_xcycwh = np.zeros((len(detections), 4))
             cls_conf = np.ones(len(detections)) # TODO: fill it with real numbers
-            features = np.zeros((len(detections), 128)) 
+            features = np.zeros((len(detections), 128))
+            numbers = []
             
             
             for idx, detection in enumerate(self.detections_dict[image_path]):
                 bbox_xcycwh[idx,:] = np.array(detection['bbox'])
                 features[idx,:] = detection['features']
+                numbers.append(detection['number'])
             
             # bbox_xcycwh = torch.cat((xcyc, wh), 1)[wh_min >=4].detach().cpu().numpy()
             # cls_conf
                 
-            outputs, detections = self.update(bbox_xcycwh, cls_conf, features, im, new_sequence, frame_id, self.img_list[frame_id])
+            self.update(bbox_xcycwh, cls_conf, features, numbers, im, new_sequence, frame_id, self.img_list[frame_id])
     
     
     def import_detections(self):
