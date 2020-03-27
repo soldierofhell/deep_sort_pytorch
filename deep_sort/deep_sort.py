@@ -289,7 +289,7 @@ class DeepSort(object):
             
             detections = self.detections_dict[image_path]
             
-            bbox_xcycwh = np.zeros(len(detections), 4)
+            bbox_xcycwh = np.zeros((len(detections), 4))
             cls_conf = np.ones(len(detections)) # TODO: fill it with real numbers
             
             for idx, detection in enumerate(self.detections_dict[image_path]):
