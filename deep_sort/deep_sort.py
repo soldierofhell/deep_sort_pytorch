@@ -50,7 +50,7 @@ class DeepSort(object):
         self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
         
-        self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))[:30]
+        self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))
         
         self.ecc_threshold = config['sequence_detection'].getfloat('ecc_threshold')
         
