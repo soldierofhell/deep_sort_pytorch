@@ -244,7 +244,7 @@ class DeepSort(object):
         img_test = cv2.imread(self.img_list[0])
         self.im_height, self.im_width = img_test.shape[:2]
         
-        for frame_id, image_path in enumerate(self.img_list):  
+        for frame_id, image_path in tqdm.tqdm(enumerate(self.img_list)):  
             
             new_sequence = False
             
