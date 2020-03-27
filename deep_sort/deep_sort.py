@@ -142,7 +142,7 @@ class DeepSort(object):
         # TODO: change this name           
             
        
-        #bbox_tlwh = self._xywh_to_tlwh(bbox_xywh)
+        bbox_tlwh = bbox_xywh # self._xywh_to_tlwh(bbox_xywh)
         
         #temp_number = {'number': None, 'confidence': None} # numbers[i]
         self.detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
