@@ -165,12 +165,12 @@ class Tracker:
 
                 candidates = np.asarray([detections[i].number for i in detection_indices])
                 
-                print('number: ', number, candidates)
+                #print('number: ', number, candidates)
                 
                 team_id = tracks[track_idx].team_id
                 team_id_candidates = np.asarray([detections[i].team_id for i in detection_indices])
                 
-                print('number: ', team_id, team_id_candidates)
+                #print('number: ', team_id, team_id_candidates)
                 
                 cost_matrix[row, :] = 1 - np.logical_and(number == candidates, team_id == team_id_candidates)
                 
