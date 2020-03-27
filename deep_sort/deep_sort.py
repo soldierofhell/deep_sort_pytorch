@@ -132,11 +132,11 @@ class DeepSort(object):
     def update(self, bbox_xywh, confidences, ori_img, new_sequence, frame_id, img_name):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
-        if self.extractor_type == 'pedestrian':
-            features = self._get_features(bbox_xywh, ori_img)
-            numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
-        else:
-            numbers, team_ids, features = self._predict_numbers(bbox_xywh, ori_img)
+        #if self.extractor_type == 'pedestrian':
+        #    features = self._get_features(bbox_xywh, ori_img)
+        #    numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
+        #else:
+        #    numbers, team_ids, features = self._predict_numbers(bbox_xywh, ori_img)
         # TODO: change this name           
             
        
@@ -160,25 +160,6 @@ class DeepSort(object):
         self.tracker.update(self.detections, new_sequence)
         
         self._add_frame_history(img_name)
-
-        # output bbox identities
-        outputs = []
-        for track in self.tracker.tracks:
-            if track.is_deleted() or track.time_since_update > 0:
-                continue
-            box = track.to_tlwh()
-            x1,y1,x2,y2 = self._tlwh_to_xyxy(box)
-            track_id = track.track_id
-            match_method = track.match_method
-            number = track.number if track.number is not None else -1
-            number_bbox = track.number_bbox if track.number_bbox is not None else [0,0,0,0]
-            detection_id = track.detection_id
-            min_cost = track.min_cost
-            outputs.append(np.array([x1,y1,x2,y2,track_id, match_method, number, number_bbox[0],number_bbox[1],number_bbox[2],number_bbox[3], detection_id, min_cost], dtype=np.int))
-        if len(outputs) > 0:
-            outputs = np.stack(outputs,axis=0)
-        return outputs, self.detections
-
 
     """
     TODO:
