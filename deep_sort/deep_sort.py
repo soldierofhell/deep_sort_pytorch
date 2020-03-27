@@ -131,7 +131,7 @@ class DeepSort(object):
         self.track_history = {}
         self.detection_history = {}
 
-    def update(self, bbox_xywh, confidences, features, numbers, team_ids, ori_img, new_sequence, frame_id, img_name):
+    def update(self, bbox_xywh, confidences, features, numbers, team_ids, categories, ori_img, new_sequence, frame_id, img_name):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
         #if self.extractor_type == 'pedestrian':
@@ -145,7 +145,7 @@ class DeepSort(object):
         bbox_tlwh = bbox_xywh # self._xywh_to_tlwh(bbox_xywh)
         
         #temp_number = {'number': None, 'confidence': None} # numbers[i]
-        self.detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
+        self.detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i], categories[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
         
         # run on non-maximum supression
         #boxes = np.array([d.tlwh for d in detections])
@@ -277,6 +277,7 @@ class DeepSort(object):
             features = np.zeros((len(detections), 128))
             numbers = []
             team_ids = []
+            categories = []
             
             
             for idx, detection in enumerate(self.detections_dict[image_path]):
@@ -284,12 +285,13 @@ class DeepSort(object):
                 features[idx,:] = detection['features']
                 numbers.append(detection['number'])
                 team_ids.append(detection['team_id'])
+                categories.append(detection['category_id'])
             
             # bbox_xcycwh = torch.cat((xcyc, wh), 1)[wh_min >=4].detach().cpu().numpy()
             # cls_conf
             
             # TODO: update(dict)
-            self.update(bbox_xcycwh, cls_conf, features, numbers, team_ids, im, new_sequence, frame_id, self.img_list[frame_id])
+            self.update(bbox_xcycwh, cls_conf, features, numbers, team_ids, categories, im, new_sequence, frame_id, self.img_list[frame_id])
     
     
     def import_detections(self):
