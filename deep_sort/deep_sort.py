@@ -295,8 +295,11 @@ class DeepSort(object):
     
     def export_detections(self):
         
+        # TODO: get rid of those lists.. ?
         file_names_all = []
         box_ids_all = []
+        bboxes_all = []
+        
         features_all = []
         team_ids_all = []
         numbers_all = []
@@ -308,6 +311,7 @@ class DeepSort(object):
                 
                 file_names_all.extend([input["file_name"] for input in input_list])
                 box_ids_all.extend([input["box_id"] for input in input_list])
+                bboxes_all.extend([input["bbox"] for input in input_list])
                 
                 crop_list = [input['image'] for input in input_list]
                 
@@ -401,6 +405,7 @@ class DeepSort(object):
                 for idx in range(len(file_names_all)):
                     out_dict.setdefault(file_names_all[idx], []).append({
                         'box_id': box_ids_all[idx],
+                        'bbox': bboxes_all[idx],
                         'number': numbers_all[idx],
                         'team_id': team_ids_all[idx],
                         'features': features_all[idx],
