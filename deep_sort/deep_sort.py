@@ -290,8 +290,8 @@ class DeepSort(object):
     
     def import_detections(self):
         
-        # pickle.load()
-        pass
+        with open(self.detections_path, 'rb') as f:
+            self.detections_dict = pickle.load(f)
     
     def export_detections(self):
         
