@@ -311,6 +311,8 @@ class DeepSort(object):
         with torch.no_grad():
             for idx, input_list in tqdm.tqdm(enumerate(self.players_loader)):
                 
+                print(input["category_id"])
+                
                 #tick = time.time()
                 
                 file_names_all.extend([input["file_name"] for input in input_list])
