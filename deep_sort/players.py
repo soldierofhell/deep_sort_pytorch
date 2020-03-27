@@ -49,7 +49,6 @@ class PlayerMapper:
           #image_crop = torch.as_tensor(np.ascontiguousarray(image.transpose(2, 0, 1)))
           image_crop = TF.to_tensor(np.ascontiguousarray(image_crop))
             
-          print(ann['category_id'])  
 
           if ann['category_id'] not in [0]: # TODO: explicit list!          
               image_list.append({
@@ -59,6 +58,7 @@ class PlayerMapper:
                   "file_name": dataset_dict["file_name"],
                   "box_id": idx,
                   "bbox": bbox,
+                  'category_id': ann['category_id'],
                   # TODO: confidence
               })          
 
