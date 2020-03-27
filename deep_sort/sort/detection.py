@@ -26,7 +26,7 @@ class Detection(object):
 
     """
 
-    def __init__(self, tlwh, confidence, feature, team_feature, number, team_id):
+    def __init__(self, tlwh, confidence, feature, number, team_id):
         self.tlwh = np.asarray(tlwh, dtype=np.float)
         self.confidence = float(confidence)
         
