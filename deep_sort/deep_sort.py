@@ -554,6 +554,7 @@ class DeepSort(object):
                 'detection_id': idx,
                 'bbox': self._tlwh_to_xyxy(detection.tlwh),
                 'confidence': detection.confidence,
+                'category_id': detection.category_id,
             }
             detection_list.append(detection_dict)           
         self.detection_history[img_name] = detection_list
