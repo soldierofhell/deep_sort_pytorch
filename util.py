@@ -88,7 +88,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
 
     image_list = detection_dict.keys() #sorted(os.listdir(img_dir))       
 
-    for idx, img_file in enumerate(sorted(os.listdir(img_dir))):       
+    for idx, img_file in enumerate(image_list):       
  
         img_path = os.path.join(img_dir, img_file)
         img = cv2.imread(img_path)
