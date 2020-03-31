@@ -127,10 +127,14 @@ class DeepSort(object):
         team_ref_img = [TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths]
         self.team_ref_embeddings = self.team_embeddings.predict(team_ref_img)
         
-        # position: pandas df -> dict={image_name: h=np.array(3,3)}        
+        # position: pandas df -> dict={image_name: h=np.array(3,3)}       
         
-        
-        self.hom_df = pd.read_csv('/content/hom_smooth.csv')
+        hom_df = pd.read_csv(config['position']['homeography_csv'])
+        self.hom_dict = hom_df.set_index('frame_index').iloc[:,:9].T.to_dict('list')
+        for k, v in self.hom_dict.items():
+            self.hom_dict[k] = np.array(v).reshape((3,3))
+        self.input_width = config['position'].getint('input_width')
+        self.input_height = config['position'].getint('input_height')
         
         # tracking
         
