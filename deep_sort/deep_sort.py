@@ -165,9 +165,11 @@ class DeepSort(object):
         #    numbers, team_ids, features = self._predict_numbers(bbox_xywh, ori_img)
         # TODO: change this name
         
-        h = self.hom_dict[self.img_list[frame_id]]
+        
+        hom_key = os.path.basename(self.img_list[frame_id])[:-4]
+        h = self.hom_dict[hom_key]
         X = np.stack((bbox_xywh[:,2]-bbox_xywh[:,0], bbox_xywh[:,3]), axis=1)
-        player_coordinates = _player_coordinates(X, h)
+        player_coordinates = self._player_coordinates(X, h)
        
         bbox_tlwh = bbox_xywh # self._xywh_to_tlwh(bbox_xywh)
         
