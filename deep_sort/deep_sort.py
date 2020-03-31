@@ -55,7 +55,7 @@ class DeepSort(object):
         self.min_confidence = 0.5
         #self.nms_max_overlap = 1.0
         
-        self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))
+        self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))[:20]
         # TODO: check first image
         self.image_width = config['input'].getint('image_width')
         self.image_height = config['input'].getint('image_height')
