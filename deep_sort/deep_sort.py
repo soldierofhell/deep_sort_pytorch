@@ -28,6 +28,10 @@ import glob
 import numpy as np
 import pandas as pd
 
+from respomodules.pitch_geom.homography import get_pitch_homography
+from respoml.core.modules.pitch_geom.hom_utils import warp_points_H
+
+
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
 
@@ -52,6 +56,9 @@ class DeepSort(object):
         #self.nms_max_overlap = 1.0
         
         self.img_list = sorted(glob.glob(os.path.join(config['input']['image_dir'], "*")))
+        # TODO: check first image
+        self.image_width = config['input'].getint('image_width')
+        self.image_height = config['input'].getint('image_height')
         
         self.ecc_threshold = config['sequence_detection'].getfloat('ecc_threshold')
         
@@ -143,13 +150,10 @@ class DeepSort(object):
         self.track_history = {}
         self.detection_history = {}
 
-    def _player_coordinates(x, y, h):
-        p = np.array([x,y,1])
-        p = np.matmul(h, p))
-        p /= p[2]
-        x_out = p[0]/self.hom_width
-        y_out = p[1]/self.hom_height
-        return x_out, y_out
+    def _player_coordinates(X, h):
+        H = get_pitch_homography(h, (self.image_height, self.image_width), orig_size=(320, 640))
+ 
+        return warp_points_H(X, H)
     
     def update(self, bbox_xywh, confidences, features, numbers, team_ids, categories, ori_img, new_sequence, frame_id, img_name):
         self.height, self.width = ori_img.shape[:2]
