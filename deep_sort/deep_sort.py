@@ -150,7 +150,7 @@ class DeepSort(object):
         self.track_history = {}
         self.detection_history = {}
 
-    def _player_coordinates(X, h):
+    def _player_coordinates(self, X, h):
         H = get_pitch_homography(h, (self.image_height, self.image_width), orig_size=(320, 640))
  
         return warp_points_H(X, H)
