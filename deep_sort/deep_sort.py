@@ -166,8 +166,8 @@ class DeepSort(object):
         # TODO: change this name
         
         h = self.hom_dict[self.img_list[frame_id]]
-        
-            
+        X = np.stack((bbox_xywh[:,2]-bbox_xywh[:,0], bbox_xywh[:,3]), axis=1)
+        player_coordinates = _player_coordinates(X, h)
        
         bbox_tlwh = bbox_xywh # self._xywh_to_tlwh(bbox_xywh)
         
@@ -177,7 +177,8 @@ class DeepSort(object):
                                      features[i],
                                      numbers[i],
                                      team_ids[i],
-                                     categories[i]
+                                     categories[i],
+                                     player_coordinates[i]
                                     ) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
         
         # run on non-maximum supression
