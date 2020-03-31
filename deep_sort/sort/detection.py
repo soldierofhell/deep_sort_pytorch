@@ -26,7 +26,7 @@ class Detection(object):
 
     """
 
-    def __init__(self, tlwh, confidence, feature, number, team_id, category_id, coordiantes):
+    def __init__(self, tlwh, confidence, feature, number, team_id, category_id, coordinates):
         self.tlwh = np.asarray(tlwh, dtype=np.float)
         self.confidence = float(confidence)
         
@@ -42,7 +42,7 @@ class Detection(object):
         self.team_id = team_id
         
         self.category_id = category_id
-        self.coordiantes = coordiantes
+        self.coordinates = coordinates
 
     def to_tlbr(self):
         """Convert bounding box to format `(min x, min y, max x, max y)`, i.e.,
