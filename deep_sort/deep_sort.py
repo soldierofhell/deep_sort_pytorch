@@ -133,8 +133,8 @@ class DeepSort(object):
         self.hom_dict = hom_df.set_index('frame_index').iloc[:,:9].T.to_dict('list')
         for k, v in self.hom_dict.items():
             self.hom_dict[k] = np.array(v).reshape((3,3))
-        self.input_width = config['position'].getint('input_width')
-        self.input_height = config['position'].getint('input_height')
+        self.hom_width = config['position'].getint('input_width')
+        self.hom_height = config['position'].getint('input_height')
         
         # tracking
         
@@ -143,6 +143,14 @@ class DeepSort(object):
         self.track_history = {}
         self.detection_history = {}
 
+    def _player_coordinates(x, y, h):
+        p = np.array([x,y,1])
+        p = np.matmul(h, p))
+        p /= p[2]
+        x_out = p[0]/self.hom_width
+        y_out = p[1]/self.hom_height
+        return x_out, y_out
+    
     def update(self, bbox_xywh, confidences, features, numbers, team_ids, categories, ori_img, new_sequence, frame_id, img_name):
         self.height, self.width = ori_img.shape[:2]
         # generate detections
@@ -151,13 +159,22 @@ class DeepSort(object):
         #    numbers, team_ids = self._predict_numbers(bbox_xywh, ori_img)
         #else:
         #    numbers, team_ids, features = self._predict_numbers(bbox_xywh, ori_img)
-        # TODO: change this name           
+        # TODO: change this name
+        
+        h = self.hom_dict[self.img_list[frame_id]]
+        
             
        
         bbox_tlwh = bbox_xywh # self._xywh_to_tlwh(bbox_xywh)
         
         #temp_number = {'number': None, 'confidence': None} # numbers[i]
-        self.detections = [Detection(bbox_tlwh[i], conf, features[i], numbers[i], team_ids[i], categories[i]) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
+        self.detections = [Detection(bbox_tlwh[i],
+                                     conf,
+                                     features[i],
+                                     numbers[i],
+                                     team_ids[i],
+                                     categories[i]
+                                    ) for i,conf in enumerate(confidences) if conf>self.min_confidence]      
         
         # run on non-maximum supression
         #boxes = np.array([d.tlwh for d in detections])
