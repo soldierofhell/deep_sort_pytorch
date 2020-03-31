@@ -26,6 +26,7 @@ import pickle
 import glob
 
 import numpy as np
+import pandas as pd
 
 import logging
 logging.basicConfig(level=logging.DEBUG, filename='/content/app.log', filemode='w')
@@ -125,6 +126,13 @@ class DeepSort(object):
         team_ref_paths = [config['game_data']['team_0_photo'], config['game_data']['team_1_photo']]
         team_ref_img = [TF.to_tensor(cv2.imread(path)).cuda() for path in team_ref_paths]
         self.team_ref_embeddings = self.team_embeddings.predict(team_ref_img)
+        
+        # position: pandas df -> dict={image_name: h=np.array(3,3)}        
+        
+        
+        self.hom_df = pd.read_csv('/content/hom_smooth.csv')
+        
+        # tracking
         
         self.tracker = Tracker(metric, team_numbers=self.team_numbers)
         
