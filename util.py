@@ -96,8 +96,8 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
         if config['pitch_projection'].getboolean('show'):
             pitch_img = cv2.imread(config['pitch_projection']['pitch_image'])
             pitch_img = pitch_img[50:-50,50:-50]
-            pitch_width = config['pitch_projection'].getint(pitch_width')
-            pitch_height = config['pitch_projection'].getint(pitch_height')
+            pitch_width = config['pitch_projection'].getint('pitch_width')
+            pitch_height = config['pitch_projection'].getint('pitch_height')
             pitch_img = cv2.resize(pitch_img, (pitch_width,pitch_height))
             img[:pitch_height,:pitch_width] = pitch_img
 
