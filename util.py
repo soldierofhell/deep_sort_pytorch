@@ -125,6 +125,10 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                         t_size = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 2 , 2)[0]
                         cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
                         
+                    if config['pitch_projection'].getboolean('show'):
+                        x, y = detection['coordinates']
+                        cv2.circle(img, (640*x,320*y), 5, color, 2)
+                        
 
                     
             if config['player_box'].getboolean('kalman_box') or config['player_box'].getboolean('detection_box'): 
