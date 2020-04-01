@@ -95,8 +95,11 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
 
         if config['pitch_projection'].getboolean('show'):
             pitch_img = cv2.imread(config['pitch_projection']['pitch_image'])
-            pitch_img = cv2.resize(pitch_img, (640,320))
-            img[:320,:640] = pitch_img
+            pitch_img = pitch_img[50:-50,50:-50]
+            pitch_width = config['pitch_projection'].getint(pitch_width')
+            pitch_height = config['pitch_projection'].getint(pitch_height')
+            pitch_img = cv2.resize(pitch_img, (pitch_width,pitch_height))
+            img[:pitch_height,:pitch_width] = pitch_img
 
         if config['flags'].getboolean('frame_id'):
             main_label = f'FRAME_ID: {idx+1} | {img_file}'
@@ -127,7 +130,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                         
                     if config['pitch_projection'].getboolean('show'):
                         x, y = detection['coordinates']
-                        cv2.circle(img, (int(640*x),int(320*y)), 5, color, -1)
+                        cv2.circle(img, (int(pitch_width*x),int(pitch_height*y)), 5, color, -1)
                         
 
                     
@@ -163,7 +166,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                             
                         if config['pitch_projection'].getboolean('show'):
                             x, y = track['detection_coordinates']
-                            cv2.circle(img, (int(640*x),int(320*y)), 5, color, -1)
+                            cv2.circle(img, (int(pitch_width*x),int(pitch_height*y)), 5, color, -1)
                 
                         
                 
