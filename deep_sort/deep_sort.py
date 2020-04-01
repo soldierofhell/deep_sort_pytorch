@@ -168,7 +168,7 @@ class DeepSort(object):
         
         hom_key = os.path.basename(self.img_list[frame_id])[:-4]
         h = self.hom_dict[hom_key]
-        X = np.stack(((bbox_xywh[:,0]+bbox_xywh[:,2])/2.0, bbox_xywh[:,1]+bbox_xywh[:,3]), axis=1)
+        X = np.stack((bbox_xywh[:,0]+bbox_xywh[:,2]/2.0, bbox_xywh[:,1]+bbox_xywh[:,3]), axis=1)
         #print(h, X)
         player_coordinates = self._player_coordinates(X, h)
        
