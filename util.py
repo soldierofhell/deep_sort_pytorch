@@ -127,7 +127,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                         
                     if config['pitch_projection'].getboolean('show'):
                         x, y = detection['coordinates']
-                        cv2.circle(img, (640*x,320*y), 5, color, 2)
+                        cv2.circle(img, (int(640*x),int(320*y)), 5, color, 2)
                         
 
                     
