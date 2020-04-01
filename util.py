@@ -162,7 +162,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
                             cv2.putText(img,label,(x1,y1+t_size[1]+4), cv2.FONT_HERSHEY_PLAIN, 2, [255,255,255], 2)
                             
                         if config['pitch_projection'].getboolean('show'):
-                            x, y = detection['detection_coordinates']
+                            x, y = track['detection_coordinates']
                             cv2.circle(img, (int(640*x),int(320*y)), 5, color, -1)
                 
                         
