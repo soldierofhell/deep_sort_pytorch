@@ -70,9 +70,7 @@ import os
 def _get_color(config, track):
     if config['flags'].getboolean('team_color'):
         team_id = track['team_id'] if track['team_id'] else 0
-        #print('track: ', track)
-        print('color: ', config['teams'][f'team{team_id}_color'].split(','))
-        color = tuple(map(config['teams'][f'team{team_id}_color'].split(','), int))
+        color = tuple(map(int, config['teams'][f'team{team_id}_color'].split(',')))
     else:
         color = COLORS_10[track['track_id']%len(COLORS_10)]
     return color
