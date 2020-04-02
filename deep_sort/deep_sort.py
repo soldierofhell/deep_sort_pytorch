@@ -578,6 +578,7 @@ class DeepSort(object):
                 'min_cost': track.min_cost,
                 'detection_conf': track.detection.confidence,
                 'detection_coordinates': track.detection.coordinates.tolist(),
+                'detection_category_id': track.detection.category_id,
                 'team_id': track.team_id,
             }
             track_list.append(track_dict)           
