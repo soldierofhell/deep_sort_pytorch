@@ -67,6 +67,13 @@ import configparser
 import json
 import os
 
+def _get_color(config, track):
+    if config['flags'].getboolean('team_color'):
+        color = tuple(map(config['teams'][f'team{track.team_id}_color'].split(','), int)
+    else:
+        color = COLORS_10[track.track_id%len(COLORS_10)]
+    return color
+
 def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml):
             
     # TODO: tracking_config.ini    
@@ -137,7 +144,7 @@ def draw_offline(img_dir, track_json, detection_json, sequence_json, config_yml)
             if config['player_box'].getboolean('kalman_box') or config['player_box'].getboolean('detection_box'): 
                 for track in tracks:            
                     track_id = track['track_id']           
-                    color = COLORS_10[track_id%len(COLORS_10)] # todo:
+                    color =  _get_color(config, track) # COLORS_10[track_id%len(COLORS_10)] # todo:
 
                     if config['player_box'].getboolean('kalman_box'):
                         box_type = 'kalman_box'
