@@ -241,7 +241,7 @@ class Tracker:
         self.tracks.append(Track(
             mean, covariance, self._next_id, self.n_init, self.max_age,
             detection.feature, detection_id=detection_idx,
-            sequence_no=self.sequence_no, detection=detection)) # , team_feature=detection.team_feature
+            sequence_no=self.sequence_no, detection=detection, team_id=detection.team_id)) # , team_feature=detection.team_feature
         self._next_id += 1
         
        
